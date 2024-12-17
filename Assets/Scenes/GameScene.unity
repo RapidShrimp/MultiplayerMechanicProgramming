@@ -728,6 +728,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bf86ea78f718f194b8edccbe4643c96f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Switches: []
+  ActiveSwitches: 0
 --- !u!4 &1920874419
 Transform:
   m_ObjectHideFlags: 0
@@ -825,6 +827,34 @@ PrefabInstance:
       propertyPath: Switch
       value: 
       objectReference: {fileID: 8164078558130704478}
+    - target: {fileID: 6106435368643658028, guid: 9de7e80ddd8aaa7438326d4a79568dcb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106435368643658028, guid: 9de7e80ddd8aaa7438326d4a79568dcb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106435368643658028, guid: 9de7e80ddd8aaa7438326d4a79568dcb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106435368643658028, guid: 9de7e80ddd8aaa7438326d4a79568dcb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106435368643658028, guid: 9de7e80ddd8aaa7438326d4a79568dcb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106435368643658028, guid: 9de7e80ddd8aaa7438326d4a79568dcb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6106435368643658028, guid: 9de7e80ddd8aaa7438326d4a79568dcb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

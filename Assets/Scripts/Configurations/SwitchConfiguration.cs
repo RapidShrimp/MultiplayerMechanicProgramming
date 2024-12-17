@@ -30,15 +30,11 @@ public class SwitchConfiguration : MonoBehaviour
             ActiveSwitches++;
             if (ActiveSwitches != Switches.Length) {return;}
             //TODO - Handle Configuration Completion
-            return;
+
         }
         else
         {
             ActiveSwitches--;
-
         }
-
-
-
     }
 }

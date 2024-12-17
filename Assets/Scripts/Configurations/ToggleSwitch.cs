@@ -23,6 +23,7 @@ public class ToggleSwitch : MonoBehaviour
         b_CurrentPosition = newPosition;
         bool IsCorrect = b_CorrectPosition == b_CurrentPosition ? true : false;
 
+        Switch.transform.localEulerAngles = IsCorrect ? new Vector3(40,0,0) : new Vector3(-40,0,0);
         //Toggle State
         Light.materials[0].color = IsCorrect ? Color.green : Color.red;
         OnToggle?.Invoke(IsCorrect);
