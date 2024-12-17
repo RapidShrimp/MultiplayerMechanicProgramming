@@ -8,21 +8,23 @@ public class ToggleSwitch : MonoBehaviour
     [SerializeField] private GameObject Switch;
     [SerializeField] private MeshRenderer Light;
 
-    bool b_SwitchOn;
+    bool b_CurrentPosition = false; //True = Up | False = Down;
+    bool b_CorrectPosition = false;
 
-    private void Start()
+
+    public void SetCorrectPosition(bool correctPosition)
     {
-        SetSwitchState(false);
+        b_CorrectPosition = correctPosition;
+        OnPositionChange(b_CurrentPosition);
     }
 
-    void SetSwitchState(bool state) { 
-        b_SwitchOn = state; 
-        OnToggle?.Invoke(state);
+    void OnPositionChange(bool newPosition)
+    {
+        b_CurrentPosition = newPosition;
+        bool IsCorrect = b_CorrectPosition == b_CurrentPosition ? true : false;
 
-
-        Light.materials[0].color = state ? Color.green: Color.red;
+        //Toggle State
+        Light.materials[0].color = IsCorrect ? Color.green : Color.red;
+        OnToggle?.Invoke(IsCorrect);
     }
-
-
-
 }
