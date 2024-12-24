@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,7 +10,8 @@ public class PlayerManager : NetworkBehaviour
         0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server);
- 
+
+    public event Action<bool> OnStartConditionUpdated;
     private TextMeshProUGUI PlayerCountUI;
 
     private void Awake()
@@ -33,6 +35,14 @@ public class PlayerManager : NetworkBehaviour
             {
                 Debug.Log($"Player count is {PlayerCount.Value}");
                 PlayerCountUI.text = $"Player Count: {PlayerCount.Value}";
+                if (PlayerCount.Value >= 2)
+                {
+                    OnStartConditionUpdated?.Invoke(true);
+                }
+                else
+                {
+                    OnStartConditionUpdated?.Invoke(false);
+                }
             };
         }
         else if(IsClient) 

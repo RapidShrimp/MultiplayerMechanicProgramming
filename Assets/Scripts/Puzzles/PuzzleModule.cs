@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class PuzzleModule : MonoBehaviour, PuzzleInterface
+public class PuzzleModule : MonoBehaviour
 {
 
     public event Action<float> OnPuzzleComplete;

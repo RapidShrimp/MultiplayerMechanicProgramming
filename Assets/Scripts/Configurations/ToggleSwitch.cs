@@ -1,7 +1,8 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ToggleSwitch : MonoBehaviour
+public class ToggleSwitch : Configuration
 {
     public event Action<bool> OnToggle;
 
@@ -14,6 +15,7 @@ public class ToggleSwitch : MonoBehaviour
 
     public void SetCorrectPosition(bool correctPosition)
     {
+        if (!IsServer) { return; }
         b_CorrectPosition = correctPosition;
         OnPositionChange(b_CurrentPosition);
     }
