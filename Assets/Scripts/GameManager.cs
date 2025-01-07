@@ -8,6 +8,7 @@ using UnityEngine;
 public class GameManager : NetworkBehaviour
 {
     public event Action OnStartGame;
+    [SerializeField] NetworkManagerUI UIMenu;
 
     [SerializeField] private NetworkVariable<int> PlayerCount = new NetworkVariable<int>(
         0,
@@ -21,18 +22,9 @@ public class GameManager : NetworkBehaviour
         );
 
 
-    [SerializeField] NetworkManagerUI UIMenu;
     private SO_GameSettings SelectedSettings;
     public override void OnNetworkSpawn()
     {
-        if(UIMenu == null)
-        {
-            throw new Exception("Couldnt Find Network UI Script");
-        }
-
-        //Bind UI Elements
-        UIMenu.OnGameStarted += () => StartGame();
-
 
         //Server Client Updates
         if (IsServer)
@@ -47,8 +39,11 @@ public class GameManager : NetworkBehaviour
             };
             PlayerCount.OnValueChanged += (int previousValue, int newValue) =>
             {
+                if (UIMenu)
+                {
+                    UIMenu.SetPlayerCount(PlayerCount.Value);
+                }
                 Debug.Log($"Player count is {PlayerCount.Value}");
-                UIMenu.SetPlayerCount(newValue);
             };
         }
 

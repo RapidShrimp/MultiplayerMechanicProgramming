@@ -1,36 +1,34 @@
 using UnityEngine;
 using Unity.Netcode;
-using UnityEngine.UI;
 using System;
+using UnityEngine.SceneManagement;
 
 public class NetworkManagerUI : NetworkBehaviour
 {
-    public event Action OnGameStarted;
     [SerializeField] private UI_MainMenu MainMenuUI;
     [SerializeField] private UI_LobbyMenu LobbyMenuUI;
+
     private int PlayersActive;
 
     private void Awake()
     {
-        PlayerManager m_PlayerManager = FindAnyObjectByType<PlayerManager>();
-        m_PlayerManager.OnStartConditionUpdated += Handle_StartConditionUpdated;
+        if (!MainMenuUI) { return; }
+        if (!LobbyMenuUI) { return; }
 
-        LobbyMenuUI.OnStartGame += () => OnGameStarted?.Invoke();
+
+        LobbyMenuUI.OnStartGame += () => 
+        { 
+            SceneManager.LoadScene(1);
+        };
+
     }
-
-    private void Handle_StartGame()
-    {
-        
-    }
-
-    private void Handle_StartConditionUpdated(bool Startable)
-    {
-        throw new NotImplementedException();
-    }
-
     public void SetPlayerCount(int Players)
     {
         PlayersActive = Players;
+        if (LobbyMenuUI != null) 
+        {
+            LobbyMenuUI.UpdatePlayerCount(Players);
+        }
         if (Players >= 2) 
         {   
             LobbyMenuUI.SetCanStartGame(true);
@@ -42,5 +40,4 @@ public class NetworkManagerUI : NetworkBehaviour
         }
     }
 
-    
 }
