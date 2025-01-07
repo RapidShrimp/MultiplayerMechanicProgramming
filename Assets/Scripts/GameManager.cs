@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : NetworkBehaviour
 {
+    public event Action OnStartGame;
+
     [SerializeField] private NetworkVariable<int> PlayerCount = new NetworkVariable<int>(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -17,18 +20,19 @@ public class GameManager : NetworkBehaviour
         NetworkVariableWritePermission.Server
         );
 
+
     [SerializeField] NetworkManagerUI UIMenu;
     private SO_GameSettings SelectedSettings;
-    protected ArcadeUnit[] Units;
     public override void OnNetworkSpawn()
     {
-        //Bind UI Elements
         if(UIMenu == null)
         {
             throw new Exception("Couldnt Find Network UI Script");
         }
 
+        //Bind UI Elements
         UIMenu.OnGameStarted += () => StartGame();
+
 
         //Server Client Updates
         if (IsServer)
@@ -60,13 +64,10 @@ public class GameManager : NetworkBehaviour
         SelectedSettings = settings;
         //Call to the arcade unit to update looks - Scope Creep Here :Skull:
     }
+
     public void StartGame()
     {
-        foreach(ArcadeUnit unit in Units)
-        {
-            unit.StartGame(SelectedSettings);
-        }
-        GameTimeRemaining.Value = SelectedSettings.GameTime;
+        OnStartGame?.Invoke();
     }
 
     IEnumerator ChangeGameTimer()

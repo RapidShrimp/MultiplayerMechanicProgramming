@@ -3,24 +3,32 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-[RequireComponent(typeof(Camera))]
-[SelectionBase]
 public class PlayerCharacterController : NetworkBehaviour
 {
-    Camera PlayerCam;
     PlayerInputActions PlayerInput;
+    Camera PlayerCam;
 
-    private void OnEnable()
+    public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
+        if (!IsOwner) { return; }
+        Debug.Log("Is Owner");
+
+
+        Camera.main.enabled = false;
         PlayerInput = new PlayerInputActions();
         PlayerInput.Enable();
-
+        PlayerCam = GetComponentInChildren<Camera>();
+        PlayerCam.enabled = true;
+        GetComponentInChildren<AudioListener>().enabled = true;
         //Bind Player Events
         PlayerInput.Player.Jump.performed += Handle_PlayerJump;
     }
-    private void OnDisable()
-    {
 
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        if(!IsOwner) { return; }
         //Unbind Player Events
         PlayerInput.Disable();
         PlayerInput.Player.Jump.performed -= Handle_PlayerJump;
@@ -30,21 +38,5 @@ public class PlayerCharacterController : NetworkBehaviour
     {
         if(!IsOwner) { return; }
         Debug.Log($"Player input on {gameObject.name}");
-    }
-
-
-
-    
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

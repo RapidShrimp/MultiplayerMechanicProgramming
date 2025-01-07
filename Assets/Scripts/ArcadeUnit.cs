@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -23,6 +24,7 @@ public class ArcadeUnit : NetworkBehaviour
         {
             config.OnConfigurationUpdated += Handle_ConfigurationUpdated;
             config.OnConfigurationSabotaged += Handle_ConfigurationSabotaged;
+            
         }
     }
     
@@ -32,8 +34,14 @@ public class ArcadeUnit : NetworkBehaviour
         MaxHealth = Settings.DefaultHealth;
         Health = MaxHealth;
         Time = Settings.GameTime; // Change this later
-    }
+        Debug.Log("StartGame");
 
+        StartCoroutine(CR_StartDelay());
+    }
+    protected void PostDelayStart()
+    {
+        Debug.Log("StartGameFull");
+    }
     #region Configurations
     private void Handle_ConfigurationUpdated(bool IsActive)
     {
@@ -85,4 +93,10 @@ public class ArcadeUnit : NetworkBehaviour
         ActiveModule.StartPuzzleModule();
     }
     #endregion
+
+    IEnumerator CR_StartDelay()
+    {
+        yield return new WaitForSeconds(3);
+        
+    }
 }

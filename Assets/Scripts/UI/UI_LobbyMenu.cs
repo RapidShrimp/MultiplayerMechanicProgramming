@@ -15,28 +15,22 @@ public class UI_LobbyMenu : MonoBehaviour
     }
     void Start()
     {
-        bCanStartGame = false;
         m_StartButton.onClick.AddListener(() =>
         {
             OnStartGame?.Invoke();
         });
-    }
-
-    private void OnEnable()
-    {
-        UpdateStartButtonUI();
+        SetCanStartGame(false);
     }
 
     protected void UpdateStartButtonUI()
     {
         if (bCanStartGame)
         {
-            m_StartButton.enabled = true;
+            m_StartButton.interactable = true;
         }
         else
         {
-            m_StartButton.enabled = false;
-
+            m_StartButton.interactable = false;
         }
     }
 }

@@ -15,7 +15,6 @@ public class ToggleSwitch : Configuration
 
     public void SetCorrectPosition(bool correctPosition)
     {
-        if (!IsServer) { return; }
         b_CorrectPosition = correctPosition;
         OnPositionChange(b_CurrentPosition);
     }
