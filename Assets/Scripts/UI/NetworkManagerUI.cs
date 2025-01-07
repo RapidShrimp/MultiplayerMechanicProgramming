@@ -3,56 +3,44 @@ using Unity.Netcode;
 using UnityEngine.UI;
 using System;
 
-public class NetworkManagerUI : MonoBehaviour
+public class NetworkManagerUI : NetworkBehaviour
 {
-
-    //private Button m_ServerButton;
-    [SerializeField] private Button m_HostButton;
-    [SerializeField] private Button m_ClientButton;
-
-    [SerializeField] private Button m_StartButton;
-
-    [SerializeField] private GameObject HostSelectScreen;
-    [SerializeField] private GameObject LobbyScreen;
+    public event Action OnGameStarted;
+    [SerializeField] private UI_MainMenu MainMenuUI;
+    [SerializeField] private UI_LobbyMenu LobbyMenuUI;
+    private int PlayersActive;
 
     private void Awake()
     {
-
-        m_StartButton.enabled = false;
-        m_StartButton.gameObject.SetActive(false);
-
         PlayerManager m_PlayerManager = FindAnyObjectByType<PlayerManager>();
         m_PlayerManager.OnStartConditionUpdated += Handle_StartConditionUpdated;
 
+        LobbyMenuUI.OnStartGame += () => OnGameStarted?.Invoke();
     }
 
-    private void Handle_StartConditionUpdated(bool CanStart)
+    private void Handle_StartGame()
     {
-        if (CanStart)
+        
+    }
+
+    private void Handle_StartConditionUpdated(bool Startable)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetPlayerCount(int Players)
+    {
+        PlayersActive = Players;
+        if (Players >= 2) 
+        {   
+            LobbyMenuUI.SetCanStartGame(true);
+        }
+        else
         {
-            m_StartButton.enabled = true;
-            m_StartButton.gameObject.SetActive(true);
+            LobbyMenuUI.SetCanStartGame(false);
+
         }
     }
 
-    void Start()
-    {
-        //Not Using Dedicated Servers
-        /*m_ServerButton.onClick.AddListener(() =>
-        {
-            NetworkManager.Singleton.StartServer();
-        });*/
-        m_HostButton.onClick.AddListener(() =>
-        {
-            NetworkManager.Singleton.StartHost();
-        });
-        m_ClientButton.onClick.AddListener(() =>
-        {
-            NetworkManager.Singleton.StartClient();
-
-        });
-
-    }
-
-
+    
 }

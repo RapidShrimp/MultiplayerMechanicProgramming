@@ -1,7 +1,8 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ArcadeUnit : MonoBehaviour
+public class ArcadeUnit : NetworkBehaviour
 {
     private PuzzleModule[] Puzzles;
     private PuzzleModule ActiveModule = null;
@@ -14,7 +15,8 @@ public class ArcadeUnit : MonoBehaviour
     private int Time;
     private int Score;
 
-    private void Awake()
+
+    public override void OnNetworkSpawn()
     {
         Configurations = GetComponentsInChildren<Configuration>();
         foreach (Configuration config in Configurations) 
@@ -22,18 +24,16 @@ public class ArcadeUnit : MonoBehaviour
             config.OnConfigurationUpdated += Handle_ConfigurationUpdated;
             config.OnConfigurationSabotaged += Handle_ConfigurationSabotaged;
         }
-
-        
     }
-
-
-    void StartGame()
+    
+    public void StartGame(SO_GameSettings Settings)
     {
         Score = 0;
+        MaxHealth = Settings.DefaultHealth;
         Health = MaxHealth;
-        Time = 120; // Change this later
-
+        Time = Settings.GameTime; // Change this later
     }
+
     #region Configurations
     private void Handle_ConfigurationUpdated(bool IsActive)
     {

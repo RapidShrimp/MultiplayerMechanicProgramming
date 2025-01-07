@@ -17,12 +17,12 @@ public class PlayerCharacterController : NetworkBehaviour
 
         //Bind Player Events
         PlayerInput.Player.Jump.performed += Handle_PlayerJump;
-        Debug.Log("Bound");
     }
     private void OnDisable()
     {
 
         //Unbind Player Events
+        PlayerInput.Disable();
         PlayerInput.Player.Jump.performed -= Handle_PlayerJump;
     }
 
