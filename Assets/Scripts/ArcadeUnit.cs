@@ -24,16 +24,15 @@ public class ArcadeUnit : NetworkBehaviour
         {
             config.OnConfigurationUpdated += Handle_ConfigurationUpdated;
             config.OnConfigurationSabotaged += Handle_ConfigurationSabotaged;
-            
         }
     }
     
     public void StartGame(SO_GameSettings Settings)
     {
         Score = 0;
-        MaxHealth = Settings.DefaultHealth;
+        MaxHealth = 100;// Settings.DefaultHealth;
         Health = MaxHealth;
-        Time = Settings.GameTime; // Change this later
+        Time = 120; // Settings.GameTime; // Change this later
         Debug.Log("StartGame");
 
         StartCoroutine(CR_StartDelay());

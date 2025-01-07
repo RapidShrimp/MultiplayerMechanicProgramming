@@ -349,6 +349,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   PlayerCounter: {fileID: 0}
   m_StartButton: {fileID: 1393497349}
+  StartButtonText: {fileID: 0}
 --- !u!1 &333360498
 GameObject:
   m_ObjectHideFlags: 0
@@ -728,7 +729,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 966706089}
-    PlayerPrefab: {fileID: 0}
+    PlayerPrefab: {fileID: 3859453590594830295, guid: 52e0ffc9f54694b41b7cb6de2ad3a257, type: 3}
     Prefabs:
       NetworkPrefabsLists:
       - {fileID: 11400000, guid: 8e0e0c8b00e9e134d956bce78116c716, type: 2}
@@ -1562,8 +1563,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -100.04}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: -178.58}
+  m_SizeDelta: {x: 200, y: 65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1393497349
 MonoBehaviour:
@@ -2111,6 +2112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
+  UIMenu: {fileID: 1098883917}
   PlayerCount:
     m_InternalValue: 0
 --- !u!1660057539 &9223372036854775807
@@ -2119,10 +2121,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 966706091}
   - {fileID: 2147433083}
+  - {fileID: 1676517847}
   - {fileID: 996570192}
   - {fileID: 1098883921}
   - {fileID: 130041006}
-  - {fileID: 1676517847}
   - {fileID: 242592813}
   - {fileID: 564873953}
   - {fileID: 1172506545}

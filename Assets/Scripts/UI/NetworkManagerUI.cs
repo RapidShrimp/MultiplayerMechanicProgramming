@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class NetworkManagerUI : NetworkBehaviour
 {
+
+    public event Action OnStartGame;
     [SerializeField] private UI_MainMenu MainMenuUI;
     [SerializeField] private UI_LobbyMenu LobbyMenuUI;
 
@@ -15,29 +17,28 @@ public class NetworkManagerUI : NetworkBehaviour
         if (!MainMenuUI) { return; }
         if (!LobbyMenuUI) { return; }
 
+        MainMenuUI.transform.localScale = Vector3.one;
+        LobbyMenuUI.transform.localScale = Vector3.zero;
 
-        LobbyMenuUI.OnStartGame += () => 
-        { 
-            SceneManager.LoadScene(1);
-        };
+        LobbyMenuUI.OnStartGame += () => {OnStartGame?.Invoke();};
 
     }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        MainMenuUI.transform.localScale = Vector3.zero;
+        LobbyMenuUI.transform.localScale = Vector3.one;
+    }
+
     public void SetPlayerCount(int Players)
     {
-        PlayersActive = Players;
-        if (LobbyMenuUI != null) 
-        {
-            LobbyMenuUI.UpdatePlayerCount(Players);
-        }
-        if (Players >= 2) 
-        {   
-            LobbyMenuUI.SetCanStartGame(true);
-        }
-        else
-        {
-            LobbyMenuUI.SetCanStartGame(false);
+        if (!LobbyMenuUI) { return ; }
 
-        }
+        PlayersActive = Players;
+        LobbyMenuUI.UpdatePlayerCount(Players);
+
     }
 
 }

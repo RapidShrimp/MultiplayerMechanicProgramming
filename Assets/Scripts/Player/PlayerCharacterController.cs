@@ -7,22 +7,26 @@ public class PlayerCharacterController : NetworkBehaviour
 {
     PlayerInputActions PlayerInput;
     Camera PlayerCam;
-
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
         if (!IsOwner) { return; }
-        Debug.Log("Is Owner");
 
-
-        Camera.main.enabled = false;
         PlayerInput = new PlayerInputActions();
+        
+        //Bind Player Events
+        PlayerInput.Player.Jump.performed += Handle_PlayerJump;
+    }
+
+    public void Handle_OnGameStarted()
+    {
+        if (!IsOwner) { return; }
         PlayerInput.Enable();
+        Camera.main.enabled = false;
         PlayerCam = GetComponentInChildren<Camera>();
         PlayerCam.enabled = true;
         GetComponentInChildren<AudioListener>().enabled = true;
-        //Bind Player Events
-        PlayerInput.Player.Jump.performed += Handle_PlayerJump;
+        
     }
 
     public override void OnNetworkDespawn()

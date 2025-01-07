@@ -16,10 +16,12 @@ public class ToggleSwitch : Configuration
     public void SetCorrectPosition(bool correctPosition)
     {
         b_CorrectPosition = correctPosition;
-        OnPositionChange(b_CurrentPosition);
+        OnPositionChange_Rpc(b_CurrentPosition);
     }
 
-    void OnPositionChange(bool newPosition)
+
+    [Rpc(SendTo.Everyone)]
+    void OnPositionChange_Rpc(bool newPosition)
     {
         b_CurrentPosition = newPosition;
         bool IsCorrect = b_CorrectPosition == b_CurrentPosition ? true : false;

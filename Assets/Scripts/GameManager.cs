@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
-using TMPro;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : NetworkBehaviour
 {
-    public event Action OnStartGame;
+ /*   public event Action OnStartGame;
+    public event Action OnPauseGame;
+    public event Action OnResumeGame;
+    public event Action OnExitGame;*/
+
     [SerializeField] NetworkManagerUI UIMenu;
 
     [SerializeField] private NetworkVariable<int> PlayerCount = new NetworkVariable<int>(
@@ -21,14 +25,23 @@ public class GameManager : NetworkBehaviour
         NetworkVariableWritePermission.Server
         );
 
-
+    private void Awake()
+    {
+        DontDestroyOnLoad( this );
+    }
     private SO_GameSettings SelectedSettings;
     public override void OnNetworkSpawn()
     {
 
         //Server Client Updates
+        NetworkManager.Singleton.OnConnectionEvent += (a,b) =>
+        {
+            /*Needs a Check to see if the disconnecting client was the host**/
+            //SceneManager.LoadScene(0);
+        };
         if (IsServer)
         {
+            UIMenu.OnStartGame += StartGame;
             NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
             {
                 PlayerCount.Value++;
@@ -37,40 +50,29 @@ public class GameManager : NetworkBehaviour
             {
                 PlayerCount.Value--;
             };
-            PlayerCount.OnValueChanged += (int previousValue, int newValue) =>
-            {
-                if (UIMenu)
-                {
-                    UIMenu.SetPlayerCount(PlayerCount.Value);
-                }
-                Debug.Log($"Player count is {PlayerCount.Value}");
-            };
         }
+        PlayerCount.OnValueChanged += (int previousValue, int newValue) =>
+        {
+            if (UIMenu)
+            {
+                UIMenu.SetPlayerCount(PlayerCount.Value);
+            }
+        };
 
-        //Get Arcade Units
         GameTimeRemaining.OnValueChanged += (float previousValue, float newValue) =>
         {
             //Call to Arcades to change UI Elements
         };
 
     }
-    public void SetGameSettings(SO_GameSettings settings)
+    [Rpc(SendTo.Everyone)]
+    public void SetGameSettings_Rpc(int settingsIndex)
     {
-        SelectedSettings = settings;
         //Call to the arcade unit to update looks - Scope Creep Here :Skull:
     }
 
     public void StartGame()
     {
-        OnStartGame?.Invoke();
-    }
-
-    IEnumerator ChangeGameTimer()
-    {
-        while (GameTimeRemaining.Value > 0)
-        {
-            yield return new WaitForSecondsRealtime(1);
-            GameTimeRemaining.Value--;
-        }
+        NetworkManager.SceneManager.LoadScene("GameScene", UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
 }

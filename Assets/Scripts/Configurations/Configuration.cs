@@ -2,10 +2,10 @@ using System;
 using Unity.Netcode;
 using UnityEngine;
 
-public class Configuration : MonoBehaviour
+public class Configuration : NetworkBehaviour
 {
     public event Action<bool> OnConfigurationUpdated; //True - Working | False - Not Working
-    public event Action OnConfigurationSabotaged; 
+    public event Action OnConfigurationSabotaged;
 
-    bool IsCompleted;
+    private NetworkVariable<bool> IsCompleted = new NetworkVariable<bool>(false);
 }
