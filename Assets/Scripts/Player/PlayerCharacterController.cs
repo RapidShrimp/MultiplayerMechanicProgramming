@@ -9,10 +9,10 @@ public class PlayerCharacterController : NetworkBehaviour
     Camera PlayerCam;
     public override void OnNetworkSpawn()
     {
+        DontDestroyOnLoad(this);
         if (!IsOwner) { return; }
 
         GameManager.OnStartGame += Handle_OnGameStarted;
-        DontDestroyOnLoad(this);
         PlayerInput = new PlayerInputActions();
         
         //Bind Player Events
@@ -36,6 +36,7 @@ public class PlayerCharacterController : NetworkBehaviour
         base.OnNetworkDespawn();
         if(!IsOwner) { return; }
         //Unbind Player Events
+        GameManager.OnStartGame -= Handle_OnGameStarted;
         PlayerInput.Disable();
         PlayerInput.Player.Jump.performed -= Handle_PlayerJump;
     }

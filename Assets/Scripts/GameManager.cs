@@ -75,14 +75,13 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void StartGame_Rpc()
     {
-        Debug.Log("Welp");
-
         NetworkManager.SceneManager.OnLoadComplete += (a, b, c) =>
         {
             OnStartGame?.Invoke();
+            
         };
         if (!IsServer) { return; }
-        NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
-        
+        NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);    
     }
+    
 }
