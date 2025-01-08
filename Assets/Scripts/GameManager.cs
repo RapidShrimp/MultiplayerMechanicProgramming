@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
 public class GameManager : NetworkBehaviour
 {
+    public static event Action<int> OnPlayerCountUpdated;
+    public static event Action OnReadyGame;
     public static event Action OnStartGame;
     public event Action OnPauseGame;
     public event Action OnResumeGame;
@@ -24,7 +27,7 @@ public class GameManager : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Server
         );
-
+    
     private void Awake()
     {
         DontDestroyOnLoad( this );
@@ -41,7 +44,7 @@ public class GameManager : NetworkBehaviour
         };
         if (IsServer)
         {
-            UIMenu.OnStartGame += StartGame_Rpc;
+            UIMenu.OnStartGame += TransitionLevel_Rpc;
             NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
             {
                 PlayerCount.Value++;
@@ -54,6 +57,7 @@ public class GameManager : NetworkBehaviour
         }
         PlayerCount.OnValueChanged += (int previousValue, int newValue) =>
         {
+            OnPlayerCountUpdated?.Invoke(newValue);
             if (UIMenu)
             {
                 UIMenu.SetPlayerCount(PlayerCount.Value);
@@ -73,15 +77,33 @@ public class GameManager : NetworkBehaviour
     }
 
     [Rpc(SendTo.Everyone)]
-    public void StartGame_Rpc()
+    public void TransitionLevel_Rpc()
     {
         NetworkManager.SceneManager.OnLoadComplete += (a, b, c) =>
         {
-            OnStartGame?.Invoke();
-            
+            OnReadyGame?.Invoke();
+            if (!IsServer) { return; }
+            StartCoroutine(StartGameCountdown(3));
         };
         if (!IsServer) { return; }
-        NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);    
+        NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+    }
+
+    IEnumerator StartGameCountdown(int CountdownLength)
+    {
+        while (CountdownLength > 0) 
+        {
+            yield return new WaitForSeconds(1);
+            CountdownLength--;
+        }
+        StartGame_Rpc();
+        yield break;
+    }
+
+    [Rpc(SendTo.Everyone)]
+    public void StartGame_Rpc()
+    {
+        OnStartGame?.Invoke();
     }
     
 }

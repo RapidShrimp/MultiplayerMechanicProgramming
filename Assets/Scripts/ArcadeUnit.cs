@@ -9,6 +9,7 @@ public class ArcadeUnit : NetworkBehaviour
     private PuzzleModule ActiveModule = null;
     private Configuration[] Configurations;
 
+    
 
     private int Health;
     private int MaxHealth = 100;
@@ -26,21 +27,15 @@ public class ArcadeUnit : NetworkBehaviour
             config.OnConfigurationSabotaged += Handle_ConfigurationSabotaged;
         }
     }
-    
+
     public void StartGame(SO_GameSettings Settings)
     {
         Score = 0;
         MaxHealth = 100;// Settings.DefaultHealth;
         Health = MaxHealth;
         Time = 120; // Settings.GameTime; // Change this later
-        Debug.Log("StartGame");
+    }
 
-        StartCoroutine(CR_StartDelay());
-    }
-    protected void PostDelayStart()
-    {
-        Debug.Log("StartGameFull");
-    }
     #region Configurations
     private void Handle_ConfigurationUpdated(bool IsActive)
     {
@@ -92,10 +87,4 @@ public class ArcadeUnit : NetworkBehaviour
         ActiveModule.StartPuzzleModule();
     }
     #endregion
-
-    IEnumerator CR_StartDelay()
-    {
-        yield return new WaitForSeconds(3);
-        
-    }
 }

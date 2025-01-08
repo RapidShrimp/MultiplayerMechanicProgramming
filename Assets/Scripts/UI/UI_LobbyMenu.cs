@@ -3,17 +3,17 @@ using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 
 
 public class UI_LobbyMenu : NetworkBehaviour
 {
     public event Action OnStartGame;
 
-    [SerializeField] private TextMeshPro PlayerCounter;
     [SerializeField] private Button m_StartButton;
-    [SerializeField] private TextMeshProUGUI StartButtonText;
-    
+    private TextMeshProUGUI StartButtonText;
+    [SerializeField] private Image ThrobberImage;
+    [SerializeField] private Sprite[] ThrobberSprites;
+
     protected bool bCanStartGame;
     private void OnEnable()
     {
@@ -43,17 +43,20 @@ public class UI_LobbyMenu : NetworkBehaviour
 
         if (bCanStartGame)
         {
+
             if (IsServer) 
             {
-                StartButtonText.text = "StartGame";
+                StartButtonText.text = "Start Game";
+                ThrobberImage.sprite = ThrobberSprites[1];
             }
             else
             {
-                StartButtonText.text = "Waiting for Host...";
+                StartButtonText.text = "Waiting for Host to Start...";
             }
         }
         else
         {
+            ThrobberImage.sprite = ThrobberSprites[0];
             m_StartButton.interactable = false;
             StartButtonText.text = "Waiting for Players...";
         }
@@ -70,7 +73,5 @@ public class UI_LobbyMenu : NetworkBehaviour
             SetCanStartGame(false);
         }
 
-        if (!PlayerCounter) { return; }
-        PlayerCounter.text = $"Players In Lobby:{Players}";
     }
 }
