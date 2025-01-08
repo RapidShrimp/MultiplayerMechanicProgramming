@@ -21,12 +21,25 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput = new PlayerInputActions();
         //Bind Player Events
         PlayerInput.Player.Move.performed += Handle_PlayerMove;
-        PlayerInput.Player.MouseLClick.performed += Handle_PlayerClick;
+        PlayerInput.Player.MouseLClick.started += Handle_PlayerClick;
+        PlayerInput.Player.MouseLClick.canceled+= Handle_PlayerClick;
+
     }
 
     private void Handle_PlayerClick(InputAction.CallbackContext context)
     {
         if(!IsOwner) { return; }
+        if (context.started) 
+        { 
+            Debug.Log("Mouse Clicked Started");
+            bool RayHit = Physics.Raycast(PlayerCam.transform.position, Mouse.current.position.ReadValue());
+
+        }
+        else
+        {
+            Debug.Log("Mouse Clicked Ended");
+
+        }
     }
 
     private void Handle_PlayerMove(InputAction.CallbackContext context)
@@ -62,7 +75,8 @@ public class PlayerCharacterController : NetworkBehaviour
 
         PlayerInput.Disable();
         PlayerInput.Player.Move.performed -= Handle_PlayerMove;
-        PlayerInput.Player.MouseLClick.performed -= Handle_PlayerClick;
+        PlayerInput.Player.MouseLClick.started -= Handle_PlayerClick;
+        PlayerInput.Player.MouseLClick.canceled -= Handle_PlayerClick;
 
     }
 

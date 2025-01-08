@@ -34,6 +34,7 @@ public class ArcadeUnit : NetworkBehaviour
         MaxHealth = 100;// Settings.DefaultHealth;
         Health = MaxHealth;
         Time = 120; // Settings.GameTime; // Change this later
+
     }
 
     #region Configurations
