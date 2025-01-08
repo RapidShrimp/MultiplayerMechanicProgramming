@@ -11,8 +11,10 @@ public class UI_LobbyMenu : NetworkBehaviour
 
     [SerializeField] private Button m_StartButton;
     private TextMeshProUGUI StartButtonText;
-    [SerializeField] private Image ThrobberImage;
-    [SerializeField] private Sprite[] ThrobberSprites;
+    [SerializeField] private Animator Throbber;
+    
+
+
 
     protected bool bCanStartGame;
     private void OnEnable()
@@ -47,16 +49,20 @@ public class UI_LobbyMenu : NetworkBehaviour
             if (IsServer) 
             {
                 StartButtonText.text = "Start Game";
-                ThrobberImage.sprite = ThrobberSprites[1];
+                Throbber.SetBool("IsWaiting", false);
             }
             else
             {
+                if (IsServer)
+                {
+                    Throbber.SetBool("IsWaiting", true);
+                }
                 StartButtonText.text = "Waiting for Host to Start...";
             }
         }
         else
         {
-            ThrobberImage.sprite = ThrobberSprites[0];
+            //ThrobberImage.sprite = ThrobberSprites[0];
             m_StartButton.interactable = false;
             StartButtonText.text = "Waiting for Players...";
         }

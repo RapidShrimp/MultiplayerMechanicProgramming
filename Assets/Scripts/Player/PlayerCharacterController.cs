@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,6 +10,9 @@ public class PlayerCharacterController : NetworkBehaviour
     Camera PlayerCam;
 
     ArcadeUnit m_ArcadeUnit;
+
+    Coroutine CR_MouseDetection;
+
     public override void OnNetworkSpawn()
     {
         DontDestroyOnLoad(this);
@@ -31,13 +35,19 @@ public class PlayerCharacterController : NetworkBehaviour
         if(!IsOwner) { return; }
         if (context.started) 
         { 
-            Debug.Log("Mouse Clicked Started");
-            bool RayHit = Physics.Raycast(PlayerCam.transform.position, Mouse.current.position.ReadValue());
+            if (CR_MouseDetection == null) 
+            {
+                CR_MouseDetection = StartCoroutine(Handle_MouseDown());
+            }
 
         }
         else
         {
-            Debug.Log("Mouse Clicked Ended");
+            if (CR_MouseDetection!=null)
+            {
+                StopCoroutine(CR_MouseDetection);
+                CR_MouseDetection = null;
+            }
 
         }
     }
@@ -80,4 +90,26 @@ public class PlayerCharacterController : NetworkBehaviour
 
     }
 
+    IEnumerator Handle_MouseDown()
+    {
+        while (true) 
+        {
+            Vector3 Mouse2World = Mouse.current.position.ReadValue();
+            Mouse2World.z = 10;
+            //Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World));
+            Debug.Log($"Mouse Down");
+
+            bool RayHit = Physics.Raycast(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World), out RaycastHit HitInfo);
+            if (RayHit) 
+            {
+                Debug.Log($"Hit {HitInfo.collider.name}");
+                if (HitInfo.collider.tag == "MouseInteractable")
+                {
+                    Debug.Log("Found Interactable");
+                }
+            }
+            yield return new WaitForFixedUpdate();
+        
+        }
+    }
 }

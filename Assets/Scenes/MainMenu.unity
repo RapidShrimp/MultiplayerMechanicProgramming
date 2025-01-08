@@ -378,10 +378,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   m_StartButton: {fileID: 1393497349}
-  ThrobberImage: {fileID: 1046633142}
-  ThrobberSprites:
-  - {fileID: 301680492, guid: 0a29a229cc0ae6e4babb34121064f0fc, type: 3}
-  - {fileID: -1303369110, guid: c7a0ed04a2fbbf54d812b1ed30d3ff88, type: 3}
+  Throbber: {fileID: 1046633144}
 --- !u!1 &333360498
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,6 +1303,7 @@ GameObject:
   - component: {fileID: 1046633141}
   - component: {fileID: 1046633143}
   - component: {fileID: 1046633142}
+  - component: {fileID: 1046633144}
   m_Layer: 5
   m_Name: WaitingThrobber
   m_TagString: Untagged
@@ -1370,6 +1368,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1046633140}
   m_CullTransparentMesh: 1
+--- !u!95 &1046633144
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1046633140}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aaa1591521a5c5e4b9c22dc5690f6093, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1098883916
 GameObject:
   m_ObjectHideFlags: 0
