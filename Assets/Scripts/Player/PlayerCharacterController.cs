@@ -9,9 +9,10 @@ public class PlayerCharacterController : NetworkBehaviour
     Camera PlayerCam;
     public override void OnNetworkSpawn()
     {
-        base.OnNetworkSpawn();
         if (!IsOwner) { return; }
 
+        GameManager.OnStartGame += Handle_OnGameStarted;
+        DontDestroyOnLoad(this);
         PlayerInput = new PlayerInputActions();
         
         //Bind Player Events
@@ -21,8 +22,9 @@ public class PlayerCharacterController : NetworkBehaviour
     public void Handle_OnGameStarted()
     {
         if (!IsOwner) { return; }
+        Debug.Log("Owned Start");
         PlayerInput.Enable();
-        Camera.main.enabled = false;
+        if (Camera.main) { Camera.main.enabled = false; }
         PlayerCam = GetComponentInChildren<Camera>();
         PlayerCam.enabled = true;
         GetComponentInChildren<AudioListener>().enabled = true;

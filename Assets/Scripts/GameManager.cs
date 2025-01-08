@@ -7,10 +7,10 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : NetworkBehaviour
 {
- /*   public event Action OnStartGame;
+    public static event Action OnStartGame;
     public event Action OnPauseGame;
     public event Action OnResumeGame;
-    public event Action OnExitGame;*/
+    public event Action OnExitGame;
 
     [SerializeField] NetworkManagerUI UIMenu;
 
@@ -41,10 +41,11 @@ public class GameManager : NetworkBehaviour
         };
         if (IsServer)
         {
-            UIMenu.OnStartGame += StartGame;
+            UIMenu.OnStartGame += StartGame_Rpc;
             NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
             {
                 PlayerCount.Value++;
+
             };
             NetworkManager.Singleton.OnClientDisconnectCallback += (id) =>
             {
@@ -71,8 +72,17 @@ public class GameManager : NetworkBehaviour
         //Call to the arcade unit to update looks - Scope Creep Here :Skull:
     }
 
-    public void StartGame()
+    [Rpc(SendTo.Everyone)]
+    public void StartGame_Rpc()
     {
-        NetworkManager.SceneManager.LoadScene("GameScene", UnityEngine.SceneManagement.LoadSceneMode.Single);
+        Debug.Log("Welp");
+
+        NetworkManager.SceneManager.OnLoadComplete += (a, b, c) =>
+        {
+            OnStartGame?.Invoke();
+        };
+        if (!IsServer) { return; }
+        NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+        
     }
 }
