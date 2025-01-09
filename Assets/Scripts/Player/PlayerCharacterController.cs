@@ -33,6 +33,8 @@ public class PlayerCharacterController : NetworkBehaviour
     private void Handle_PlayerClick(InputAction.CallbackContext context)
     {
         if(!IsOwner) { return; }
+
+        // Hold Functionality
         if (context.started) 
         { 
             if (CR_MouseDetection == null) 
@@ -92,24 +94,52 @@ public class PlayerCharacterController : NetworkBehaviour
 
     IEnumerator Handle_MouseDown()
     {
+        GameObject tmp = GetObjectUnderMouse();
+        if (tmp == null) { yield break; }
+        Debug.Log($"{tmp.name}");
+        IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
+        if (Interaction == null) { yield break; }
+        Debug.Log($"Here");
+
+        if (Interaction != null)
+        {
+            if (Interaction.OnClick()) 
+            {
+                Debug.Log("Do Click Event");
+                yield break;
+            };
+
+        }
+        else
+        {
+            yield break;
+        }
         while (true) 
         {
-            Vector3 Mouse2World = Mouse.current.position.ReadValue();
-            Mouse2World.z = 10;
-            //Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World));
-            Debug.Log($"Mouse Down");
-
-            bool RayHit = Physics.Raycast(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World), out RaycastHit HitInfo);
-            if (RayHit) 
+            if (GetObjectUnderMouse())
             {
-                Debug.Log($"Hit {HitInfo.collider.name}");
-                if (HitInfo.collider.tag == "MouseInteractable")
-                {
-                    Debug.Log("Found Interactable");
-                }
+                Debug.Log("Do Drag Event");
             }
             yield return new WaitForFixedUpdate();
         
         }
+    }
+
+    protected GameObject GetObjectUnderMouse()
+    {
+        Vector3 Mouse2World = Mouse.current.position.ReadValue();
+        Mouse2World.z = 100;
+        //Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World));
+        Ray ray = new Ray();
+        ray.origin = PlayerCam.transform.position;
+        ray.direction = PlayerCam.ScreenToWorldPoint(Mouse2World);
+        Debug.DrawRay(ray.origin, ray.direction, Color.red, 0.5f);
+        bool RayHit = Physics.Raycast(ray, out RaycastHit HitInfo, float.MaxValue, LayerMask.NameToLayer("MouseInteractable"));
+        if (RayHit) 
+        {
+            return HitInfo.collider.gameObject;
+        }
+
+        return null;
     }
 }

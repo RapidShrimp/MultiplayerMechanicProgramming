@@ -79,6 +79,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5251855349646999288}
   - component: {fileID: 6083235638080479788}
+  - component: {fileID: 8247812798405606981}
   m_Layer: 0
   m_Name: Switch
   m_TagString: Untagged
@@ -118,6 +119,27 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   Switch: {fileID: 3375522942707608517}
   Light: {fileID: 6451942953937505229}
+--- !u!135 &8247812798405606981
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3387433077809866009}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.04
+  m_Center: {x: 0, y: 0.09, z: -0.02}
 --- !u!1 &4525376476838135080
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,7 +238,6 @@ GameObject:
   - component: {fileID: 2440170453050097649}
   - component: {fileID: 651356484056532667}
   - component: {fileID: 4048647436090303023}
-  - component: {fileID: 5212043691264753443}
   m_Layer: 0
   m_Name: Switch
   m_TagString: Untagged
@@ -292,24 +313,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &5212043691264753443
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6875612789590355146}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.035
-  m_Center: {x: 0, y: 0, z: -0.014618}
