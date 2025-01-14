@@ -64,16 +64,16 @@ public class PlayerCharacterController : NetworkBehaviour
     {
         if (!IsOwner) { return; }
         PlayerInput.Enable();
+        m_ArcadeUnit.ReadyGame();
         if (Camera.main) { Camera.main.enabled = false; }
         PlayerCam = GetComponentInChildren<Camera>();
         PlayerCam.enabled = true;
         GetComponentInChildren<AudioListener>().enabled = true;
-        m_ArcadeUnit.StartGame(null);
-        
     }
     private void Handle_OnStartGame()
     {
-        m_ArcadeUnit.StartGame(null);
+        if(!IsOwner) { return; }   
+        m_ArcadeUnit.StartGame();
     }
 
     public override void OnNetworkDespawn()
@@ -83,7 +83,7 @@ public class PlayerCharacterController : NetworkBehaviour
         //Unbind Player Events
         GameManager.OnReadyGame -= Handle_OnGameReady;
         GameManager.OnStartGame -= Handle_OnStartGame;
-
+        
         PlayerInput.Disable();
         PlayerInput.Player.Move.performed -= Handle_PlayerMove;
         PlayerInput.Player.MouseLClick.started -= Handle_PlayerClick;

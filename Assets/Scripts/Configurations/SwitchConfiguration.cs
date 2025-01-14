@@ -24,10 +24,6 @@ public class SwitchConfiguration : Configuration
         }
     }
 
-    public override void OnNetworkSpawn()
-    {
-
-    }
     /*
  * If an active switch comes through checks will be completed to see if the configuration 
  * module is active, if the configuration completion is correct a delegate will be fired.

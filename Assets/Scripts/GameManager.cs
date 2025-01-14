@@ -16,7 +16,6 @@ public class GameManager : NetworkBehaviour
     public event Action OnExitGame;
 
     [SerializeField] NetworkManagerUI UIMenu;
-
     [SerializeField] private NetworkVariable<int> PlayerCount = new NetworkVariable<int>(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -36,6 +35,17 @@ public class GameManager : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
 
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += (a, b, c) =>
+        {
+            if(NetworkManager.Singleton.LocalClientId == a)
+            {
+                OnReadyGame?.Invoke();
+            }
+
+            if (!IsServer ) { return; }
+            StartCoroutine(StartGameCountdown(3));
+        };
+        
         //Server Client Updates
         NetworkManager.Singleton.OnConnectionEvent += (a,b) =>
         {
@@ -44,6 +54,7 @@ public class GameManager : NetworkBehaviour
         };
         if (IsServer)
         {
+
             UIMenu.OnStartGame += TransitionLevel_Rpc;
             NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
             {
@@ -76,15 +87,8 @@ public class GameManager : NetworkBehaviour
         //Call to the arcade unit to update looks - Scope Creep Here :Skull:
     }
 
-    [Rpc(SendTo.Everyone)]
     public void TransitionLevel_Rpc()
     {
-        NetworkManager.SceneManager.OnLoadComplete += (a, b, c) =>
-        {
-            OnReadyGame?.Invoke();
-            if (!IsServer) { return; }
-            StartCoroutine(StartGameCountdown(3));
-        };
         if (!IsServer) { return; }
         NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
@@ -100,9 +104,11 @@ public class GameManager : NetworkBehaviour
         yield break;
     }
 
+
     [Rpc(SendTo.Everyone)]
     public void StartGame_Rpc()
     {
+        Debug.Log("Readied");
         OnStartGame?.Invoke();
     }
     

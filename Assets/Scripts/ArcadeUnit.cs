@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,38 +8,53 @@ public class ArcadeUnit : NetworkBehaviour
     private PuzzleModule ActiveModule = null;
     [SerializeField] private Configuration[] Configurations;
 
-    
-
-    private int Health;
     private int MaxHealth = 100;
+    private NetworkVariable<int> GameTimeRemaining = new NetworkVariable<int>(
+        value: 0,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
+    
+    private NetworkVariable<float> Health = new NetworkVariable<float>(
+    value: 100,
+    NetworkVariableReadPermission.Everyone,
+    NetworkVariableWritePermission.Owner);
 
-    private int Time;
-    private int Score;
+    private NetworkVariable<int> Score = new NetworkVariable<int>(
+    value: 0,
+    NetworkVariableReadPermission.Everyone,
+    NetworkVariableWritePermission.Owner);
 
 
     public override void OnNetworkSpawn()
     {
+        if (!IsOwner) { return; }
         Configurations = GetComponentsInChildren<Configuration>();
         foreach (Configuration config in Configurations) 
         {
             config.OnConfigurationUpdated += Handle_ConfigurationUpdated;
             config.OnConfigurationSabotaged += Handle_ConfigurationSabotaged;
         }
+
     }
 
-    public void StartGame(SO_GameSettings Settings)
+    public void ReadyGame()
     {
-        Score = 0;
+        if (!IsOwner) { return; }
+        Debug.Log("Readied");
         MaxHealth = 100;// Settings.DefaultHealth;
-        Health = MaxHealth;
-        Time = 120; // Settings.GameTime; // Change this later
-        if(!IsOwner) {return;}
+        Score.Value = 0;
+        Health.Value = MaxHealth;
+        GameTimeRemaining.Value = 120; // Settings.GameTime; // Change this later
         foreach (Configuration config in Configurations)
         {
-            //config.StartModule();
+            config.StartModule();
         }
     }
-
+    public void StartGame()
+    {
+        StartCoroutine(ArcadeTimer(GameTimeRemaining.Value));
+    }
+    
     #region Configurations
     private void Handle_ConfigurationUpdated(bool IsActive)
     {
@@ -48,7 +62,7 @@ public class ArcadeUnit : NetworkBehaviour
     }
     private void Handle_ConfigurationSabotaged()
     {
-        Score += 25;
+        Score.Value += 25;
     }
 
     #endregion
@@ -66,18 +80,18 @@ public class ArcadeUnit : NetworkBehaviour
     private void Handle_PuzzleComplete(float AwardedTime)
     {
         Debug.Log("Completed Puzzle");
-        Score += 150;
+        Score.Value += 150;
 
     }
     private void Handle_PuzzleFail(float PunishmentTime)
     {
         Debug.Log("Failed Puzzle");
-        Score -= 25;
+        Score.Value -= 25;
     }
     private void Handle_PuzzleError()
     {
         Debug.Log("Errored Puzzle");
-        Score -= 10;
+        Score.Value -= 10;
     }
     public void StartNewPuzzle()
     {
@@ -92,4 +106,16 @@ public class ArcadeUnit : NetworkBehaviour
         ActiveModule.StartPuzzleModule();
     }
     #endregion
+
+    
+    IEnumerator ArcadeTimer(float GameTime)
+    {
+        while (GameTime > 0) 
+        {
+            yield return new WaitForSecondsRealtime(1);
+            GameTime --;
+            Debug.Log($"{GameTime}");
+        }
+
+    }
 }
