@@ -8,4 +8,5 @@ public class Configuration : NetworkBehaviour
     public event Action OnConfigurationSabotaged;
 
     private NetworkVariable<bool> IsCompleted = new NetworkVariable<bool>(false);
+    virtual public void StartModule() { }
 }

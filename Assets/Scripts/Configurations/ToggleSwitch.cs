@@ -11,12 +11,11 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
     [SerializeField] private MeshRenderer Light;
 
     //True = Up | False = Down;
-    [SerializeField] private NetworkVariable<bool> b_CurrentPosition = new NetworkVariable<bool>(
+    private NetworkVariable<bool> b_CurrentPosition = new NetworkVariable<bool>(
         value: false,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
-    [SerializeField]
     private NetworkVariable<bool> b_CorrectPosition = new NetworkVariable<bool>(
         value: false,
         NetworkVariableReadPermission.Everyone,
@@ -53,7 +52,7 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
 
     public bool OnClick()
     {
-        if (!IsOwner) { return false; }
+        if (!IsOwner) { return true; }
         b_CurrentPosition.Value = !b_CurrentPosition.Value;
         return true;
     }

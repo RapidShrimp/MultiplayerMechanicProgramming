@@ -11,8 +11,9 @@ public class SwitchConfiguration : Configuration
         Switches = GetComponentsInChildren<ToggleSwitch>();
     }
 
-    public void StartModule()
+    override public void StartModule()
     {
+        if (!IsOwner) { return; }
         foreach (ToggleSwitch sw in Switches)
         {
             bool SwitchActive = Random.Range(0, 2) == 1 ? true : false;
@@ -23,6 +24,10 @@ public class SwitchConfiguration : Configuration
         }
     }
 
+    public override void OnNetworkSpawn()
+    {
+
+    }
     /*
  * If an active switch comes through checks will be completed to see if the configuration 
  * module is active, if the configuration completion is correct a delegate will be fired.

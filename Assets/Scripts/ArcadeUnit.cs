@@ -7,7 +7,7 @@ public class ArcadeUnit : NetworkBehaviour
 {
     private PuzzleModule[] Puzzles;
     private PuzzleModule ActiveModule = null;
-    private Configuration[] Configurations;
+    [SerializeField] private Configuration[] Configurations;
 
     
 
@@ -34,7 +34,11 @@ public class ArcadeUnit : NetworkBehaviour
         MaxHealth = 100;// Settings.DefaultHealth;
         Health = MaxHealth;
         Time = 120; // Settings.GameTime; // Change this later
-
+        if(!IsOwner) {return;}
+        foreach (Configuration config in Configurations)
+        {
+            //config.StartModule();
+        }
     }
 
     #region Configurations
