@@ -1,7 +1,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-public class SwitchConfiguration : MonoBehaviour
+public class SwitchConfiguration : Configuration
 {
 
     [SerializeField] protected ToggleSwitch[] Switches;

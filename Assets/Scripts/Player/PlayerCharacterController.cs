@@ -63,7 +63,6 @@ public class PlayerCharacterController : NetworkBehaviour
     public void Handle_OnGameReady()
     {
         if (!IsOwner) { return; }
-        Debug.Log("Owned Start");
         PlayerInput.Enable();
         if (Camera.main) { Camera.main.enabled = false; }
         PlayerCam = GetComponentInChildren<Camera>();
@@ -96,33 +95,28 @@ public class PlayerCharacterController : NetworkBehaviour
     {
         GameObject tmp = GetObjectUnderMouse();
         if (tmp == null) { yield break; }
-        Debug.Log($"{tmp.name}");
         IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
         if (Interaction == null) { yield break; }
-        Debug.Log($"Here");
 
         if (Interaction != null)
         {
             if (Interaction.OnClick()) 
             {
-                Debug.Log("Do Click Event");
                 yield break;
             };
-
         }
         else
         {
-            yield break;
-        }
-        while (true) 
-        {
-            if (GetObjectUnderMouse())
+            while (true) 
             {
-                Debug.Log("Do Drag Event");
+                if (GetObjectUnderMouse())
+                {
+                    Debug.Log("Do Drag Event");
+                }
+                yield return new WaitForFixedUpdate();
             }
-            yield return new WaitForFixedUpdate();
-        
         }
+        yield break;
     }
 
     protected GameObject GetObjectUnderMouse()

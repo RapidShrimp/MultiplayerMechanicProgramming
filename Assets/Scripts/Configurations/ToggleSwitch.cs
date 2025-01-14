@@ -3,7 +3,7 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class ToggleSwitch : Configuration, IInteractable
+public class ToggleSwitch : NetworkBehaviour , IInteractable
 {
     public event Action<bool> OnToggle;
 
@@ -11,44 +11,50 @@ public class ToggleSwitch : Configuration, IInteractable
     [SerializeField] private MeshRenderer Light;
 
     //True = Up | False = Down;
-    NetworkVariable<bool> b_CurrentPosition = new NetworkVariable<bool>(
-        value: false,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
-    
-    NetworkVariable<bool> b_CorrectPosition = new NetworkVariable<bool>(
+    [SerializeField] private NetworkVariable<bool> b_CurrentPosition = new NetworkVariable<bool>(
         value: false,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
+    [SerializeField]
+    private NetworkVariable<bool> b_CorrectPosition = new NetworkVariable<bool>(
+        value: false,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner);
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        b_CurrentPosition.OnValueChanged += OnPositionChange;
+        b_CorrectPosition.OnValueChanged += OnPositionChange;
+        OnPositionChange(false,false);
+
+    }
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        b_CurrentPosition.OnValueChanged -= OnPositionChange;
+        b_CorrectPosition.OnValueChanged -= OnPositionChange;
+    }
     public void SetCorrectPosition(bool correctPosition)
     {
         if (!IsOwner) { return; }
         b_CorrectPosition.Value = correctPosition;
-        OnPositionChange_Rpc(b_CurrentPosition.Value);
     }
 
-
-    [Rpc(SendTo.Everyone)]
-    void OnPositionChange_Rpc(bool newPosition)
+    void OnPositionChange(bool old, bool newval)
     {
-        if (IsOwner)
-        {
-            b_CurrentPosition.Value = newPosition;
-            Debug.Log(b_CurrentPosition.Value);
-        }
-        bool IsCorrect = b_CorrectPosition == b_CurrentPosition ? true : false;
-
-        Switch.transform.localEulerAngles = IsCorrect ? new Vector3(40,0,0) : new Vector3(-40,0,0);
         //Toggle State
+        bool IsCorrect = b_CorrectPosition.Value == b_CurrentPosition.Value ? true : false;
         Light.materials[0].color = IsCorrect ? Color.green : Color.red;
+        Switch.transform.localEulerAngles = IsCorrect ? new Vector3(40,0,0) : new Vector3(-40,0,0);
         OnToggle?.Invoke(IsCorrect);
     }
 
     public bool OnClick()
     {
-        OnPositionChange_Rpc(!b_CurrentPosition.Value);
+        if (!IsOwner) { return false; }
+        b_CurrentPosition.Value = !b_CurrentPosition.Value;
         return true;
     }
 
