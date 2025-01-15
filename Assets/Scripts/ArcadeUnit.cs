@@ -8,6 +8,8 @@ public class ArcadeUnit : NetworkBehaviour
     private PuzzleModule ActiveModule = null;
     [SerializeField] private Configuration[] Configurations;
 
+    Coroutine CR_GameTimer;
+
     private int MaxHealth = 100;
     private NetworkVariable<int> GameTimeRemaining = new NetworkVariable<int>(
         value: 0,
@@ -52,7 +54,9 @@ public class ArcadeUnit : NetworkBehaviour
     }
     public void StartGame()
     {
-        StartCoroutine(ArcadeTimer(GameTimeRemaining.Value));
+        if (!IsOwner) { return; }
+        Debug.Log("Started");
+        CR_GameTimer = StartCoroutine(ArcadeTimer());
     }
     
     #region Configurations
@@ -81,7 +85,6 @@ public class ArcadeUnit : NetworkBehaviour
     {
         Debug.Log("Completed Puzzle");
         Score.Value += 150;
-
     }
     private void Handle_PuzzleFail(float PunishmentTime)
     {
@@ -108,13 +111,12 @@ public class ArcadeUnit : NetworkBehaviour
     #endregion
 
     
-    IEnumerator ArcadeTimer(float GameTime)
+    IEnumerator ArcadeTimer()
     {
-        while (GameTime > 0) 
+        while (GameTimeRemaining.Value > 0) 
         {
             yield return new WaitForSecondsRealtime(1);
-            GameTime --;
-            Debug.Log($"{GameTime}");
+            GameTimeRemaining.Value --;
         }
 
     }

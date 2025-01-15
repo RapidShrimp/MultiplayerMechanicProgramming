@@ -33,13 +33,14 @@ public class SwitchConfiguration : Configuration
         if (IsActive)
         {
             ActiveSwitches++;
-            if (ActiveSwitches != Switches.Length) {return;}
-            //TODO - Handle Configuration Completion
-
+            if (ActiveSwitches != Switches.Length || !IsOwner)  { return; }
+            IsCompleted.Value = true;
         }
         else
         {
             ActiveSwitches--;
+            if (!IsOwner) { return;}
+            IsCompleted.Value = false;
         }
     }
 }

@@ -63,7 +63,6 @@ public class PlayerCharacterController : NetworkBehaviour
     public void Handle_OnGameReady()
     {
         if (!IsOwner) { return; }
-        PlayerInput.Enable();
         m_ArcadeUnit.ReadyGame();
         if (Camera.main) { Camera.main.enabled = false; }
         PlayerCam = GetComponentInChildren<Camera>();
@@ -73,6 +72,7 @@ public class PlayerCharacterController : NetworkBehaviour
     private void Handle_OnStartGame()
     {
         if(!IsOwner) { return; }   
+        PlayerInput.Enable();
         m_ArcadeUnit.StartGame();
     }
 
@@ -122,7 +122,7 @@ public class PlayerCharacterController : NetworkBehaviour
     protected GameObject GetObjectUnderMouse()
     {
         Vector3 Mouse2World = Mouse.current.position.ReadValue();
-        Mouse2World.z = 100;
+        Mouse2World.z = 200;
         //Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World));
         Ray ray = new Ray();
         ray.origin = PlayerCam.transform.position;

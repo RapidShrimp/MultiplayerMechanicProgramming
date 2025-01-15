@@ -42,7 +42,7 @@ public class GameManager : NetworkBehaviour
                 OnReadyGame?.Invoke();
             }
 
-            if (!IsServer ) { return; }
+            if (!IsServer || NetworkManager.Singleton.LocalClientId != a) { return; }
             StartCoroutine(StartGameCountdown(3));
         };
         
@@ -55,7 +55,7 @@ public class GameManager : NetworkBehaviour
         if (IsServer)
         {
 
-            UIMenu.OnStartGame += TransitionLevel_Rpc;
+            UIMenu.OnStartGame += TransitionLevel;
             NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
             {
                 PlayerCount.Value++;
@@ -87,7 +87,7 @@ public class GameManager : NetworkBehaviour
         //Call to the arcade unit to update looks - Scope Creep Here :Skull:
     }
 
-    public void TransitionLevel_Rpc()
+    public void TransitionLevel()
     {
         if (!IsServer) { return; }
         NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
@@ -108,7 +108,6 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void StartGame_Rpc()
     {
-        Debug.Log("Readied");
         OnStartGame?.Invoke();
     }
     

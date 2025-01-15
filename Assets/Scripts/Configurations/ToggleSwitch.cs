@@ -35,6 +35,14 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
         b_CurrentPosition.OnValueChanged -= OnPositionChange;
         b_CorrectPosition.OnValueChanged -= OnPositionChange;
     }
+
+    [Rpc(SendTo.Owner)]
+    private void ChangePosition_Rpc()
+    {
+        if (!IsServer) { return; }
+        b_CurrentPosition.Value = !b_CurrentPosition.Value;
+    }
+
     public void SetCorrectPosition(bool correctPosition)
     {
         if (!IsOwner) { return; }
@@ -52,8 +60,7 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
 
     public bool OnClick()
     {
-        if (!IsOwner) { return true; }
-        b_CurrentPosition.Value = !b_CurrentPosition.Value;
+        ChangePosition_Rpc();
         return true;
     }
 
