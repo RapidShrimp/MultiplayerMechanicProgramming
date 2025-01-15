@@ -45,6 +45,7 @@ public class DialConfiguration : Configuration, IInteractable
     [Rpc(SendTo.Owner)]
     private void ChangeDialPosition_Rpc(int NewPosition)
     {
+        Debug.Log("Recieved");
         DialPosition.Value = NewPosition;
         if (DialPosition.Value == CorrectPosition.Value) 
         {
@@ -62,6 +63,7 @@ public class DialConfiguration : Configuration, IInteractable
 
     public bool OnClick()
     {
+        Debug.Log($"Clicked Dial Owns:{IsOwner}");
         int DialIncrement;
         if (IsOwner)
         {
@@ -70,8 +72,10 @@ public class DialConfiguration : Configuration, IInteractable
         }
         else
         {
-            do {DialIncrement = Random.Range(0, 4);} 
-            while (DialIncrement != DialPosition.Value);
+            do {DialIncrement = Random.Range(0, 4);
+                Debug.Log(DialIncrement);
+            } 
+            while (DialIncrement == DialPosition.Value);
             ChangeDialPosition_Rpc(DialIncrement);
         }
         return true;
