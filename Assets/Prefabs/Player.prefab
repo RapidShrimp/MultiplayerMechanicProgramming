@@ -186,6 +186,8 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   IsCompleted:
     m_InternalValue: 0
+  DialPosition:
+    m_InternalValue: 0
   DialMesh: {fileID: 3299897976309059807}
 --- !u!135 &1674802381340054977
 SphereCollider:
@@ -1855,6 +1857,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7006648259233591107}
+  - component: {fileID: 4564704646793052729}
   - component: {fileID: 2944145880362513274}
   - component: {fileID: 5781904913464397457}
   - component: {fileID: 6274789708336835366}
@@ -1881,6 +1884,24 @@ Transform:
   - {fileID: 7557157304529134604}
   m_Father: {fileID: 7965101962450438650}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!114 &4564704646793052729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511604673374253695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5151012b1db464c9535861b6d2140d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  IsCompleted:
+    m_InternalValue: 0
+  DesiredXPos:
+    m_InternalValue: 0
+  SliderMesh: {fileID: 0}
 --- !u!33 &2944145880362513274
 MeshFilter:
   m_ObjectHideFlags: 0

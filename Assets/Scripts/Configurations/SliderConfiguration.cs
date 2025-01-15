@@ -4,81 +4,59 @@ using UnityEngine;
 
 public class SliderConfiguration : Configuration, IInteractable
 {
-    [SerializeField] NetworkVariable<int> DialPosition = new NetworkVariable<int>(
+    [SerializeField] NetworkVariable<int> DesiredXPos= new NetworkVariable<int>(
         value:0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
     
-    NetworkVariable<int> CorrectPosition = new NetworkVariable<int>(
-        value: 0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
+    [SerializeField] NetworkVariable<int> SliderXPos = new NetworkVariable<int>(
+     value: 0,
+     NetworkVariableReadPermission.Everyone,
+     NetworkVariableWritePermission.Owner);
 
-    [SerializeField] GameObject DialMesh;
+    int SliderMax = 10;
+    [SerializeField] GameObject SliderMesh;
+    [SerializeField] GameObject SliderDesired;
 
     public override void OnNetworkSpawn()
     {
-        DialPosition.OnValueChanged += OnDialTurned;
-        CorrectPosition.OnValueChanged += OnDialTurned;
+        DesiredXPos.OnValueChanged += SetCorrectSliderPos_Rpc;
     }
     public override void OnNetworkDespawn()
     {
-        DialPosition.OnValueChanged -= OnDialTurned;
-        CorrectPosition.OnValueChanged -= OnDialTurned;
+        DesiredXPos.OnValueChanged -= SetCorrectSliderPos_Rpc;
     }
+
     override public void StartModule()
     {
         if (IsOwner)
         {
-            ChangeDialPosition_Rpc(Random.Range(0, 4));
+            DesiredXPos.Value = Random.Range(0, SliderMax + 1);
         }
     }
 
 
     [Rpc(SendTo.Owner)]
-    private void SetCorrectDialPosition_Rpc(int NewPosition)
+    private void SetCorrectSliderPos_Rpc(int OldPosition ,int NewPosition)
     {
-        Mathf.Clamp(NewPosition, 0, 3);
-        CorrectPosition.Value = NewPosition;
+        DesiredXPos.Value = NewPosition;
+        
     }
 
     [Rpc(SendTo.Owner)]
-    private void ChangeDialPosition_Rpc(int NewPosition)
+    private void ChangeSliderPosition_Rpc(int NewPosition)
     {
-        DialPosition.Value = NewPosition;
-        if (DialPosition.Value == CorrectPosition.Value) 
-        {
-            IsCompleted.Value = true;
-            return;
-        }
-        IsCompleted.Value = false;
-    }
 
-    private void OnDialTurned(int OldValue, int NewValue)
-    {
-        if(!IsOwner) { return;}
-        DialMesh.transform.rotation = Quaternion.Euler(0, 0, 90 * NewValue);
     }
 
     public bool OnClick()
     {
-        int DialIncrement;
-        if (IsOwner)
-        {
-            DialIncrement = DialPosition.Value == 3 ? 0 : DialPosition.Value+1;
-            ChangeDialPosition_Rpc(DialIncrement);
-        }
-        else
-        {
-            do {DialIncrement = Random.Range(0, 4);} 
-            while (DialIncrement != DialPosition.Value);
-            ChangeDialPosition_Rpc(DialIncrement);
-        }
-        return true;
+        return false;
     }
 
     public void OnDrag()
     {
-        //Do Nothing :)
+        Debug.Log("Drag Logic");
+        //Do Something :)
     }
 }

@@ -98,26 +98,17 @@ public class PlayerCharacterController : NetworkBehaviour
         IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
         if (Interaction == null) { yield break; }
 
-        if (Interaction != null)
+
+        if (Interaction.OnClick()) 
         {
-            if (Interaction.OnClick()) 
-            {
-                //Debug.Log("Click");
-                yield break;
-            };
-        }
-        else
+            yield break;
+        };
+    
+        while (PlayerInput.Player.MouseLClick.IsInProgress()) 
         {
-            while (true) 
-            {
-                if (GetObjectUnderMouse())
-                {
-                    //Debug.Log("Do Drag Event");
-                }
-                yield return new WaitForFixedUpdate();
-            }
+            Interaction.OnDrag();
+            yield return new WaitForFixedUpdate();
         }
-        yield break;
     }
 
     protected GameObject GetObjectUnderMouse()
