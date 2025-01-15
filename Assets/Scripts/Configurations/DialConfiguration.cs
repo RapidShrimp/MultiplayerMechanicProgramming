@@ -40,7 +40,6 @@ public class DialConfiguration : Configuration, IInteractable
 
     public bool OnClick()
     {
-        Debug.Log("CLikc");
         ChangeDialPosition_Rpc();
         return true;
     }

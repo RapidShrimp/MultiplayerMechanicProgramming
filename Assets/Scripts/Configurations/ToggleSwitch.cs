@@ -39,7 +39,7 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
     [Rpc(SendTo.Owner)]
     private void ChangePosition_Rpc()
     {
-        if (!IsServer) { return; }
+        Debug.Log("Change Switch");
         b_CurrentPosition.Value = !b_CurrentPosition.Value;
     }
 

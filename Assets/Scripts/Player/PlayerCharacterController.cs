@@ -102,6 +102,7 @@ public class PlayerCharacterController : NetworkBehaviour
         {
             if (Interaction.OnClick()) 
             {
+                Debug.Log("Click");
                 yield break;
             };
         }
