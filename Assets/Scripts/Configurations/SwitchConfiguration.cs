@@ -19,7 +19,7 @@ public class SwitchConfiguration : Configuration
             bool SwitchActive = Random.Range(0, 2) == 1 ? true : false;
             if (SwitchActive == false) { ActiveSwitches++; }
 
-            sw.SetCorrectPosition(SwitchActive);
+            sw.SetCorrectPosition_Rpc(SwitchActive);
             sw.OnToggle += OnSwitchToggled;
         }
     }

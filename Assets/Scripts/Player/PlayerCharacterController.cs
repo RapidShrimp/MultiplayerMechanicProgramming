@@ -102,7 +102,7 @@ public class PlayerCharacterController : NetworkBehaviour
         {
             if (Interaction.OnClick()) 
             {
-                Debug.Log("Click");
+                //Debug.Log("Click");
                 yield break;
             };
         }
@@ -112,7 +112,7 @@ public class PlayerCharacterController : NetworkBehaviour
             {
                 if (GetObjectUnderMouse())
                 {
-                    Debug.Log("Do Drag Event");
+                    //Debug.Log("Do Drag Event");
                 }
                 yield return new WaitForFixedUpdate();
             }
