@@ -81,8 +81,9 @@ public class DialConfiguration : Configuration, IInteractable
         return true;
     }
 
-    public void OnDrag()
+    public bool OnDrag(Vector3 WorldPos)
     {
         //Do Nothing :)
+        return false;
     }
 }

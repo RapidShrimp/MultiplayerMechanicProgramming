@@ -26,18 +26,18 @@ public class PlayerCharacterController : NetworkBehaviour
         //Bind Player Events
         PlayerInput.Player.Move.performed += Handle_PlayerMove;
         PlayerInput.Player.MouseLClick.started += Handle_PlayerClick;
-        PlayerInput.Player.MouseLClick.canceled+= Handle_PlayerClick;
+        PlayerInput.Player.MouseLClick.canceled += Handle_PlayerClick;
 
     }
 
     private void Handle_PlayerClick(InputAction.CallbackContext context)
     {
-        if(!IsOwner) { return; }
+        if (!IsOwner) { return; }
 
         // Hold Functionality
-        if (context.started) 
-        { 
-            if (CR_MouseDetection == null) 
+        if (context.started)
+        {
+            if (CR_MouseDetection == null)
             {
                 CR_MouseDetection = StartCoroutine(Handle_MouseDown());
             }
@@ -45,7 +45,7 @@ public class PlayerCharacterController : NetworkBehaviour
         }
         else
         {
-            if (CR_MouseDetection!=null)
+            if (CR_MouseDetection != null)
             {
                 StopCoroutine(CR_MouseDetection);
                 CR_MouseDetection = null;
@@ -71,7 +71,7 @@ public class PlayerCharacterController : NetworkBehaviour
     }
     private void Handle_OnStartGame()
     {
-        if(!IsOwner) { return; }   
+        if (!IsOwner) { return; }
         PlayerInput.Enable();
         m_ArcadeUnit.StartGame();
     }
@@ -79,11 +79,11 @@ public class PlayerCharacterController : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
-        if(!IsOwner) { return; }
+        if (!IsOwner) { return; }
         //Unbind Player Events
         GameManager.OnReadyGame -= Handle_OnGameReady;
         GameManager.OnStartGame -= Handle_OnStartGame;
-        
+
         PlayerInput.Disable();
         PlayerInput.Player.Move.performed -= Handle_PlayerMove;
         PlayerInput.Player.MouseLClick.started -= Handle_PlayerClick;
@@ -93,39 +93,48 @@ public class PlayerCharacterController : NetworkBehaviour
 
     IEnumerator Handle_MouseDown()
     {
-        GameObject tmp = GetObjectUnderMouse();
+        RaycastHit Hit;
+        if(!GetHitUnderMouse(PlayerCam,out Hit, "MouseInteractable")) { yield break; }
+        GameObject tmp = Hit.collider.gameObject;
         if (tmp == null) { yield break; }
         IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
         if (Interaction == null) { yield break; }
 
 
-        if (Interaction.OnClick()) 
+        if (Interaction.OnClick())
         {
             yield break;
         };
-    
-        while (PlayerInput.Player.MouseLClick.IsInProgress()) 
+
+        while (PlayerInput.Player.MouseLClick.IsInProgress())
         {
-            Interaction.OnDrag();
-            yield return new WaitForFixedUpdate();
+            GetHitUnderMouse(PlayerCam, out Hit, "Default");
+            
+            if (Interaction.OnDrag(Hit.point))
+            {
+                yield return new WaitForSeconds(0.1f);
+            }
+            else
+            {
+                yield break;
+            }
         }
     }
 
-    protected GameObject GetObjectUnderMouse()
+    protected bool GetHitUnderMouse(Camera PlayerCamera, out RaycastHit HitResult, String LayerName)
     {
         Vector3 Mouse2World = Mouse.current.position.ReadValue();
-        Mouse2World.z = 200;
-        //Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World));
+        LayerMask LayerMaskID = LayerMask.NameToLayer(LayerName);
         Ray ray = new Ray();
-        ray.origin = PlayerCam.transform.position;
-        ray.direction = PlayerCam.ScreenToWorldPoint(Mouse2World);
+        Mouse2World.z = PlayerCamera.farClipPlane;
+        ray.origin = PlayerCamera.transform.position;
+        ray.direction = PlayerCamera.ScreenToWorldPoint(Mouse2World);
         Debug.DrawRay(ray.origin, ray.direction, Color.red, 0.5f);
-        bool RayHit = Physics.Raycast(ray, out RaycastHit HitInfo, float.MaxValue, LayerMask.NameToLayer("MouseInteractable"));
-        if (RayHit) 
-        {
-            return HitInfo.collider.gameObject;
-        }
+        Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World));
+        bool RayHit = Physics.Raycast(ray, out HitResult, float.MaxValue, LayerMaskID);
+        Debug.Log($"Did Ray Hit? { RayHit } mask name {LayerMaskID.value}");
+        return RayHit;
+    } 
 
-        return null;
-    }
 }
+

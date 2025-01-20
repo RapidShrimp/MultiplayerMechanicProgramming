@@ -14,17 +14,24 @@ public class SliderConfiguration : Configuration, IInteractable
      NetworkVariableReadPermission.Everyone,
      NetworkVariableWritePermission.Owner);
 
-    int SliderMax = 10;
+    [SerializeField] int SliderMax = 10;
+    [SerializeField] float Step = 0.075f;
     [SerializeField] GameObject SliderMesh;
-    [SerializeField] GameObject SliderDesired;
+    [SerializeField] GameObject CorrectLocMesh;
+    MeshRenderer CorrectLocRenderer;
 
     public override void OnNetworkSpawn()
     {
         DesiredXPos.OnValueChanged += SetCorrectSliderPos_Rpc;
+        SliderXPos.OnValueChanged += OnSliderChange;
+        CorrectLocRenderer = CorrectLocMesh.GetComponentInChildren<MeshRenderer>();
+
     }
     public override void OnNetworkDespawn()
     {
         DesiredXPos.OnValueChanged -= SetCorrectSliderPos_Rpc;
+        SliderXPos.OnValueChanged -= OnSliderChange;
+
     }
 
     override public void StartModule()
@@ -40,13 +47,30 @@ public class SliderConfiguration : Configuration, IInteractable
     private void SetCorrectSliderPos_Rpc(int OldPosition ,int NewPosition)
     {
         DesiredXPos.Value = NewPosition;
-        
+        CorrectLocMesh.transform.localPosition = new Vector3(NewPosition * Step, 0);
+        ChangeSliderPosition_Rpc(SliderXPos.Value);
     }
 
-    [Rpc(SendTo.Owner)]
+    [Rpc(SendTo.Everyone)]
     private void ChangeSliderPosition_Rpc(int NewPosition)
     {
 
+        CorrectLocRenderer.materials[0].color = NewPosition != DesiredXPos.Value ? Color.red : Color.green;
+
+        if (IsOwner)
+        {
+            SliderXPos.Value = NewPosition;
+        }
+        
+    }
+
+    private void OnSliderChange(int OldPosition ,int NewPosition)
+    {
+        if(!IsOwner) {return;}
+        SliderMesh.transform.localPosition = new Vector3(NewPosition*Step,0) ;
+        if(NewPosition == DesiredXPos.Value)
+        {
+        }
     }
 
     public bool OnClick()
@@ -54,9 +78,14 @@ public class SliderConfiguration : Configuration, IInteractable
         return false;
     }
 
-    public void OnDrag()
+    public bool OnDrag(Vector3 WorldPos)
     {
-        Debug.Log("Drag Logic");
+
+        int SliderMove = 1;
+        //Calculate Mouse Difference
+        Debug.Log(SliderMesh.transform.position - WorldPos);
+        ChangeSliderPosition_Rpc(Mathf.Clamp(SliderXPos.Value + SliderMove, 0, SliderMax));
         //Do Something :)
+        return true;
     }
 }

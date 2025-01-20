@@ -63,8 +63,8 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
         return true;
     }
 
-    public void OnDrag()
+    public bool OnDrag(Vector3 WorldPos)
     {
-        
+        return false;
     }
 }
