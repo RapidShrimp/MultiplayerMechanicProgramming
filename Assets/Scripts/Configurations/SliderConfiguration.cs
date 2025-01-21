@@ -20,7 +20,11 @@ public class SliderConfiguration : Configuration, IInteractable
     [SerializeField] GameObject SliderMesh;
     [SerializeField] GameObject CorrectLocMesh;
     MeshRenderer CorrectLocRenderer;
-    float DistanceTolerance = 0.1f;
+    float DistanceTolerance = 0.025f;
+
+
+    Vector3 DebugWorldPos = Vector3.one;
+
     public override void OnNetworkSpawn()
     {
         DesiredXPos.OnValueChanged += SetCorrectSliderPos_Rpc;
@@ -71,6 +75,11 @@ public class SliderConfiguration : Configuration, IInteractable
         SliderMesh.transform.localPosition = new Vector3(NewPosition*Step,0) ;
         if(NewPosition == DesiredXPos.Value)
         {
+            IsCompleted.Value = true;
+        }
+        else
+        {
+            IsCompleted.Value = false;
         }
     }
 
@@ -81,7 +90,8 @@ public class SliderConfiguration : Configuration, IInteractable
 
     public bool OnDrag(Vector3 WorldPos)
     {
-        float XDiff = (SliderMesh.transform.position - WorldPos).x;
+        float XDiff = (SliderMesh.transform.position - WorldPos).x + 0.5f;
+        DebugWorldPos = WorldPos;
         if(Mathf.Abs(XDiff) < DistanceTolerance)
         {
             return true;
@@ -91,5 +101,10 @@ public class SliderConfiguration : Configuration, IInteractable
         ChangeSliderPosition_Rpc(Mathf.Clamp(SliderXPos.Value + SliderMove, 0, SliderMax));
         //Do Something :)
         return true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(DebugWorldPos,0.01f);
     }
 }
