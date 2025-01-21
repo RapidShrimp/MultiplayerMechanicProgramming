@@ -94,7 +94,7 @@ public class PlayerCharacterController : NetworkBehaviour
     IEnumerator Handle_MouseDown()
     {
         RaycastHit Hit;
-        if(!GetHitUnderMouse(PlayerCam,out Hit, "MouseInteractable")) { yield break; }
+        if(!GetHitUnderMouse(PlayerCam,out Hit)) { yield break; }
         GameObject tmp = Hit.collider.gameObject;
         if (tmp == null) { yield break; }
         IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
@@ -108,8 +108,7 @@ public class PlayerCharacterController : NetworkBehaviour
 
         while (PlayerInput.Player.MouseLClick.IsInProgress())
         {
-            GetHitUnderMouse(PlayerCam, out Hit, "Default");
-            
+            GetHitUnderMouse(PlayerCam, out Hit);
             if (Interaction.OnDrag(Hit.point))
             {
                 yield return new WaitForSeconds(0.1f);
@@ -121,18 +120,16 @@ public class PlayerCharacterController : NetworkBehaviour
         }
     }
 
-    protected bool GetHitUnderMouse(Camera PlayerCamera, out RaycastHit HitResult, String LayerName)
+    protected bool GetHitUnderMouse(Camera PlayerCamera, out RaycastHit HitResult)
     {
         Vector3 Mouse2World = Mouse.current.position.ReadValue();
-        LayerMask LayerMaskID = LayerMask.NameToLayer(LayerName);
         Ray ray = new Ray();
         Mouse2World.z = PlayerCamera.farClipPlane;
         ray.origin = PlayerCamera.transform.position;
         ray.direction = PlayerCamera.ScreenToWorldPoint(Mouse2World);
         Debug.DrawRay(ray.origin, ray.direction, Color.red, 0.5f);
-        Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World));
-        bool RayHit = Physics.Raycast(ray, out HitResult, float.MaxValue, LayerMaskID);
-        Debug.Log($"Did Ray Hit? { RayHit } mask name {LayerMaskID.value}");
+        Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World),Color.blue,0.5f);
+        bool RayHit = Physics.Raycast(ray, out HitResult, float.MaxValue);
         return RayHit;
     } 
 

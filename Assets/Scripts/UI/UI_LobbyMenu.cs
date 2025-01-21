@@ -12,7 +12,7 @@ public class UI_LobbyMenu : NetworkBehaviour
     [SerializeField] private Button m_StartButton;
     private TextMeshProUGUI StartButtonText;
     [SerializeField] private Animator Throbber;
-    
+
 
 
 
@@ -31,6 +31,8 @@ public class UI_LobbyMenu : NetworkBehaviour
             {
                 OnStartGame?.Invoke();
             });
+
+
         }
 
     }

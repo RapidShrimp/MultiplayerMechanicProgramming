@@ -45,7 +45,6 @@ public class DialConfiguration : Configuration, IInteractable
     [Rpc(SendTo.Owner)]
     private void ChangeDialPosition_Rpc(int NewPosition)
     {
-        Debug.Log("Recieved");
         DialPosition.Value = NewPosition;
         if (DialPosition.Value == CorrectPosition.Value) 
         {

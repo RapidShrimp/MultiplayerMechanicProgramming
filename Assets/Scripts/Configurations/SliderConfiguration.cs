@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SliderConfiguration : Configuration, IInteractable
@@ -14,12 +15,12 @@ public class SliderConfiguration : Configuration, IInteractable
      NetworkVariableReadPermission.Everyone,
      NetworkVariableWritePermission.Owner);
 
-    [SerializeField] int SliderMax = 10;
+    [SerializeField] int SliderMax = 9;
     [SerializeField] float Step = 0.075f;
     [SerializeField] GameObject SliderMesh;
     [SerializeField] GameObject CorrectLocMesh;
     MeshRenderer CorrectLocRenderer;
-
+    float DistanceTolerance = 0.02f;
     public override void OnNetworkSpawn()
     {
         DesiredXPos.OnValueChanged += SetCorrectSliderPos_Rpc;
@@ -80,10 +81,13 @@ public class SliderConfiguration : Configuration, IInteractable
 
     public bool OnDrag(Vector3 WorldPos)
     {
-
-        int SliderMove = 1;
-        //Calculate Mouse Difference
-        Debug.Log(SliderMesh.transform.position - WorldPos);
+        float XDiff = (SliderMesh.transform.position - WorldPos).x;
+        if(Mathf.Abs(XDiff) < DistanceTolerance)
+        {
+            return true;
+        }
+        
+        int SliderMove = XDiff < 0 ? 1 : -1;
         ChangeSliderPosition_Rpc(Mathf.Clamp(SliderXPos.Value + SliderMove, 0, SliderMax));
         //Do Something :)
         return true;

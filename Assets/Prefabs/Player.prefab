@@ -1957,7 +1957,7 @@ MonoBehaviour:
     m_InternalValue: 0
   SliderXPos:
     m_InternalValue: 0
-  SliderMax: 10
+  SliderMax: 8
   Step: 0.1
   SliderMesh: {fileID: 5511604673374253695}
   CorrectLocMesh: {fileID: 885685135243757618}
