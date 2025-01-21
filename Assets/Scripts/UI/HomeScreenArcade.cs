@@ -8,6 +8,7 @@ public class HomeScreenArcade : NetworkBehaviour
     private void OnEnable()
     {
         GameManager.OnPlayerCountUpdated += GameManager_OnPlayerCountUpdated;
+        GameManager_OnPlayerCountUpdated(0);
     }
 
     private void GameManager_OnPlayerCountUpdated(int NewValue)
@@ -17,11 +18,11 @@ public class HomeScreenArcade : NetworkBehaviour
             if(i >= NewValue)
             {
                 if (MenuArcadeUnits[i].materials[0].color == Color.white) { continue; }
-                MenuArcadeUnits[i].materials[2].color = Color.black;
+                MenuArcadeUnits[i].materials[0].color = Color.black;
             }
             else
             {
-                MenuArcadeUnits[i].materials[2].color = Color.white;   
+                MenuArcadeUnits[i].materials[0].color = Color.white;   
             }
         }
     }

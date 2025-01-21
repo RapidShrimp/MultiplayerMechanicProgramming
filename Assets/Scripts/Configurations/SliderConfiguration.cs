@@ -16,11 +16,11 @@ public class SliderConfiguration : Configuration, IInteractable
      NetworkVariableWritePermission.Owner);
 
     [SerializeField] int SliderMax = 9;
-    [SerializeField] float Step = 0.075f;
+    [SerializeField] float Step = 0.025f;
     [SerializeField] GameObject SliderMesh;
     [SerializeField] GameObject CorrectLocMesh;
     MeshRenderer CorrectLocRenderer;
-    float DistanceTolerance = 0.02f;
+    float DistanceTolerance = 0.1f;
     public override void OnNetworkSpawn()
     {
         DesiredXPos.OnValueChanged += SetCorrectSliderPos_Rpc;
