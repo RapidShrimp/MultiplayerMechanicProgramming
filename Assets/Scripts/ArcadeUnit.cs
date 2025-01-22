@@ -9,6 +9,7 @@ public class ArcadeUnit : NetworkBehaviour
     [SerializeField] private Configuration[] Configurations;
 
     Coroutine CR_GameTimer;
+    [SerializeField] GameObject JoystickPivot;
 
     private int MaxHealth = 100;
     private NetworkVariable<int> GameTimeRemaining = new NetworkVariable<int>(
@@ -110,7 +111,10 @@ public class ArcadeUnit : NetworkBehaviour
     }
     #endregion
 
-    
+    public void SetDesiredJoystickPosition(Vector2 joystickPosition)
+    {
+        JoystickPivot.transform.localRotation = Quaternion.Euler(joystickPosition.y*45,0,joystickPosition.x*-45);
+    }
     IEnumerator ArcadeTimer()
     {
         while (GameTimeRemaining.Value > 0) 

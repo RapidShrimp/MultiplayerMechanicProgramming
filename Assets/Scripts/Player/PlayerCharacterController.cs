@@ -12,6 +12,7 @@ public class PlayerCharacterController : NetworkBehaviour
     ArcadeUnit m_ArcadeUnit;
 
     Coroutine CR_MouseDetection;
+    Coroutine CR_MoveAction;
 
     public override void OnNetworkSpawn()
     {
@@ -25,6 +26,7 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput = new PlayerInputActions();
         //Bind Player Events
         PlayerInput.Player.Move.performed += Handle_PlayerMove;
+        PlayerInput.Player.Move.canceled += Handle_PlayerMove;
         PlayerInput.Player.MouseLClick.started += Handle_PlayerClick;
         PlayerInput.Player.MouseLClick.canceled += Handle_PlayerClick;
 
@@ -58,7 +60,17 @@ public class PlayerCharacterController : NetworkBehaviour
     {
         if (!IsOwner) { return; }
 
+        if (context.performed)
+        {
+            m_ArcadeUnit.SetDesiredJoystickPosition(PlayerInput.Player.Move.ReadValue<Vector2>());
+        }
+        else if (context.canceled)
+        {
+            m_ArcadeUnit.SetDesiredJoystickPosition(Vector2.zero);
+
+        }
     }
+
 
     public void Handle_OnGameReady()
     {
@@ -86,6 +98,7 @@ public class PlayerCharacterController : NetworkBehaviour
 
         PlayerInput.Disable();
         PlayerInput.Player.Move.performed -= Handle_PlayerMove;
+        PlayerInput.Player.Move.canceled -= Handle_PlayerMove;
         PlayerInput.Player.MouseLClick.started -= Handle_PlayerClick;
         PlayerInput.Player.MouseLClick.canceled -= Handle_PlayerClick;
 
@@ -131,7 +144,7 @@ public class PlayerCharacterController : NetworkBehaviour
         Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World),Color.blue,0.5f);
         bool RayHit = Physics.Raycast(ray, out HitResult, float.MaxValue);
         return RayHit;
-    } 
+    }
 
 }
 
