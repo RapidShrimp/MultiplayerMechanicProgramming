@@ -33,7 +33,6 @@ public class HandleConfiguration : Configuration, IInteractable
         Debug.Log("Here");
         if (IsOwner)
         {
-            
             HandleMesh.transform.position = new Vector3 (HandleMesh.transform.position.x,WorldPos.y, HandleMesh.transform.position.z);
         }
         //Do Something :)
