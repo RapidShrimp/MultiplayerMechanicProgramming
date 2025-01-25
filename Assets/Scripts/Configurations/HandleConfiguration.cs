@@ -28,10 +28,21 @@ public class HandleConfiguration : Configuration, IInteractable
             IsCompleted.Value = false;
         }
     }
+    [Rpc(SendTo.Owner)]
+    protected void SetModuleActive_Rpc()
+    {
+        if (!IsOwner) { return; }
+
+    }
 
     public bool OnClick()
     {
-        return false;
+        if (IsOwner) { return false; }
+        else
+        {
+            SetModuleActive_Rpc();
+            return true;       
+        }
     }
 
     public bool OnDrag(Vector3 WorldPos)
