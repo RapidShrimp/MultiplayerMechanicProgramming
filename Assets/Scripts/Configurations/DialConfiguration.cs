@@ -62,7 +62,6 @@ public class DialConfiguration : Configuration, IInteractable
 
     public bool OnClick()
     {
-        Debug.Log($"Clicked Dial Owns:{IsOwner}");
         int DialIncrement;
         if (IsOwner)
         {
