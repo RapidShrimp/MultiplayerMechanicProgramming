@@ -9,13 +9,12 @@ public class HandleConfiguration : Configuration, IInteractable
     [SerializeField] GameObject HandleMesh;
     float DistanceTolerance = 0.025f;
     float TopYPos;
-    float BottomYPos;
+    float LerpValue;
     Coroutine CR_DesiredRotation;
     Coroutine CR_ResetLever;
     public override void OnNetworkSpawn()
     {
         TopYPos = GetComponent<Collider>().transform.position.y;
-        BottomYPos = transform.position.y;
     }
     public override void OnNetworkDespawn()
     {
@@ -24,7 +23,10 @@ public class HandleConfiguration : Configuration, IInteractable
 
     override public void StartModule()
     {
-
+        if (IsOwner)
+        {
+            IsCompleted.Value = false;
+        }
     }
 
     public bool OnClick()
@@ -35,12 +37,12 @@ public class HandleConfiguration : Configuration, IInteractable
     public bool OnDrag(Vector3 WorldPos)
     {
 
-        if (IsOwner)
+        if (IsOwner && !IsCompleted.Value)
         {
-            float LerpValue = WorldPos.y - TopYPos;
-            if(CR_DesiredRotation == null)
-            {
-                CR_DesiredRotation = StartCoroutine(MoveTowardsDesiredLerp(LerpValue));
+            LerpValue = WorldPos.y - TopYPos;
+            if (CR_DesiredRotation == null) 
+            { 
+                CR_DesiredRotation = StartCoroutine(MoveTowardsDesiredLerp());
             }
 
             if(CR_ResetLever != null)
@@ -49,19 +51,24 @@ public class HandleConfiguration : Configuration, IInteractable
                 CR_ResetLever = null;
             }
             CR_ResetLever = StartCoroutine(ResetPosition(true));
-            bool Bottom = LerpValue < 0;
-            return !Bottom; 
+            return true; 
         }
         else
         {
             return false;
         }
     }
-    IEnumerator MoveTowardsDesiredLerp(float LerpValue)
+    IEnumerator MoveTowardsDesiredLerp()
     {
-        float Rotation = Mathf.Lerp(-90, 0, LerpValue);
         while(true) 
         { 
+            Debug.Log($"Rotation {transform.rotation.eulerAngles.x}");
+            if(transform.rotation.eulerAngles.x == 270)
+            {
+                IsCompleted.Value = true;
+                yield break;
+            }
+            float Rotation = Mathf.Lerp(-90, 0, LerpValue);
             HandleMesh.transform.rotation = Quaternion.RotateTowards(HandleMesh.transform.rotation, Quaternion.Euler(Rotation, 0, 0), 2);
             yield return new WaitForFixedUpdate();
         }
