@@ -896,6 +896,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   Configurations: []
   JoystickPivot: {fileID: 289072622887605824}
+  UI_Prefab: {fileID: 8993535193209809532, guid: bb00c88abf86d8b49981cdb0735a6d3a, type: 3}
 --- !u!1 &1578398126438888730
 GameObject:
   m_ObjectHideFlags: 0
@@ -4140,7 +4141,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 3589333493158463532, guid: f8294ce2b3ba56146b4eba04e1bc53a1, type: 3}
+  - {fileID: 2100000, guid: 9bf33741073546740b063e1e8dd67dcf, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

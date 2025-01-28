@@ -10,6 +10,9 @@ public class ArcadeUnit : NetworkBehaviour
 
     Coroutine CR_GameTimer;
     [SerializeField] GameObject JoystickPivot;
+    [SerializeField] GameObject UI_Prefab;
+    protected UI_Game PlayerUI;
+
 
     private int MaxHealth = 100;
     private NetworkVariable<int> GameTimeRemaining = new NetworkVariable<int>(
@@ -39,10 +42,28 @@ public class ArcadeUnit : NetworkBehaviour
         }
 
     }
+    public override void OnNetworkDespawn()
+    {
+    }
 
     public void ReadyGame()
     {
+/*        GameObject UI = Instantiate(UI_Prefab);
+        if (IsServer)
+        {
+            PlayerUI = UI.GetComponent<UI_Game>();
+
+            if (PlayerUI == null)
+            {
+                Debug.Assert(false, "Player Has No UI");
+            }
+
+            PlayerUI.GetComponent<NetworkObject>().Spawn();
+        }*/
+
         if (!IsOwner) { return; }
+  
+
         Debug.Log("Readied");
         MaxHealth = 100;// Settings.DefaultHealth;
         Score.Value = 0;
@@ -59,11 +80,10 @@ public class ArcadeUnit : NetworkBehaviour
         Debug.Log("Started");
         CR_GameTimer = StartCoroutine(ArcadeTimer());
     }
-    
+
     #region Configurations
     private void Handle_ConfigurationUpdated(bool IsActive)
     {
-        Debug.Log($"Configuration Updated: {IsActive}");
     }
     private void Handle_ConfigurationSabotaged()
     {
@@ -71,6 +91,7 @@ public class ArcadeUnit : NetworkBehaviour
     }
 
     #endregion
+
     #region Puzzles
     public void BindToPuzzles()
     {

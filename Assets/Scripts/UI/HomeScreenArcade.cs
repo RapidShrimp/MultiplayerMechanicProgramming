@@ -4,9 +4,24 @@ using UnityEngine;
 public class HomeScreenArcade : NetworkBehaviour
 {
     [SerializeField] MeshRenderer[] MenuArcadeUnits;
+    [SerializeField] Material[] UI_MenuMats;
+    [SerializeField] GameObject[] UI_RenderTargets;
 
     private void OnEnable()
     {
+
+        //foreach(GameObject go in UI_RenderTargets)
+        //{
+        //    Instantiate(go);
+        //    go.SetActive(true);
+        //}
+
+        for (int i = 0; i < UI_RenderTargets.Length; i++)
+        {
+            GameObject test = Instantiate(UI_RenderTargets[i]);
+            test.SetActive(true);
+        }
+
         GameManager.OnPlayerCountUpdated += GameManager_OnPlayerCountUpdated;
         GameManager_OnPlayerCountUpdated(0);
     }
@@ -17,12 +32,12 @@ public class HomeScreenArcade : NetworkBehaviour
         {
             if(i >= NewValue)
             {
-                if (MenuArcadeUnits[i].materials[0].color == Color.white) { continue; }
-                MenuArcadeUnits[i].materials[0].color = Color.black;
+                if (MenuArcadeUnits[i].material == UI_MenuMats[1]) { continue; }
+                MenuArcadeUnits[i].material = UI_MenuMats[0] ;
             }
             else
             {
-                MenuArcadeUnits[i].materials[0].color = Color.white;   
+                MenuArcadeUnits[i].material = UI_MenuMats[1];   
             }
         }
     }
