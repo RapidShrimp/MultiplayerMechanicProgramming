@@ -48,11 +48,10 @@ public class ArcadeUnit : NetworkBehaviour
 
     public void ReadyGame()
     {
-/*        GameObject UI = Instantiate(UI_Prefab);
-        if (IsServer)
+/*        if (IsServer)
         {
+            GameObject UI = Instantiate(UI_Prefab);
             PlayerUI = UI.GetComponent<UI_Game>();
-
             if (PlayerUI == null)
             {
                 Debug.Assert(false, "Player Has No UI");

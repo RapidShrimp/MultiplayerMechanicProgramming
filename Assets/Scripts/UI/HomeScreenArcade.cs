@@ -10,16 +10,10 @@ public class HomeScreenArcade : NetworkBehaviour
     private void OnEnable()
     {
 
-        //foreach(GameObject go in UI_RenderTargets)
-        //{
-        //    Instantiate(go);
-        //    go.SetActive(true);
-        //}
-
-        for (int i = 0; i < UI_RenderTargets.Length; i++)
+        foreach (GameObject go in UI_RenderTargets)
         {
-            GameObject test = Instantiate(UI_RenderTargets[i]);
-            test.SetActive(true);
+            Instantiate(go);
+            go.SetActive(true);
         }
 
         GameManager.OnPlayerCountUpdated += GameManager_OnPlayerCountUpdated;
