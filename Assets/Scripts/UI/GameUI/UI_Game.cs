@@ -15,20 +15,20 @@ public class UI_Game : NetworkBehaviour
     {
         cam = GetComponent<Canvas>().worldCamera;
         cam.enabled = false;
+        ToggleActiveRender(true);
         TestText = GetComponentInChildren<TextMeshPro>();
         if(TestText == null) { return; }
         TestText.text = Random.Range(0, 500).ToString();
-
 
     }
 
     public void ToggleActiveRender(bool Active)
     {
         if (DesiredRenderTo == null) { return; }
-
         cam.targetTexture = DesiredRenderTo;
         cam.enabled = true;
     }
+
     public override void OnNetworkSpawn()
     {
     }
