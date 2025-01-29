@@ -1,13 +1,13 @@
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UI_Game : NetworkBehaviour
 {
     Camera cam;
 
 
-    TextMeshPro TestText;
     [SerializeField] RenderTexture DesiredRenderTo;
     [SerializeField] bool RenderAuto = false;
     [SerializeField] TextMeshPro ScoreCounter;
@@ -19,10 +19,7 @@ public class UI_Game : NetworkBehaviour
     {
         cam = GetComponent<Canvas>().worldCamera;
         cam.enabled = false;
-        TestText = GetComponentInChildren<TextMeshPro>();
         ToggleActiveRender(RenderAuto);
-        if(TestText == null) { return; }
-        TestText.text = Random.Range(0, 500).ToString();
     }
 
     public void ToggleActiveRender(bool Active)
