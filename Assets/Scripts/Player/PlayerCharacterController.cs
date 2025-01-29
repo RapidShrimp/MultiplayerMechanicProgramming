@@ -24,6 +24,7 @@ public class PlayerCharacterController : NetworkBehaviour
     {
         DontDestroyOnLoad(this);
         m_ArcadeUnit = GetComponentInChildren<ArcadeUnit>();
+        PlayerCam = GetComponentInChildren<Camera>();
         if (!IsOwner) { return; }
         transform.position = new Vector3(transform.position.x + 2, transform.position.y, transform.position.z);
         GameManager.OnReadyGame += Handle_OnGameReady;
@@ -83,7 +84,6 @@ public class PlayerCharacterController : NetworkBehaviour
         if (!IsOwner) { return; }
         m_ArcadeUnit.ReadyGame();
         if (Camera.main) { Camera.main.enabled = false; }
-        PlayerCam = GetComponentInChildren<Camera>();
         PlayerCam.enabled = true;
         GetComponentInChildren<AudioListener>().enabled = true;
         GameObject Hud = Instantiate(UI_HUDPrefab);
@@ -94,16 +94,14 @@ public class PlayerCharacterController : NetworkBehaviour
 
     private void Handle_OnSelectPlayer(int Direction)
     {
+        if(!IsOwner) { return; }
         CurrentListID = (int)Mathf.Repeat(CurrentListID + Direction, NetworkManager.Singleton.ConnectedClientsList.Count);
         GameObject PlayerClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
-        Debug.Log($"Player Client Valid? {PlayerClient.GetInstanceID()}");
 
         if (PlayerClient != null) 
         {
             PlayerCharacterController FoundClient = PlayerClient.GetComponent<PlayerCharacterController>();
             ArcadeUnit FoundArcade = PlayerClient.GetComponentInChildren<ArcadeUnit>();
-            FoundArcade.GetUIRenderCamera().targetTexture = null;
-            //PlayerCam.enabled = false;
         }
         //Do Some Stuff Here to get the next player 
     }
@@ -111,6 +109,7 @@ public class PlayerCharacterController : NetworkBehaviour
     private void Handle_OnStartGame()
     {
         if (!IsOwner) { return; }
+        m_ArcadeUnit.GetArcadeUI().ToggleActiveRender(true);
         PlayerInput.Enable();
         m_ArcadeUnit.StartGame();
     }

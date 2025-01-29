@@ -12,14 +12,14 @@ public class ArcadeUnit : NetworkBehaviour
     [SerializeField] GameObject JoystickPivot;
     [SerializeField] GameObject UI_ScreenPrefab;
 
-    protected UI_Game PlayerUI;
+    [SerializeField] protected UI_Game PlayerUI;
 
     private int MaxHealth = 100;
     private NetworkVariable<int> GameTimeRemaining = new NetworkVariable<int>(
         value: 0,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
-    
+
     private NetworkVariable<float> Health = new NetworkVariable<float>(
     value: 100,
     NetworkVariableReadPermission.Everyone,
@@ -35,7 +35,8 @@ public class ArcadeUnit : NetworkBehaviour
     {
         if (!IsOwner) { return; }
         Configurations = GetComponentsInChildren<Configuration>();
-        foreach (Configuration config in Configurations) 
+
+        foreach (Configuration config in Configurations)
         {
             config.OnConfigurationUpdated += Handle_ConfigurationUpdated;
             config.OnConfigurationSabotaged += Handle_ConfigurationSabotaged;
@@ -46,16 +47,7 @@ public class ArcadeUnit : NetworkBehaviour
     {
     }
 
-    [Rpc(SendTo.Server)]
-    public void ServerSpawnUI_Rpc()
-    {
-        GameObject SpawnedUI = Instantiate(UI_ScreenPrefab);
-        PlayerUI = SpawnedUI.GetComponent<UI_Game>();
-        PlayerUI.GetComponent<NetworkObject>().Spawn();
-        Debug.Log(PlayerUI);
-    }
-
-    public void ReadyGame()
+     public void ReadyGame()
     {
         if (!IsOwner) { return; }
  
@@ -68,7 +60,6 @@ public class ArcadeUnit : NetworkBehaviour
         {
             config.StartModule();
         }
-        ServerSpawnUI_Rpc();
     }
     public void StartGame()
     {
@@ -145,9 +136,9 @@ public class ArcadeUnit : NetworkBehaviour
 
     #region UI
 
-    public Camera GetUIRenderCamera()
+    public UI_Game GetArcadeUI()
     {
-        return PlayerUI.GetUICamera(); ;
+        return PlayerUI;
     }
 
     #endregion

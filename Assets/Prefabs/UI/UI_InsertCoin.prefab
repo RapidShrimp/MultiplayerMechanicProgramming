@@ -147,6 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   DesiredRenderTo: {fileID: 8400000, guid: 453565b0f8e45674fbfc5751b819f8e1, type: 2}
+  RenderAuto: 1
 --- !u!114 &3484364399220217619
 MonoBehaviour:
   m_ObjectHideFlags: 0

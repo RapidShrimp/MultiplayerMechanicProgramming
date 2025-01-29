@@ -7,6 +7,7 @@ public class UI_Game : NetworkBehaviour
     Camera cam;
     TextMeshPro TestText;
     [SerializeField] RenderTexture DesiredRenderTo;
+    [SerializeField] bool RenderAuto = false;
     public Camera GetUICamera()
     {
         return cam; 
@@ -15,18 +16,18 @@ public class UI_Game : NetworkBehaviour
     {
         cam = GetComponent<Canvas>().worldCamera;
         cam.enabled = false;
-        ToggleActiveRender(true);
         TestText = GetComponentInChildren<TextMeshPro>();
+        ToggleActiveRender(RenderAuto);
         if(TestText == null) { return; }
         TestText.text = Random.Range(0, 500).ToString();
-
     }
 
     public void ToggleActiveRender(bool Active)
     {
         if (DesiredRenderTo == null) { return; }
-        cam.targetTexture = DesiredRenderTo;
-        cam.enabled = true;
+
+        cam.targetTexture = Active ? DesiredRenderTo : null;
+        cam.enabled = Active;
     }
 
     public override void OnNetworkSpawn()
