@@ -291,6 +291,7 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   m_StartButton: {fileID: 1393497349}
   Throbber: {fileID: 1046633144}
+  RequiredPlayersToStart: 1
 --- !u!1 &333360498
 GameObject:
   m_ObjectHideFlags: 0

@@ -70,6 +70,7 @@ public class DialConfiguration : Configuration, IInteractable
         }
         else
         {
+            Sabotage(10);
             do {DialIncrement = Random.Range(0, 4);} 
             while (DialIncrement == DialPosition.Value);
             ChangeDialPosition_Rpc(DialIncrement);
@@ -79,6 +80,7 @@ public class DialConfiguration : Configuration, IInteractable
 
     public bool OnDrag(Vector3 WorldPos)
     {
+
         //Do Nothing :)
         return false;
     }

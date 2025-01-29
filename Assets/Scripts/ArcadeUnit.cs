@@ -75,7 +75,7 @@ public class ArcadeUnit : NetworkBehaviour
     private void Handle_ConfigurationUpdated(bool IsActive)
     {
     }
-    private void Handle_ConfigurationSabotaged()
+    private void Handle_ConfigurationSabotaged(int SabotageScore)
     {
         Score.Value += 25;
     }

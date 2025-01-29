@@ -12,7 +12,7 @@ public class UI_LobbyMenu : NetworkBehaviour
     [SerializeField] private Button m_StartButton;
     private TextMeshProUGUI StartButtonText;
     [SerializeField] private Animator Throbber;
-
+    [SerializeField] int RequiredPlayersToStart = 2;
 
 
 
@@ -72,7 +72,7 @@ public class UI_LobbyMenu : NetworkBehaviour
 
     public void UpdatePlayerCount(int Players) 
     {
-        if (Players >= 2)
+        if (Players >= RequiredPlayersToStart)
         {
             SetCanStartGame(true);
         }
