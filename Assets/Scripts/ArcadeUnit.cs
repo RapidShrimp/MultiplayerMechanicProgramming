@@ -10,9 +10,9 @@ public class ArcadeUnit : NetworkBehaviour
 
     Coroutine CR_GameTimer;
     [SerializeField] GameObject JoystickPivot;
-    [SerializeField] GameObject UI_Prefab;
-    protected UI_Game PlayerUI;
+    [SerializeField] GameObject UI_ScreenPrefab;
 
+    protected UI_Game PlayerUI;
 
     private int MaxHealth = 100;
     private NetworkVariable<int> GameTimeRemaining = new NetworkVariable<int>(
@@ -46,24 +46,20 @@ public class ArcadeUnit : NetworkBehaviour
     {
     }
 
+    [Rpc(SendTo.Server)]
+    public void ServerSpawnUI_Rpc()
+    {
+        GameObject SpawnedUI = Instantiate(UI_ScreenPrefab);
+        PlayerUI = SpawnedUI.GetComponent<UI_Game>();
+        PlayerUI.GetComponent<NetworkObject>().Spawn();
+        Debug.Log(PlayerUI);
+    }
+
     public void ReadyGame()
     {
-/*        if (IsServer)
-        {
-            GameObject UI = Instantiate(UI_Prefab);
-            PlayerUI = UI.GetComponent<UI_Game>();
-            if (PlayerUI == null)
-            {
-                Debug.Assert(false, "Player Has No UI");
-            }
-
-            PlayerUI.GetComponent<NetworkObject>().Spawn();
-        }*/
-
         if (!IsOwner) { return; }
-  
-
-        Debug.Log("Readied");
+ 
+        Debug.Log($"Readied {GetInstanceID()}");
         MaxHealth = 100;// Settings.DefaultHealth;
         Score.Value = 0;
         Health.Value = MaxHealth;
@@ -72,6 +68,7 @@ public class ArcadeUnit : NetworkBehaviour
         {
             config.StartModule();
         }
+        ServerSpawnUI_Rpc();
     }
     public void StartGame()
     {
@@ -144,4 +141,14 @@ public class ArcadeUnit : NetworkBehaviour
         }
 
     }
+
+
+    #region UI
+
+    public Camera GetUIRenderCamera()
+    {
+        return PlayerUI.GetUICamera(); ;
+    }
+
+    #endregion
 }

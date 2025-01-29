@@ -1,5 +1,7 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -10,9 +12,13 @@ public class PlayerCharacterController : NetworkBehaviour
     Camera PlayerCam;
 
     ArcadeUnit m_ArcadeUnit;
-
+    
+    [SerializeField] GameObject UI_HUDPrefab;
+    private UI_HUDSelectPlayer UI_HUD;
     Coroutine CR_MouseDetection;
     Coroutine CR_MoveAction;
+
+    int CurrentListID = 0;
 
     public override void OnNetworkSpawn()
     {
@@ -80,7 +86,28 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerCam = GetComponentInChildren<Camera>();
         PlayerCam.enabled = true;
         GetComponentInChildren<AudioListener>().enabled = true;
+        GameObject Hud = Instantiate(UI_HUDPrefab);
+        UI_HUD = Hud.GetComponent<UI_HUDSelectPlayer>();
+        UI_HUD.OnSelectPlayer += Handle_OnSelectPlayer;
+
     }
+
+    private void Handle_OnSelectPlayer(int Direction)
+    {
+        CurrentListID = (int)Mathf.Repeat(CurrentListID + Direction, NetworkManager.Singleton.ConnectedClientsList.Count);
+        GameObject PlayerClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
+        Debug.Log($"Player Client Valid? {PlayerClient.GetInstanceID()}");
+
+        if (PlayerClient != null) 
+        {
+            PlayerCharacterController FoundClient = PlayerClient.GetComponent<PlayerCharacterController>();
+            ArcadeUnit FoundArcade = PlayerClient.GetComponentInChildren<ArcadeUnit>();
+            FoundArcade.GetUIRenderCamera().targetTexture = null;
+            //PlayerCam.enabled = false;
+        }
+        //Do Some Stuff Here to get the next player 
+    }
+
     private void Handle_OnStartGame()
     {
         if (!IsOwner) { return; }

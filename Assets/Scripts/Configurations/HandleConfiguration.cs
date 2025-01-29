@@ -73,7 +73,7 @@ public class HandleConfiguration : Configuration, IInteractable
     {
         while(true) 
         { 
-            Debug.Log($"Rotation {transform.rotation.eulerAngles.x}");
+            //Debug.Log($"Rotation {transform.rotation.eulerAngles.x}");
             if(transform.rotation.eulerAngles.x == 270)
             {
                 IsCompleted.Value = true;
