@@ -10,7 +10,7 @@ public class PlayerCharacterController : NetworkBehaviour
 {
     PlayerInputActions PlayerInput;
     Camera PlayerCam;
-
+    Camera CurrentlyViewing;
     ArcadeUnit m_ArcadeUnit;
     
     [SerializeField] GameObject UI_HUDPrefab;
@@ -85,6 +85,7 @@ public class PlayerCharacterController : NetworkBehaviour
         m_ArcadeUnit.ReadyGame();
         if (Camera.main) { Camera.main.enabled = false; }
         PlayerCam.enabled = true;
+        CurrentlyViewing = PlayerCam;
         GetComponentInChildren<AudioListener>().enabled = true;
         GameObject Hud = Instantiate(UI_HUDPrefab);
         UI_HUD = Hud.GetComponent<UI_HUDSelectPlayer>();
@@ -95,13 +96,24 @@ public class PlayerCharacterController : NetworkBehaviour
     private void Handle_OnSelectPlayer(int Direction)
     {
         if(!IsOwner) { return; }
-        CurrentListID = (int)Mathf.Repeat(CurrentListID + Direction, NetworkManager.Singleton.ConnectedClientsList.Count);
-        GameObject PlayerClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
-
-        if (PlayerClient != null) 
+        GameObject CurrentClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
         {
-            PlayerCharacterController FoundClient = PlayerClient.GetComponent<PlayerCharacterController>();
-            ArcadeUnit FoundArcade = PlayerClient.GetComponentInChildren<ArcadeUnit>();
+            PlayerCharacterController FoundClient = CurrentClient.GetComponent<PlayerCharacterController>();
+            ArcadeUnit FoundArcade = CurrentClient.GetComponentInChildren<ArcadeUnit>();
+            FoundClient.PlayerCam.enabled = false;
+            FoundArcade.GetArcadeUI().ToggleActiveRender(false);
+        }
+
+        CurrentListID = (int)Mathf.Repeat(CurrentListID + Direction, NetworkManager.Singleton.ConnectedClientsList.Count);
+
+        GameObject NextClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
+        if (NextClient != null) 
+        {
+            PlayerCharacterController FoundClient = NextClient.GetComponent<PlayerCharacterController>();
+            ArcadeUnit FoundArcade = NextClient.GetComponentInChildren<ArcadeUnit>();
+            FoundClient.PlayerCam.enabled = true;
+            CurrentlyViewing = FoundClient.PlayerCam;
+            FoundArcade.GetArcadeUI().ToggleActiveRender(true);
         }
         //Do Some Stuff Here to get the next player 
     }
@@ -133,7 +145,7 @@ public class PlayerCharacterController : NetworkBehaviour
     IEnumerator Handle_MouseDown()
     {
         RaycastHit Hit;
-        if(!GetHitUnderMouse(PlayerCam,out Hit)) { yield break; }
+        if(!GetHitUnderMouse(CurrentlyViewing,out Hit)) { yield break; }
         GameObject tmp = Hit.collider.gameObject;
         if (tmp == null) { yield break; }
         IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
@@ -147,7 +159,7 @@ public class PlayerCharacterController : NetworkBehaviour
 
         while (PlayerInput.Player.MouseLClick.IsInProgress())
         {
-            GetHitUnderMouse(PlayerCam, out Hit);
+            GetHitUnderMouse(CurrentlyViewing, out Hit);
             if (Interaction.OnDrag(Hit.point))
             {
                 yield return new WaitForSeconds(0.1f);

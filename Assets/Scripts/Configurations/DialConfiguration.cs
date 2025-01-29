@@ -70,9 +70,7 @@ public class DialConfiguration : Configuration, IInteractable
         }
         else
         {
-            do {DialIncrement = Random.Range(0, 4);
-                Debug.Log(DialIncrement);
-            } 
+            do {DialIncrement = Random.Range(0, 4);} 
             while (DialIncrement == DialPosition.Value);
             ChangeDialPosition_Rpc(DialIncrement);
         }

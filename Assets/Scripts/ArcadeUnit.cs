@@ -9,10 +9,13 @@ public class ArcadeUnit : NetworkBehaviour
     [SerializeField] private Configuration[] Configurations;
 
     Coroutine CR_GameTimer;
-    [SerializeField] GameObject JoystickPivot;
-    [SerializeField] GameObject UI_ScreenPrefab;
 
-    [SerializeField] protected UI_Game PlayerUI;
+    [SerializeField] GameObject JoystickPivot;
+    Quaternion DesiredJoystickRotation;
+    Coroutine CR_Joystick;
+
+    [SerializeField] GameObject UI_ScreenPrefab; //The Render Texture
+    [SerializeField] protected UI_Game PlayerUI; //The UI Component
 
     private int MaxHealth = 100;
     private NetworkVariable<int> GameTimeRemaining = new NetworkVariable<int>(
@@ -121,8 +124,20 @@ public class ArcadeUnit : NetworkBehaviour
 
     public void SetDesiredJoystickPosition(Vector2 joystickPosition)
     {
-        JoystickPivot.transform.localRotation = Quaternion.Euler(joystickPosition.y*45,0,joystickPosition.x*-45);
+        if (CR_Joystick == null) { CR_Joystick = StartCoroutine(MoveJoystickToLocation()); }
+        DesiredJoystickRotation = Quaternion.Euler(joystickPosition.y*45,0,joystickPosition.x*-45);
     }
+
+    public IEnumerator MoveJoystickToLocation()
+    {
+        while (true)
+        {
+            JoystickPivot.transform.localRotation = Quaternion.RotateTowards(JoystickPivot.transform.localRotation,DesiredJoystickRotation,8);
+            yield return new WaitForFixedUpdate();
+
+        }
+    }
+
     IEnumerator ArcadeTimer()
     {
         while (GameTimeRemaining.Value > 0) 
