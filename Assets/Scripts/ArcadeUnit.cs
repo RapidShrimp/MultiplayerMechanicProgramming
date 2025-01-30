@@ -14,7 +14,6 @@ public class ArcadeUnit : NetworkBehaviour
     Quaternion DesiredJoystickRotation;
     Coroutine CR_Joystick;
 
-    [SerializeField] GameObject UI_ScreenPrefab; //The Render Texture
     [SerializeField] protected UI_Game PlayerUI; //The UI Component
 
     private int MaxHealth = 100;
@@ -45,6 +44,7 @@ public class ArcadeUnit : NetworkBehaviour
             config.OnConfigurationSabotaged += Handle_ConfigurationSabotaged;
         }
 
+        PlayerUI.transform.position = new Vector3(transform.position.x, 500);
     }
     public override void OnNetworkDespawn()
     {

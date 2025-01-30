@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 428708581731806056}
   - component: {fileID: 7553326346644917029}
   - component: {fileID: 1842453755686871004}
-  - component: {fileID: 2887638421627814492}
   - component: {fileID: 3484364399220217619}
+  - component: {fileID: 3486027458151587193}
   m_Layer: 5
   m_Name: UI_InsertCoin
   m_TagString: Untagged
@@ -133,21 +133,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &2887638421627814492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1013384719021673949}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8e628a95beb53a4883f91f1bc659c67, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
-  DesiredRenderTo: {fileID: 8400000, guid: 453565b0f8e45674fbfc5751b819f8e1, type: 2}
-  RenderAuto: 1
 --- !u!114 &3484364399220217619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +147,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Object: {fileID: 5568784141360036534}
   LoopingTime: 0.25
+--- !u!114 &3486027458151587193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1013384719021673949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7a9308b89204a045a7bd572c849ee4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  DesiredRenderTo: {fileID: 8400000, guid: 453565b0f8e45674fbfc5751b819f8e1, type: 2}
+  RenderAuto: 1
 --- !u!1 &3804158166183752692
 GameObject:
   m_ObjectHideFlags: 0

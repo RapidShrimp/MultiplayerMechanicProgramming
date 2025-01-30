@@ -3,14 +3,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_Game : NetworkBehaviour
+public class UI_Game : UI_RenderTarget
 {
-    Camera cam;
-
-
-    [SerializeField] RenderTexture DesiredRenderTo;
-    [SerializeField] bool RenderAuto = false;
-    [SerializeField] TextMeshPro ScoreCounter;
+    [SerializeField] UI_Score ScoreCounter;
     public Camera GetUICamera()
     {
         return cam; 
@@ -18,33 +13,20 @@ public class UI_Game : NetworkBehaviour
     private void Awake()
     {
         cam = GetComponent<Canvas>().worldCamera;
+        ScoreCounter = GetComponentInChildren<UI_Score>();
         cam.enabled = false;
         ToggleActiveRender(RenderAuto);
     }
 
-    public void ToggleActiveRender(bool Active)
-    {
-        if (DesiredRenderTo == null) { return; }
-
-        cam.targetTexture = Active ? DesiredRenderTo : null;
-        cam.enabled = Active;
-    }
-
     public override void OnNetworkSpawn()
     {
-        ChangeScore_Rpc(GetInstanceID());
+        ScoreCounter.ChangeScore_Rpc(5);
     }
 
     public override void OnNetworkDespawn()
     {
     }
 
-    [Rpc(SendTo.Everyone)]
-    public void ChangeScore_Rpc(int NewScore)
-    {
-        if (ScoreCounter == null) { Debug.Assert(false, "No Score Counter"); return; }
 
-        ScoreCounter.text = NewScore.ToString();
-    }
 
 }
