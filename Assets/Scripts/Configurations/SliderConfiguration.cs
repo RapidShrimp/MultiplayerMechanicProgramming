@@ -71,8 +71,9 @@ public class SliderConfiguration : Configuration, IInteractable
 
     private void OnSliderChange(int OldPosition ,int NewPosition)
     {
-        if(!IsOwner) {return;}
         SliderMesh.transform.localPosition = new Vector3(NewPosition*Step,0) ;
+        if(!IsOwner) {return;} //Gets an error if i change this lol
+        
         if(NewPosition == DesiredXPos.Value)
         {
             IsCompleted.Value = true;

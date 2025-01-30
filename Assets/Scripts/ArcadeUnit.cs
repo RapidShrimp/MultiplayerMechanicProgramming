@@ -44,7 +44,6 @@ public class ArcadeUnit : NetworkBehaviour
             config.OnConfigurationSabotaged += Handle_ConfigurationSabotaged;
         }
 
-        PlayerUI.transform.position = new Vector3(transform.position.x, 500);
     }
     public override void OnNetworkDespawn()
     {
@@ -53,7 +52,7 @@ public class ArcadeUnit : NetworkBehaviour
      public void ReadyGame()
     {
         if (!IsOwner) { return; }
- 
+        PlayerUI.transform.position = new Vector3(transform.position.x, 500);
         Debug.Log($"Readied {GetInstanceID()}");
         MaxHealth = 100;// Settings.DefaultHealth;
         Score.Value = 0;

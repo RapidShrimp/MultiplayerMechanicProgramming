@@ -56,7 +56,7 @@ public class DialConfiguration : Configuration, IInteractable
 
     private void OnDialTurned(int OldValue, int NewValue)
     {
-        if(!IsOwner) { return;}
+        //if(!IsOwner) { return;}
         DialMesh.transform.rotation = Quaternion.Euler(0, 0, 90 * NewValue);
     }
 
