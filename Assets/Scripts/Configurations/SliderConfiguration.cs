@@ -48,12 +48,15 @@ public class SliderConfiguration : Configuration, IInteractable
     }
 
 
-    [Rpc(SendTo.Owner)]
+    [Rpc(SendTo.Everyone)]
     private void SetCorrectSliderPos_Rpc(int OldPosition ,int NewPosition)
     {
-        DesiredXPos.Value = NewPosition;
         CorrectLocMesh.transform.localPosition = new Vector3(NewPosition * Step, 0);
-        ChangeSliderPosition_Rpc(SliderXPos.Value);
+        if (IsOwner)
+        {
+            DesiredXPos.Value = NewPosition;
+            ChangeSliderPosition_Rpc(SliderXPos.Value);
+        }
     }
 
     [Rpc(SendTo.Everyone)]

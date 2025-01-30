@@ -32,7 +32,10 @@ public class ArcadeUnit : NetworkBehaviour
     NetworkVariableReadPermission.Everyone,
     NetworkVariableWritePermission.Owner);
 
-
+    private void Awake()
+    {
+        PlayerUI.transform.position = new Vector3(transform.position.x, 500);
+    }
     public override void OnNetworkSpawn()
     {
         if (!IsOwner) { return; }
@@ -52,7 +55,6 @@ public class ArcadeUnit : NetworkBehaviour
      public void ReadyGame()
     {
         if (!IsOwner) { return; }
-        PlayerUI.transform.position = new Vector3(transform.position.x, 500);
         Debug.Log($"Readied {GetInstanceID()}");
         MaxHealth = 100;// Settings.DefaultHealth;
         Score.Value = 0;
