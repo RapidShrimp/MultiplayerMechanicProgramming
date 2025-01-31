@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UI_Game : UI_RenderTarget
 {
     protected UI_Score ScoreCounter;
+
     public Camera GetUICamera()
     {
         return cam; 
@@ -20,13 +21,17 @@ public class UI_Game : UI_RenderTarget
 
     public override void OnNetworkSpawn()
     {
-        ScoreCounter.ChangeScore_Rpc(GetInstanceID());
+        ScoreCounter.ChangeScore_Rpc(0);
     }
 
     public override void OnNetworkDespawn()
     {
     }
 
+    public void UpdateScore(int NewValue)
+    {
+        ScoreCounter.ChangeScore_Rpc(NewValue);
+    }
 
 
 }

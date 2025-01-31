@@ -32,6 +32,7 @@ public class HandleConfiguration : Configuration, IInteractable
     protected void SetModuleActive_Rpc()
     {
         if (!IsOwner) { return; }
+        IsCompleted.Value = false;
 
     }
 
@@ -40,6 +41,7 @@ public class HandleConfiguration : Configuration, IInteractable
         if (IsOwner) { return false; }
         else
         {
+            if (IsCompleted.Value) { Sabotage_Rpc(); }
             SetModuleActive_Rpc();
             return true;       
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -38,6 +39,9 @@ public class ArcadeUnit : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
+
+        Score.OnValueChanged += Handle_ScoreChanged;
+
         if (!IsOwner) { return; }
         Configurations = GetComponentsInChildren<Configuration>();
 
@@ -48,11 +52,16 @@ public class ArcadeUnit : NetworkBehaviour
         }
 
     }
+
+ 
+
     public override void OnNetworkDespawn()
     {
+        Score.OnValueChanged -= Handle_ScoreChanged;
+
     }
 
-     public void ReadyGame()
+    public void ReadyGame()
     {
         if (!IsOwner) { return; }
         Debug.Log($"Readied {GetInstanceID()}");
@@ -78,7 +87,8 @@ public class ArcadeUnit : NetworkBehaviour
     }
     private void Handle_ConfigurationSabotaged(int SabotageScore)
     {
-        Score.Value += 25;
+        if(!IsOwner) { return; }
+        Score.Value += SabotageScore;
     }
 
     #endregion
@@ -156,6 +166,11 @@ public class ArcadeUnit : NetworkBehaviour
     {
         return PlayerUI;
     }
+    private void Handle_ScoreChanged(int oldScore, int newScore)
+    {
+        if (!PlayerUI) { Debug.Assert(false); return; }
 
+        PlayerUI.UpdateScore(newScore);
+    }
     #endregion
 }

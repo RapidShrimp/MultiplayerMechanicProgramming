@@ -39,8 +39,13 @@ public class SwitchConfiguration : Configuration
         else
         {
             ActiveSwitches--;
-            if (!IsOwner) { return;}
+            if (!IsOwner) 
+            {
+                Sabotage_Rpc();
+                return;
+            }
             IsCompleted.Value = false;
         }
     }
+
 }

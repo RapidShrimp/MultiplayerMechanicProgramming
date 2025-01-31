@@ -104,6 +104,8 @@ public class SliderConfiguration : Configuration, IInteractable
         int SliderMove = XDiff < 0 ? 1 : -1;
         ChangeSliderPosition_Rpc(Mathf.Clamp(SliderXPos.Value + SliderMove, 0, SliderMax));
         //Do Something :)
+        if (IsCompleted.Value && !IsOwner) { Sabotage_Rpc(); }
+
         return true;
     }
 
