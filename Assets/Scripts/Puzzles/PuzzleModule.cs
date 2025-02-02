@@ -10,7 +10,6 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
     public event Action OnUIUpdated;
 
 
-    [SerializeField] GameObject Puzzle_UI;
     protected int Attempts = 1;
     protected int CurrentAttempt = 0;
     [SerializeField] protected int AwardScore = 100;
@@ -27,7 +26,6 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
 
     public virtual void DeactivatePuzzleModule()
     {
-        Puzzle_UI.SetActive(false);
     }
 
 

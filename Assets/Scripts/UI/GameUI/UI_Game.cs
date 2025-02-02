@@ -11,9 +11,12 @@ public class UI_Game : UI_RenderTarget
 
     public event Action<int,bool> OnButtonPressRecieved; //Int is the Index of the Button, bool is if the button was performed / canceled
 
+    [SerializeField] TextMeshProUGUI DisplayText;
     protected UI_Score ScoreCounter;
     PuzzleModule[] Puzzles;
     GameObject CurrentPuzzle;
+
+    public bool ConfigurationSet = false;
     public Camera GetUICamera()
     {
         return cam; 
@@ -23,14 +26,6 @@ public class UI_Game : UI_RenderTarget
         cam = GetComponent<Canvas>().worldCamera;
         ScoreCounter = GetComponentInChildren<UI_Score>();
         Puzzles = GetComponentsInChildren<PuzzleModule>();
-
-        foreach (PuzzleModule puzzle in Puzzles) 
-        { 
-            puzzle.OnPuzzleComplete += Handle_PuzzleComplete;
-            puzzle.OnPuzzleFail += Handle_PuzzleFail;
-            puzzle.OnPuzzleError += Handle_PuzzleError;
-            puzzle.OnUIUpdated += ForceNewRender;
-        }
 
         cam.enabled = false;
         ToggleActiveRender(RenderAuto);
@@ -44,6 +39,14 @@ public class UI_Game : UI_RenderTarget
     public override void OnNetworkSpawn()
     {
         ScoreCounter.ChangeScore_Rpc(0);
+        foreach (PuzzleModule puzzle in Puzzles)
+        {
+            puzzle.OnPuzzleComplete += Handle_PuzzleComplete;
+            puzzle.OnPuzzleFail += Handle_PuzzleFail;
+            puzzle.OnPuzzleError += Handle_PuzzleError;
+            puzzle.OnUIUpdated += ForceNewRender;
+            puzzle.gameObject.SetActive(false);
+        }
     }
 
     public override void OnNetworkDespawn()
@@ -59,6 +62,7 @@ public class UI_Game : UI_RenderTarget
     [Rpc(SendTo.Everyone)]
     public void StartNewPuzzle_Rpc(int IndexRevealed)
     {
+        DisplayText.gameObject.SetActive(false);
         CurrentPuzzle = Puzzles[IndexRevealed].gameObject;
         CurrentPuzzle.SetActive(true);
         Puzzles[IndexRevealed].StartPuzzleModule();
@@ -93,7 +97,16 @@ public class UI_Game : UI_RenderTarget
 
     IEnumerator NextPuzzleDelay()
     {
+        DisplayText.gameObject.SetActive(true);
+        DisplayText.text = "Waiting for New Puzzle";
+        ForceNewRender();
         yield return new WaitForSeconds(8);
+        while (!ConfigurationSet)
+        {
+            DisplayText.text = "Must Complete all Configurations to recieve new puzzle";
+            yield return new WaitForFixedUpdate();
+        }
+        DisplayText.gameObject.SetActive(false);
         StartNewPuzzle();
     }
 

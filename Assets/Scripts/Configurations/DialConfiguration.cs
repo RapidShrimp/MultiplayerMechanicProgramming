@@ -18,6 +18,7 @@ public class DialConfiguration : Configuration, IInteractable
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         DialPosition.OnValueChanged += OnDialTurned;
         CorrectPosition.OnValueChanged += OnDialTurned;
     }

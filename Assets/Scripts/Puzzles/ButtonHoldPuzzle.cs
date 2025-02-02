@@ -32,15 +32,21 @@ public class ButtonHoldPuzzle : PuzzleModule
         ButtonImage = GetComponentInChildren<Image>();
     }
 
+    private void OnEnable()
+    {
+        UpdateUI(0, 0);
+    }
+
     public override void OnNetworkSpawn()
     {
+        HoldLength.OnValueChanged += UpdateUI;
         DesiredButtonIndex.OnValueChanged += UpdateUI;
     }
 
     public override void OnNetworkDespawn()
     {
+        HoldLength.OnValueChanged -= UpdateUI;
         DesiredButtonIndex.OnValueChanged -= UpdateUI;
-
     }
     private void ButtonHoldPuzzle_OnButtonPressRecieved(int button,bool performed)
     {
@@ -66,6 +72,7 @@ public class ButtonHoldPuzzle : PuzzleModule
         if (!IsOwner) { return; }
         HoldLength.Value = UnityEngine.Random.Range(2, 7);
         DesiredButtonIndex.Value = UnityEngine.Random.Range(0, 4);
+        UpdateUI(0, 0);
     }
 
     public void UpdateUI(int oldval, int newval)
@@ -101,7 +108,7 @@ public class ButtonHoldPuzzle : PuzzleModule
     IEnumerator OnHoldingButton()
     {
         ButtonImage.sprite = ButtonSprites[DesiredButtonIndex.Value + 4];
-
+        UpdateUIRender();
         float TimeHeld = 0;
         while (b_Holding)
         {

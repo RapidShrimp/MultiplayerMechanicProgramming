@@ -6,9 +6,12 @@ using UnityEngine;
 public class ArcadeUnit : NetworkBehaviour
 {
     private Configuration[] Configurations;
+    [SerializeField] protected int ConfigsCompleted;
 
     Coroutine CR_GameTimer;
 
+
+    ArcadeButton[] Buttons;
     [SerializeField] GameObject JoystickPivot;
     Quaternion DesiredJoystickRotation;
     Coroutine CR_Joystick;
@@ -34,6 +37,24 @@ public class ArcadeUnit : NetworkBehaviour
     private void Awake()
     {
         PlayerUI.transform.position = new Vector3(transform.position.x, 500);
+        Buttons = GetComponentsInChildren<ArcadeButton>();
+        for(int i = 0; i < Buttons.Length; i++)
+        {
+            Color color = Color.white;
+            switch(i)
+            {
+                case 0: color = Color.yellow;
+                    break;
+                case 1: color = Color.red;
+                    break;
+                case 2: color = Color.green;
+                    break;
+                case 3: color = Color.blue;
+                    break;
+            }
+            Buttons[i].InitButton(color, i);
+            Buttons[i].OnButtonPressed += PressButton;
+        }
     }
     public override void OnNetworkSpawn()
     {
@@ -80,6 +101,10 @@ public class ArcadeUnit : NetworkBehaviour
     #region Configurations
     private void Handle_ConfigurationUpdated(bool IsActive)
     {
+        if (IsActive) { ConfigsCompleted++; }
+        else ConfigsCompleted-- ;
+
+        PlayerUI.ConfigurationSet = ConfigsCompleted == Configurations.Length;
     }
     private void Handle_ConfigurationSabotaged(int SabotageScore)
     {

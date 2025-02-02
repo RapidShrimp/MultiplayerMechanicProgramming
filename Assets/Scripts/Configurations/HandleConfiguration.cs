@@ -13,6 +13,7 @@ public class HandleConfiguration : Configuration, IInteractable
     Coroutine CR_ResetLever;
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         TopYPos = GetComponent<Collider>().transform.position.y;
     }
     public override void OnNetworkDespawn()

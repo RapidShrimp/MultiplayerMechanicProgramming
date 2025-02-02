@@ -12,6 +12,14 @@ public class Configuration : NetworkBehaviour
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
 
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        IsCompleted.OnValueChanged +=  (a, b) => { OnConfigurationUpdated?.Invoke(b); };
+       
+    }
+
     virtual public void StartModule() { }
 
     [Rpc(SendTo.Owner)]

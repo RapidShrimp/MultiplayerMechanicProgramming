@@ -27,6 +27,7 @@ public class SliderConfiguration : Configuration, IInteractable
 
     public override void OnNetworkSpawn()
     {
+        base.OnNetworkSpawn();
         DesiredXPos.OnValueChanged += SetCorrectSliderPos_Rpc;
         SliderXPos.OnValueChanged += OnSliderChange;
         CorrectLocRenderer = CorrectLocMesh.GetComponentInChildren<MeshRenderer>();
