@@ -55,24 +55,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""GreenAction"",
-                    ""type"": ""Button"",
-                    ""id"": ""b581764c-dd46-4d8b-95f6-26f35d631c56"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""BlueAction"",
-                    ""type"": ""Button"",
-                    ""id"": ""e55a3cf9-cda6-41a0-b1ae-0382d8227935"",
-                    ""expectedControlType"": """",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""YellowAction"",
                     ""type"": ""Button"",
                     ""id"": ""683e30a5-89ae-41f5-8fc5-40a91a99f234"",
@@ -85,6 +67,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": ""RedAction"",
                     ""type"": ""Button"",
                     ""id"": ""258dbc95-4a72-4ad6-bd98-38684052da64"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GreenAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""b581764c-dd46-4d8b-95f6-26f35d631c56"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""BlueAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""e55a3cf9-cda6-41a0-b1ae-0382d8227935"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -278,7 +278,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""cbb244dd-4f8f-43f3-8799-ca33df2973f7"",
-                    ""path"": ""<Keyboard>/s"",
+                    ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -299,8 +299,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""f0850986-1586-421b-87d1-82c45df2e846"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GreenAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""91ca3d1d-c188-4dec-8af4-1832d7db3c80"",
-                    ""path"": ""<Keyboard>/a"",
+                    ""path"": ""<Keyboard>/leftArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -321,8 +332,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""af574b2d-e084-45d7-8fda-9f5bb896e2f3"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""BlueAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""eb49ca53-d4be-44af-b378-8e30619eeeef"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""path"": ""<Keyboard>/upArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -343,8 +365,19 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""ce0658fc-e5e0-4273-9863-fe7347c7db01"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""YellowAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""895261a4-f6e6-4328-ae27-2125ac49c5e8"",
-                    ""path"": ""<Keyboard>/d"",
+                    ""path"": ""<Keyboard>/rightArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -356,6 +389,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""03c616d5-aada-4443-b604-4c6680ed5e90"",
                     ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RedAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0b342e56-caec-4464-a0b7-5ce328ac2c3c"",
+                    ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -994,10 +1038,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_MouseLClick = m_Player.FindAction("MouseLClick", throwIfNotFound: true);
-        m_Player_GreenAction = m_Player.FindAction("GreenAction", throwIfNotFound: true);
-        m_Player_BlueAction = m_Player.FindAction("BlueAction", throwIfNotFound: true);
         m_Player_YellowAction = m_Player.FindAction("YellowAction", throwIfNotFound: true);
         m_Player_RedAction = m_Player.FindAction("RedAction", throwIfNotFound: true);
+        m_Player_GreenAction = m_Player.FindAction("GreenAction", throwIfNotFound: true);
+        m_Player_BlueAction = m_Player.FindAction("BlueAction", throwIfNotFound: true);
         m_Player_ShoulderRight = m_Player.FindAction("ShoulderRight", throwIfNotFound: true);
         m_Player_ShoulderLeft = m_Player.FindAction("ShoulderLeft", throwIfNotFound: true);
         // UI
@@ -1082,10 +1126,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_MouseLClick;
-    private readonly InputAction m_Player_GreenAction;
-    private readonly InputAction m_Player_BlueAction;
     private readonly InputAction m_Player_YellowAction;
     private readonly InputAction m_Player_RedAction;
+    private readonly InputAction m_Player_GreenAction;
+    private readonly InputAction m_Player_BlueAction;
     private readonly InputAction m_Player_ShoulderRight;
     private readonly InputAction m_Player_ShoulderLeft;
     public struct PlayerActions
@@ -1095,10 +1139,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @MouseLClick => m_Wrapper.m_Player_MouseLClick;
-        public InputAction @GreenAction => m_Wrapper.m_Player_GreenAction;
-        public InputAction @BlueAction => m_Wrapper.m_Player_BlueAction;
         public InputAction @YellowAction => m_Wrapper.m_Player_YellowAction;
         public InputAction @RedAction => m_Wrapper.m_Player_RedAction;
+        public InputAction @GreenAction => m_Wrapper.m_Player_GreenAction;
+        public InputAction @BlueAction => m_Wrapper.m_Player_BlueAction;
         public InputAction @ShoulderRight => m_Wrapper.m_Player_ShoulderRight;
         public InputAction @ShoulderLeft => m_Wrapper.m_Player_ShoulderLeft;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
@@ -1119,18 +1163,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MouseLClick.started += instance.OnMouseLClick;
             @MouseLClick.performed += instance.OnMouseLClick;
             @MouseLClick.canceled += instance.OnMouseLClick;
-            @GreenAction.started += instance.OnGreenAction;
-            @GreenAction.performed += instance.OnGreenAction;
-            @GreenAction.canceled += instance.OnGreenAction;
-            @BlueAction.started += instance.OnBlueAction;
-            @BlueAction.performed += instance.OnBlueAction;
-            @BlueAction.canceled += instance.OnBlueAction;
             @YellowAction.started += instance.OnYellowAction;
             @YellowAction.performed += instance.OnYellowAction;
             @YellowAction.canceled += instance.OnYellowAction;
             @RedAction.started += instance.OnRedAction;
             @RedAction.performed += instance.OnRedAction;
             @RedAction.canceled += instance.OnRedAction;
+            @GreenAction.started += instance.OnGreenAction;
+            @GreenAction.performed += instance.OnGreenAction;
+            @GreenAction.canceled += instance.OnGreenAction;
+            @BlueAction.started += instance.OnBlueAction;
+            @BlueAction.performed += instance.OnBlueAction;
+            @BlueAction.canceled += instance.OnBlueAction;
             @ShoulderRight.started += instance.OnShoulderRight;
             @ShoulderRight.performed += instance.OnShoulderRight;
             @ShoulderRight.canceled += instance.OnShoulderRight;
@@ -1150,18 +1194,18 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MouseLClick.started -= instance.OnMouseLClick;
             @MouseLClick.performed -= instance.OnMouseLClick;
             @MouseLClick.canceled -= instance.OnMouseLClick;
-            @GreenAction.started -= instance.OnGreenAction;
-            @GreenAction.performed -= instance.OnGreenAction;
-            @GreenAction.canceled -= instance.OnGreenAction;
-            @BlueAction.started -= instance.OnBlueAction;
-            @BlueAction.performed -= instance.OnBlueAction;
-            @BlueAction.canceled -= instance.OnBlueAction;
             @YellowAction.started -= instance.OnYellowAction;
             @YellowAction.performed -= instance.OnYellowAction;
             @YellowAction.canceled -= instance.OnYellowAction;
             @RedAction.started -= instance.OnRedAction;
             @RedAction.performed -= instance.OnRedAction;
             @RedAction.canceled -= instance.OnRedAction;
+            @GreenAction.started -= instance.OnGreenAction;
+            @GreenAction.performed -= instance.OnGreenAction;
+            @GreenAction.canceled -= instance.OnGreenAction;
+            @BlueAction.started -= instance.OnBlueAction;
+            @BlueAction.performed -= instance.OnBlueAction;
+            @BlueAction.canceled -= instance.OnBlueAction;
             @ShoulderRight.started -= instance.OnShoulderRight;
             @ShoulderRight.performed -= instance.OnShoulderRight;
             @ShoulderRight.canceled -= instance.OnShoulderRight;
@@ -1353,10 +1397,10 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnMouseLClick(InputAction.CallbackContext context);
-        void OnGreenAction(InputAction.CallbackContext context);
-        void OnBlueAction(InputAction.CallbackContext context);
         void OnYellowAction(InputAction.CallbackContext context);
         void OnRedAction(InputAction.CallbackContext context);
+        void OnGreenAction(InputAction.CallbackContext context);
+        void OnBlueAction(InputAction.CallbackContext context);
         void OnShoulderRight(InputAction.CallbackContext context);
         void OnShoulderLeft(InputAction.CallbackContext context);
     }

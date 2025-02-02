@@ -17,9 +17,9 @@ public class LoopingVisibility : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(0,1.0f));
         while (true)
         {
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitForSecondsRealtime(LoopingTime);
             Object.SetActive(false);
-            yield return new WaitForSecondsRealtime(1);
+            yield return new WaitForSecondsRealtime(LoopingTime);
             Object.SetActive(true);
         }
     }

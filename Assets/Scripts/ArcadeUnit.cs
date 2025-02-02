@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class ArcadeUnit : NetworkBehaviour
 {
-    private PuzzleModule[] Puzzles;
-    private PuzzleModule ActiveModule = null;
     private Configuration[] Configurations;
 
     Coroutine CR_GameTimer;
@@ -44,7 +42,6 @@ public class ArcadeUnit : NetworkBehaviour
 
         if (!IsOwner) { return; }
         Configurations = GetComponentsInChildren<Configuration>();
-
         foreach (Configuration config in Configurations)
         {
             config.OnConfigurationUpdated += Handle_ConfigurationUpdated;
@@ -77,6 +74,7 @@ public class ArcadeUnit : NetworkBehaviour
         if (!IsOwner) { return; }
         Debug.Log("Started");
         CR_GameTimer = StartCoroutine(ArcadeTimer());
+        PlayerUI.StartNewPuzzle();
     }
 
     #region Configurations
@@ -91,50 +89,9 @@ public class ArcadeUnit : NetworkBehaviour
 
     #endregion
 
-    #region Puzzles
-    public void BindToPuzzles()
+    public void PressButton(int ButtonIndex,bool Performed)
     {
-        foreach (PuzzleModule Module in Puzzles)
-        {
-            Module.OnPuzzleComplete += Handle_PuzzleComplete;
-            Module.OnPuzzleFail += Handle_PuzzleFail;
-            Module.OnPuzzleError += Handle_PuzzleError;
-        }
-    }
-
-    private void Handle_PuzzleComplete(float AwardedTime)
-    {
-        Debug.Log("Completed Puzzle");
-        Score.Value += 150;
-    }
-    private void Handle_PuzzleFail(float PunishmentTime)
-    {
-        Debug.Log("Failed Puzzle");
-        Score.Value -= 25;
-    }
-    private void Handle_PuzzleError()
-    {
-        Debug.Log("Errored Puzzle");
-        Score.Value -= 10;
-    }
-    public void StartNewPuzzle()
-    {
-        if (ActiveModule != null)
-        {
-            ActiveModule.DeactivatePuzzleModule();
-        }
-
-        ActiveModule = Puzzles[UnityEngine.Random.Range(0, Puzzles.Length)];
-        if (ActiveModule == null) { Debug.LogError("Couldnt Find Puzzle"); }
-
-        ActiveModule.StartPuzzleModule();
-    }
-    #endregion
-
-
-    public void PressButton(int ButtonIndex)
-    {
-
+        PlayerUI.ButtonPressed(ButtonIndex,Performed);
     }
 
     public void SetDesiredJoystickPosition(Vector2 joystickPosition)

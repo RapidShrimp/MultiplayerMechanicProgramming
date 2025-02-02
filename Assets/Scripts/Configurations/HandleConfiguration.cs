@@ -7,7 +7,6 @@ public class HandleConfiguration : Configuration, IInteractable
 {
 
     [SerializeField] GameObject HandleMesh;
-    float DistanceTolerance = 0.025f;
     float TopYPos;
     float LerpValue;
     Coroutine CR_DesiredRotation;

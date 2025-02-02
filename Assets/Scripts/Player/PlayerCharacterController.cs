@@ -45,6 +45,11 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput.Player.RedAction.performed += Handle_Action2;
         PlayerInput.Player.GreenAction.performed += Handle_Action3;
         PlayerInput.Player.BlueAction.performed += Handle_Action4;
+        PlayerInput.Player.YellowAction.canceled += Handle_Action1;
+        PlayerInput.Player.RedAction.canceled += Handle_Action2;
+        PlayerInput.Player.GreenAction.canceled += Handle_Action3;
+        PlayerInput.Player.BlueAction.canceled += Handle_Action4;
+
 
         PlayerInput.Player.ShoulderLeft.performed += Handle_LB;
         PlayerInput.Player.ShoulderRight.performed += Handle_RB;
@@ -74,37 +79,38 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput.Player.GreenAction.performed -= Handle_Action3;
         PlayerInput.Player.BlueAction.performed -= Handle_Action4;
 
+        PlayerInput.Player.YellowAction.canceled -= Handle_Action1;
+        PlayerInput.Player.RedAction.canceled -= Handle_Action2;
+        PlayerInput.Player.GreenAction.canceled -= Handle_Action3;
+        PlayerInput.Player.BlueAction.canceled -= Handle_Action4;
+
         PlayerInput.Player.ShoulderLeft.performed -= Handle_LB;
         PlayerInput.Player.ShoulderRight.performed -= Handle_RB;
 
     }
 
     #region PlayerInput
-    private void Handle_LB(InputAction.CallbackContext context)
-    {
-        Handle_OnSelectPlayer(-1);
-    }
-
-    private void Handle_RB(InputAction.CallbackContext context)
-    {
-        Handle_OnSelectPlayer(1);
-    }
-
-
+    private void Handle_LB(InputAction.CallbackContext context) { Handle_OnSelectPlayer(-1); }
+    private void Handle_RB(InputAction.CallbackContext context) { Handle_OnSelectPlayer(1); }
     private void Handle_Action1(InputAction.CallbackContext context)
     {
+        bool IsDown = context.performed ? true : false;
+        m_ArcadeUnit.PressButton(0, IsDown);
     }
-
     private void Handle_Action2(InputAction.CallbackContext context)
     {
+        bool IsDown = context.performed ? true : false;
+        m_ArcadeUnit.PressButton(1, IsDown);
     }
-
     private void Handle_Action3(InputAction.CallbackContext context)
     {
+        bool IsDown = context.performed ? true : false;
+        m_ArcadeUnit.PressButton(2, IsDown);
     }
-
-    private void Handle_Action4(InputAction.CallbackContext context)
+    private void Handle_Action4(InputAction.CallbackContext context) 
     {
+        bool IsDown = context.performed ? true : false;
+        m_ArcadeUnit.PressButton(3,IsDown); 
     }
 
     private void Handle_PlayerLook(InputAction.CallbackContext context)

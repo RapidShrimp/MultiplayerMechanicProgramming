@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 770c8174d2fd8e2409e47fdad3e42910, type: 3}
+  m_Name: SO_ButtonHold
+  m_EditorClassIdentifier: 
+  UI_Prefab: {fileID: 3994555649828372281, guid: 7b880515bc93e464a9b4b2a317657672, type: 3}
