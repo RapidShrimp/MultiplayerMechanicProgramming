@@ -7,7 +7,7 @@ public class ArcadeUnit : NetworkBehaviour
 {
     private PuzzleModule[] Puzzles;
     private PuzzleModule ActiveModule = null;
-    [SerializeField] private Configuration[] Configurations;
+    private Configuration[] Configurations;
 
     Coroutine CR_GameTimer;
 
@@ -52,8 +52,6 @@ public class ArcadeUnit : NetworkBehaviour
         }
 
     }
-
- 
 
     public override void OnNetworkDespawn()
     {
@@ -132,6 +130,12 @@ public class ArcadeUnit : NetworkBehaviour
         ActiveModule.StartPuzzleModule();
     }
     #endregion
+
+
+    public void PressButton(int ButtonIndex)
+    {
+
+    }
 
     public void SetDesiredJoystickPosition(Vector2 joystickPosition)
     {

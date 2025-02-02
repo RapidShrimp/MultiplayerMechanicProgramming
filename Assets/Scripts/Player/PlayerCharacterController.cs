@@ -16,6 +16,7 @@ public class PlayerCharacterController : NetworkBehaviour
     [SerializeField] GameObject UI_HUDPrefab;
     private UI_HUDSelectPlayer UI_HUD;
     Coroutine CR_MouseDetection;
+    Coroutine CR_MoveMouse;
     Coroutine CR_MoveAction;
 
     int CurrentListID = 0;
@@ -37,6 +38,101 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput.Player.MouseLClick.started += Handle_PlayerClick;
         PlayerInput.Player.MouseLClick.canceled += Handle_PlayerClick;
 
+        PlayerInput.Player.Look.performed += Handle_PlayerLook;
+        PlayerInput.Player.Look.canceled += Handle_PlayerLook;
+
+        PlayerInput.Player.YellowAction.performed += Handle_Action1;
+        PlayerInput.Player.RedAction.performed += Handle_Action2;
+        PlayerInput.Player.GreenAction.performed += Handle_Action3;
+        PlayerInput.Player.BlueAction.performed += Handle_Action4;
+
+        PlayerInput.Player.ShoulderLeft.performed += Handle_LB;
+        PlayerInput.Player.ShoulderRight.performed += Handle_RB;
+    }
+
+
+
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+        if (!IsOwner) { return; }
+        //Unbind Player Events
+        GameManager.OnReadyGame -= Handle_OnGameReady;
+        GameManager.OnStartGame -= Handle_OnStartGame;
+
+        PlayerInput.Disable();
+        PlayerInput.Player.Move.performed -= Handle_PlayerMove;
+        PlayerInput.Player.Move.canceled -= Handle_PlayerMove;
+        PlayerInput.Player.MouseLClick.started -= Handle_PlayerClick;
+        PlayerInput.Player.MouseLClick.canceled -= Handle_PlayerClick;
+
+        PlayerInput.Player.Look.performed -= Handle_PlayerLook;
+        PlayerInput.Player.Look.canceled -= Handle_PlayerLook;
+
+        PlayerInput.Player.YellowAction.performed -= Handle_Action1;
+        PlayerInput.Player.RedAction.performed -= Handle_Action2;
+        PlayerInput.Player.GreenAction.performed -= Handle_Action3;
+        PlayerInput.Player.BlueAction.performed -= Handle_Action4;
+
+        PlayerInput.Player.ShoulderLeft.performed -= Handle_LB;
+        PlayerInput.Player.ShoulderRight.performed -= Handle_RB;
+
+    }
+
+    #region PlayerInput
+    private void Handle_LB(InputAction.CallbackContext context)
+    {
+        Handle_OnSelectPlayer(-1);
+    }
+
+    private void Handle_RB(InputAction.CallbackContext context)
+    {
+        Handle_OnSelectPlayer(1);
+    }
+
+
+    private void Handle_Action1(InputAction.CallbackContext context)
+    {
+    }
+
+    private void Handle_Action2(InputAction.CallbackContext context)
+    {
+    }
+
+    private void Handle_Action3(InputAction.CallbackContext context)
+    {
+    }
+
+    private void Handle_Action4(InputAction.CallbackContext context)
+    {
+    }
+
+    private void Handle_PlayerLook(InputAction.CallbackContext context)
+    {
+
+        if (context.performed && CR_MoveMouse == null)
+        {
+            CR_MoveMouse = StartCoroutine(MoveMouse());
+        }
+        else if (context.canceled && CR_MoveMouse != null)
+        {
+            StopCoroutine(CR_MoveMouse);
+            CR_MoveMouse = null;
+        }
+    }
+
+    IEnumerator MoveMouse()
+    {
+        while (PlayerInput.Player.Look.IsInProgress())
+        {
+            yield return new WaitForFixedUpdate();
+
+
+            //PlayerInput.Player.Look.ReadValue<Vector2>()
+            Vector2 currentPosition = Mouse.current.position.ReadValue();
+            Vector2 newPosition = currentPosition + (PlayerInput.Player.Look.ReadValue<Vector2>().normalized * 5.0f); 
+            Mouse.current.WarpCursorPosition(newPosition);
+        }
     }
 
     private void Handle_PlayerClick(InputAction.CallbackContext context)
@@ -78,74 +174,10 @@ public class PlayerCharacterController : NetworkBehaviour
         }
     }
 
-
-    public void Handle_OnGameReady()
-    {
-        if (!IsOwner) { return; }
-        m_ArcadeUnit.ReadyGame();
-        if (Camera.main) { Camera.main.enabled = false; }
-        PlayerCam.enabled = true;
-        CurrentlyViewing = PlayerCam;
-        GetComponentInChildren<AudioListener>().enabled = true;
-        GameObject Hud = Instantiate(UI_HUDPrefab);
-        UI_HUD = Hud.GetComponent<UI_HUDSelectPlayer>();
-        UI_HUD.OnSelectPlayer += Handle_OnSelectPlayer;
-
-    }
-
-    private void Handle_OnSelectPlayer(int Direction)
-    {
-        if(!IsOwner) { return; }
-        GameObject CurrentClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
-        {
-            PlayerCharacterController FoundClient = CurrentClient.GetComponent<PlayerCharacterController>();
-            ArcadeUnit FoundArcade = CurrentClient.GetComponentInChildren<ArcadeUnit>();
-            FoundClient.PlayerCam.enabled = false;
-            FoundArcade.GetArcadeUI().ToggleActiveRender(false);
-        }
-
-        CurrentListID = (int)Mathf.Repeat(CurrentListID + Direction, NetworkManager.Singleton.ConnectedClientsList.Count);
-
-        GameObject NextClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
-        if (NextClient != null) 
-        {
-            PlayerCharacterController FoundClient = NextClient.GetComponent<PlayerCharacterController>();
-            ArcadeUnit FoundArcade = NextClient.GetComponentInChildren<ArcadeUnit>();
-            FoundClient.PlayerCam.enabled = true;
-            CurrentlyViewing = FoundClient.PlayerCam;
-            FoundArcade.GetArcadeUI().ToggleActiveRender(true);
-        }
-        //Do Some Stuff Here to get the next player 
-    }
-
-    private void Handle_OnStartGame()
-    {
-        if (!IsOwner) { return; }
-        m_ArcadeUnit.GetArcadeUI().ToggleActiveRender(true);
-        PlayerInput.Enable();
-        m_ArcadeUnit.StartGame();
-    }
-
-    public override void OnNetworkDespawn()
-    {
-        base.OnNetworkDespawn();
-        if (!IsOwner) { return; }
-        //Unbind Player Events
-        GameManager.OnReadyGame -= Handle_OnGameReady;
-        GameManager.OnStartGame -= Handle_OnStartGame;
-
-        PlayerInput.Disable();
-        PlayerInput.Player.Move.performed -= Handle_PlayerMove;
-        PlayerInput.Player.Move.canceled -= Handle_PlayerMove;
-        PlayerInput.Player.MouseLClick.started -= Handle_PlayerClick;
-        PlayerInput.Player.MouseLClick.canceled -= Handle_PlayerClick;
-
-    }
-
     IEnumerator Handle_MouseDown()
     {
         RaycastHit Hit;
-        if(!GetHitUnderMouse(CurrentlyViewing,out Hit)) { yield break; }
+        if (!GetHitUnderMouse(CurrentlyViewing, out Hit)) { yield break; }
         GameObject tmp = Hit.collider.gameObject;
         if (tmp == null) { yield break; }
         IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
@@ -179,10 +211,65 @@ public class PlayerCharacterController : NetworkBehaviour
         ray.origin = PlayerCamera.transform.position;
         ray.direction = PlayerCamera.ScreenToWorldPoint(Mouse2World);
         Debug.DrawRay(ray.origin, ray.direction, Color.red, 0.5f);
-        Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World),Color.blue,0.5f);
+        Debug.DrawLine(PlayerCam.transform.position, PlayerCam.ScreenToWorldPoint(Mouse2World), Color.blue, 0.5f);
         bool RayHit = Physics.Raycast(ray, out HitResult, float.MaxValue);
         return RayHit;
     }
+
+#endregion
+
+
+    public void Handle_OnGameReady()
+    {
+        if (!IsOwner) { return; }
+        m_ArcadeUnit.ReadyGame();
+        if (Camera.main) { Camera.main.enabled = false; }
+        PlayerCam.enabled = true;
+        CurrentlyViewing = PlayerCam;
+        GetComponentInChildren<AudioListener>().enabled = true;
+        GameObject Hud = Instantiate(UI_HUDPrefab);
+        UI_HUD = Hud.GetComponent<UI_HUDSelectPlayer>();
+        UI_HUD.OnSelectPlayer += Handle_OnSelectPlayer;
+
+    }
+
+    private void Handle_OnStartGame()
+    {
+        if (!IsOwner) { return; }
+        m_ArcadeUnit.GetArcadeUI().ToggleActiveRender(true);
+        PlayerInput.Enable();
+        m_ArcadeUnit.StartGame();
+    }
+
+    private void Handle_OnSelectPlayer(int Direction)
+    {
+        if(!IsOwner) { return; }
+        GameObject CurrentClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
+        {
+            PlayerCharacterController FoundClient = CurrentClient.GetComponent<PlayerCharacterController>();
+            ArcadeUnit FoundArcade = CurrentClient.GetComponentInChildren<ArcadeUnit>();
+            FoundClient.PlayerCam.enabled = false;
+            FoundArcade.GetArcadeUI().ToggleActiveRender(false);
+        }
+
+        CurrentListID = (int)Mathf.Repeat(CurrentListID + Direction, NetworkManager.Singleton.ConnectedClientsList.Count);
+
+        GameObject NextClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
+        if (NextClient != null) 
+        {
+            PlayerCharacterController FoundClient = NextClient.GetComponent<PlayerCharacterController>();
+            ArcadeUnit FoundArcade = NextClient.GetComponentInChildren<ArcadeUnit>();
+            FoundClient.PlayerCam.enabled = true;
+            CurrentlyViewing = FoundClient.PlayerCam;
+            FoundArcade.GetArcadeUI().ToggleActiveRender(true);
+        }
+    }
+
+
+
+
+
+
 
 }
 

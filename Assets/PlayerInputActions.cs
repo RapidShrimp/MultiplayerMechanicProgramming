@@ -53,6 +53,60 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GreenAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""b581764c-dd46-4d8b-95f6-26f35d631c56"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""BlueAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""e55a3cf9-cda6-41a0-b1ae-0382d8227935"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""YellowAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""683e30a5-89ae-41f5-8fc5-40a91a99f234"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RedAction"",
+                    ""type"": ""Button"",
+                    ""id"": ""258dbc95-4a72-4ad6-bd98-38684052da64"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShoulderRight"",
+                    ""type"": ""Button"",
+                    ""id"": ""e2bf8c6f-c1ce-47b5-b9db-316ea0f87910"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ShoulderLeft"",
+                    ""type"": ""Button"",
+                    ""id"": ""99b4c850-511a-47f0-afcb-fee162437e90"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -190,17 +244,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""8c8e490b-c610-4785-884f-f04217b23ca4"",
-                    ""path"": ""<Pointer>/delta"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": "";Keyboard&Mouse;Touch"",
-                    ""action"": ""Look"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""3e5f5442-8668-4b27-a940-df99bad7e831"",
                     ""path"": ""<Joystick>/{Hatswitch}"",
                     ""interactions"": """",
@@ -218,6 +261,149 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": "";Keyboard&Mouse"",
                     ""action"": ""MouseLClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""831fd04a-74bf-4a9b-b371-710c305a2e88"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseLClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cbb244dd-4f8f-43f3-8799-ca33df2973f7"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GreenAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1df4d2e2-c80b-4ebc-8d38-073e7e4c2bd2"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""GreenAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""91ca3d1d-c188-4dec-8af4-1832d7db3c80"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""BlueAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5db83471-192e-4f22-bd7d-a3f868b00d27"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""BlueAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""eb49ca53-d4be-44af-b378-8e30619eeeef"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""YellowAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5286ffe9-6194-41e8-9a7d-682f5986438d"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""YellowAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""895261a4-f6e6-4328-ae27-2125ac49c5e8"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RedAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""03c616d5-aada-4443-b604-4c6680ed5e90"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RedAction"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5a9a33bf-6856-4a3c-80a5-272799bfe5e9"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShoulderRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ca81ebfe-f365-451a-94a7-138e5420a683"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShoulderRight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d3152c80-3542-4ab2-a273-3ac33b13c68a"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShoulderLeft"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b5184486-f4ae-4c5d-af1d-66d88fa9f709"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ShoulderLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -808,6 +994,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
         m_Player_MouseLClick = m_Player.FindAction("MouseLClick", throwIfNotFound: true);
+        m_Player_GreenAction = m_Player.FindAction("GreenAction", throwIfNotFound: true);
+        m_Player_BlueAction = m_Player.FindAction("BlueAction", throwIfNotFound: true);
+        m_Player_YellowAction = m_Player.FindAction("YellowAction", throwIfNotFound: true);
+        m_Player_RedAction = m_Player.FindAction("RedAction", throwIfNotFound: true);
+        m_Player_ShoulderRight = m_Player.FindAction("ShoulderRight", throwIfNotFound: true);
+        m_Player_ShoulderLeft = m_Player.FindAction("ShoulderLeft", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -890,6 +1082,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
     private readonly InputAction m_Player_MouseLClick;
+    private readonly InputAction m_Player_GreenAction;
+    private readonly InputAction m_Player_BlueAction;
+    private readonly InputAction m_Player_YellowAction;
+    private readonly InputAction m_Player_RedAction;
+    private readonly InputAction m_Player_ShoulderRight;
+    private readonly InputAction m_Player_ShoulderLeft;
     public struct PlayerActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -897,6 +1095,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
         public InputAction @MouseLClick => m_Wrapper.m_Player_MouseLClick;
+        public InputAction @GreenAction => m_Wrapper.m_Player_GreenAction;
+        public InputAction @BlueAction => m_Wrapper.m_Player_BlueAction;
+        public InputAction @YellowAction => m_Wrapper.m_Player_YellowAction;
+        public InputAction @RedAction => m_Wrapper.m_Player_RedAction;
+        public InputAction @ShoulderRight => m_Wrapper.m_Player_ShoulderRight;
+        public InputAction @ShoulderLeft => m_Wrapper.m_Player_ShoulderLeft;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -915,6 +1119,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MouseLClick.started += instance.OnMouseLClick;
             @MouseLClick.performed += instance.OnMouseLClick;
             @MouseLClick.canceled += instance.OnMouseLClick;
+            @GreenAction.started += instance.OnGreenAction;
+            @GreenAction.performed += instance.OnGreenAction;
+            @GreenAction.canceled += instance.OnGreenAction;
+            @BlueAction.started += instance.OnBlueAction;
+            @BlueAction.performed += instance.OnBlueAction;
+            @BlueAction.canceled += instance.OnBlueAction;
+            @YellowAction.started += instance.OnYellowAction;
+            @YellowAction.performed += instance.OnYellowAction;
+            @YellowAction.canceled += instance.OnYellowAction;
+            @RedAction.started += instance.OnRedAction;
+            @RedAction.performed += instance.OnRedAction;
+            @RedAction.canceled += instance.OnRedAction;
+            @ShoulderRight.started += instance.OnShoulderRight;
+            @ShoulderRight.performed += instance.OnShoulderRight;
+            @ShoulderRight.canceled += instance.OnShoulderRight;
+            @ShoulderLeft.started += instance.OnShoulderLeft;
+            @ShoulderLeft.performed += instance.OnShoulderLeft;
+            @ShoulderLeft.canceled += instance.OnShoulderLeft;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -928,6 +1150,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MouseLClick.started -= instance.OnMouseLClick;
             @MouseLClick.performed -= instance.OnMouseLClick;
             @MouseLClick.canceled -= instance.OnMouseLClick;
+            @GreenAction.started -= instance.OnGreenAction;
+            @GreenAction.performed -= instance.OnGreenAction;
+            @GreenAction.canceled -= instance.OnGreenAction;
+            @BlueAction.started -= instance.OnBlueAction;
+            @BlueAction.performed -= instance.OnBlueAction;
+            @BlueAction.canceled -= instance.OnBlueAction;
+            @YellowAction.started -= instance.OnYellowAction;
+            @YellowAction.performed -= instance.OnYellowAction;
+            @YellowAction.canceled -= instance.OnYellowAction;
+            @RedAction.started -= instance.OnRedAction;
+            @RedAction.performed -= instance.OnRedAction;
+            @RedAction.canceled -= instance.OnRedAction;
+            @ShoulderRight.started -= instance.OnShoulderRight;
+            @ShoulderRight.performed -= instance.OnShoulderRight;
+            @ShoulderRight.canceled -= instance.OnShoulderRight;
+            @ShoulderLeft.started -= instance.OnShoulderLeft;
+            @ShoulderLeft.performed -= instance.OnShoulderLeft;
+            @ShoulderLeft.canceled -= instance.OnShoulderLeft;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1113,6 +1353,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnMouseLClick(InputAction.CallbackContext context);
+        void OnGreenAction(InputAction.CallbackContext context);
+        void OnBlueAction(InputAction.CallbackContext context);
+        void OnYellowAction(InputAction.CallbackContext context);
+        void OnRedAction(InputAction.CallbackContext context);
+        void OnShoulderRight(InputAction.CallbackContext context);
+        void OnShoulderLeft(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
