@@ -15,6 +15,8 @@ public class UI_Game : UI_RenderTarget
     PuzzleModule[] Puzzles;
     GameObject CurrentPuzzle;
 
+    
+
     public bool ConfigurationSet = false;
     public Camera GetUICamera()
     {
