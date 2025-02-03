@@ -5,6 +5,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+
+
 public class ButtonHoldPuzzle : PuzzleModule
 {
 
@@ -12,12 +15,12 @@ public class ButtonHoldPuzzle : PuzzleModule
     TextMeshProUGUI OnScreenPromptText;
     Image ButtonImage;
 
-    NetworkVariable<int> HoldLength = new NetworkVariable<int>(
+    [SerializeField] NetworkVariable<int> HoldLength = new NetworkVariable<int>(
         value:1,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
     
-    NetworkVariable<int> DesiredButtonIndex = new NetworkVariable<int>(
+    [SerializeField] NetworkVariable<int> DesiredButtonIndex = new NetworkVariable<int>(
     value: 0,
     NetworkVariableReadPermission.Everyone,
     NetworkVariableWritePermission.Owner);
@@ -34,22 +37,25 @@ public class ButtonHoldPuzzle : PuzzleModule
 
     private void OnEnable()
     {
-        UpdateUI(0, 0);
+        HoldLength.OnValueChanged += UIValueChanged;
+        DesiredButtonIndex.OnValueChanged += UIValueChanged;
+        RequestUIChanges();
+    }
+    private void OnDisable()
+    {
+        HoldLength.OnValueChanged -= UIValueChanged;
+        DesiredButtonIndex.OnValueChanged -= UIValueChanged;
     }
 
-    public override void OnNetworkSpawn()
+    private void UIValueChanged(int previousValue, int newValue)
     {
-        HoldLength.OnValueChanged += UpdateUI;
-        DesiredButtonIndex.OnValueChanged += UpdateUI;
+        RequestUIChanges();
     }
 
-    public override void OnNetworkDespawn()
-    {
-        HoldLength.OnValueChanged -= UpdateUI;
-        DesiredButtonIndex.OnValueChanged -= UpdateUI;
-    }
+    #region Manage Button Input 
     private void ButtonHoldPuzzle_OnButtonPressRecieved(int button,bool performed)
     {
+        if(!isActiveAndEnabled) {return;}
         
         if(button != DesiredButtonIndex.Value) { return; }
         //Incorrect Button - Stop Hold
@@ -65,17 +71,23 @@ public class ButtonHoldPuzzle : PuzzleModule
         CR_HoldButton = StartCoroutine(OnHoldingButton());
 
     }
+    #endregion
 
-    public override void StartPuzzleModule() 
+    public override void StartPuzzleModule()
     {
         base.StartPuzzleModule();
         if (!IsOwner) { return; }
         HoldLength.Value = UnityEngine.Random.Range(2, 7);
         DesiredButtonIndex.Value = UnityEngine.Random.Range(0, 4);
-        UpdateUI(0, 0);
     }
 
-    public void UpdateUI(int oldval, int newval)
+    public override void RequestUIChanges()
+    {
+        OnUpdateUI();
+    }
+
+
+    public void OnUpdateUI()
     {
 
         String ButtonColour = "Yellow";
@@ -101,9 +113,6 @@ public class ButtonHoldPuzzle : PuzzleModule
         ButtonImage.sprite = ButtonSprites[DesiredButtonIndex.Value];
         UpdateUIRender();
     }
-    public override void DeactivatePuzzleModule()
-    {
-    }
 
     IEnumerator OnHoldingButton()
     {
@@ -115,10 +124,13 @@ public class ButtonHoldPuzzle : PuzzleModule
             TimeHeld += Time.deltaTime;
             yield return new WaitForFixedUpdate();
         }
-        if (TimeHeld >= HoldLength.Value && TimeHeld <= HoldLength.Value + 2) 
+        if (TimeHeld >= HoldLength.Value) 
         {
-            Debug.Log("Completed");
             CompleteModule();
+        }
+        else
+        {
+            ErrorPuzzle();
         }
     }
 }

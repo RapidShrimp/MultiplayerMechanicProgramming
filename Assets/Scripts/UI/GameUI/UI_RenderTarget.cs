@@ -15,7 +15,7 @@ public class UI_RenderTarget : NetworkBehaviour
         ToggleActiveRender(RenderAuto);
     }
 
-    public void ToggleActiveRender(bool Active)
+    public virtual void ToggleActiveRender(bool Active)
     {
         if (DesiredRenderTo == null) { return; }
 

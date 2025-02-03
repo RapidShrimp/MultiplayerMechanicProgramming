@@ -1,4 +1,5 @@
 using System;
+using Unity.IO.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -18,6 +19,9 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
     {
         CurrentAttempt = 0;
     }
+
+    virtual public void RequestUIChanges() { /*Override*/ }
+
 
     public virtual void StartPuzzleModule()
     {
@@ -45,23 +49,25 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
 
     public virtual void FailModule()
     {
-        OnPuzzleFail?.Invoke(Mathf.FloorToInt(AwardScore/2));
+        OnPuzzleFail?.Invoke(Mathf.FloorToInt(AwardScore / 2));
     }
 
     public virtual bool OnClick()
     {
-        if(!IsOwner) { return false; }
+        if (!IsOwner) { return false; }
         return false;
 
     }
 
     public virtual bool OnDrag(Vector3 WorldPos)
     {
-        if(!IsOwner) { return false; };
+        if (!IsOwner) { return false; };
         return false;
     }
 
-    protected void UpdateUIRender()
+
+
+    protected virtual void UpdateUIRender()
     {
         OnUIUpdated?.Invoke();
     }

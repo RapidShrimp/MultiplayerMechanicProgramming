@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -6,7 +7,8 @@ using UnityEngine;
 public class HandleConfiguration : Configuration, IInteractable
 {
 
-    [SerializeField] GameObject HandleMesh;
+    MeshRenderer HandleMesh;
+
     float TopYPos;
     float LerpValue;
     Coroutine CR_DesiredRotation;
@@ -15,12 +17,16 @@ public class HandleConfiguration : Configuration, IInteractable
     {
         base.OnNetworkSpawn();
         TopYPos = GetComponent<Collider>().transform.position.y;
+        HandleMesh = GetComponentInChildren<MeshRenderer>();
+        IsCompleted.OnValueChanged += Handle_CompleteUpdated;
     }
+
+
     public override void OnNetworkDespawn()
     {
+        IsCompleted.OnValueChanged -= Handle_CompleteUpdated;
 
     }
-
     override public void StartModule()
     {
         if (IsOwner)
@@ -28,6 +34,7 @@ public class HandleConfiguration : Configuration, IInteractable
             IsCompleted.Value = false;
         }
     }
+
     [Rpc(SendTo.Owner)]
     protected void SetModuleActive_Rpc()
     {
@@ -35,6 +42,13 @@ public class HandleConfiguration : Configuration, IInteractable
         IsCompleted.Value = false;
 
     }
+
+    private void Handle_CompleteUpdated(bool previousValue, bool newValue)
+    {
+        Color NewColour = newValue ? Color.green : Color.red;
+        HandleMesh.materials[1].color = NewColour;
+    }
+
 
     public bool OnClick()
     {
@@ -82,7 +96,7 @@ public class HandleConfiguration : Configuration, IInteractable
                 yield break;
             }
             float Rotation = Mathf.Lerp(-90, 0, LerpValue);
-            HandleMesh.transform.rotation = Quaternion.RotateTowards(HandleMesh.transform.rotation, Quaternion.Euler(Rotation, 0, 0), 2);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(Rotation, 0, 0), 2);
             yield return new WaitForFixedUpdate();
         }
     }
@@ -93,10 +107,10 @@ public class HandleConfiguration : Configuration, IInteractable
         StopCoroutine(CR_DesiredRotation);
         CR_DesiredRotation = null;
 
-        while (HandleMesh.transform.rotation != Quaternion.identity) 
+        while (transform.rotation != Quaternion.identity) 
         {
             yield return new WaitForFixedUpdate();
-            HandleMesh.transform.rotation = Quaternion.RotateTowards(HandleMesh.transform.rotation, Quaternion.identity, 2);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.identity, 2);
         }
         CR_ResetLever = null;   
     }

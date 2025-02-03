@@ -37,6 +37,7 @@ public class ArcadeUnit : NetworkBehaviour
     private void Awake()
     {
         PlayerUI.transform.position = new Vector3(transform.position.x, 500);
+        PlayerUI.OnScoreUpdated += Handle_UpdateScore;
         Buttons = GetComponentsInChildren<ArcadeButton>();
         for(int i = 0; i < Buttons.Length; i++)
         {
@@ -56,6 +57,9 @@ public class ArcadeUnit : NetworkBehaviour
             Buttons[i].OnButtonPressed += PressButton;
         }
     }
+
+
+
     public override void OnNetworkSpawn()
     {
 
@@ -80,7 +84,7 @@ public class ArcadeUnit : NetworkBehaviour
     public void ReadyGame()
     {
         if (!IsOwner) { return; }
-        Debug.Log($"Readied {GetInstanceID()}");
+        PlayerUI.ToggleActiveRender(true);
         MaxHealth = 100;// Settings.DefaultHealth;
         Score.Value = 0;
         Health.Value = MaxHealth;
@@ -147,15 +151,19 @@ public class ArcadeUnit : NetworkBehaviour
 
 
     #region UI
-
     public UI_Game GetArcadeUI()
     {
         return PlayerUI;
     }
+
+    private void Handle_UpdateScore(int ScoreChange)
+    {
+        if (!IsOwner) { return; }
+        Score.Value += ScoreChange;
+    }
     private void Handle_ScoreChanged(int oldScore, int newScore)
     {
         if (!PlayerUI) { Debug.Assert(false); return; }
-
         PlayerUI.UpdateScore(newScore);
     }
     #endregion

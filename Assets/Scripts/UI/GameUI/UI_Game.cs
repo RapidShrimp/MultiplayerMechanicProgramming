@@ -3,13 +3,12 @@ using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
-using UnityEngine.UI;
 
 public class UI_Game : UI_RenderTarget
 {
 
     public event Action<int,bool> OnButtonPressRecieved; //Int is the Index of the Button, bool is if the button was performed / canceled
+    public event Action<int> OnScoreUpdated;
 
     [SerializeField] TextMeshProUGUI DisplayText;
     protected UI_Score ScoreCounter;
@@ -28,11 +27,22 @@ public class UI_Game : UI_RenderTarget
         Puzzles = GetComponentsInChildren<PuzzleModule>();
 
         cam.enabled = false;
-        ToggleActiveRender(RenderAuto);
+        ToggleActiveRender(false);
     }
 
-    private void ForceNewRender()
+    public override void ToggleActiveRender(bool Active)
     {
+        base.ToggleActiveRender(Active);
+        if (CurrentPuzzle != null)
+        {
+            CurrentPuzzle.GetComponent<PuzzleModule>().RequestUIChanges();
+        }
+        ForceNewRender();
+    }
+
+    public void ForceNewRender()
+    {
+        if(!cam.isActiveAndEnabled) { return; }
         cam.Render();
     }
 
@@ -41,7 +51,7 @@ public class UI_Game : UI_RenderTarget
         ScoreCounter.ChangeScore_Rpc(0);
         foreach (PuzzleModule puzzle in Puzzles)
         {
-            puzzle.OnPuzzleComplete += Handle_PuzzleComplete;
+            puzzle.OnPuzzleComplete += Handle_PuzzleComplete_Rpc;
             puzzle.OnPuzzleFail += Handle_PuzzleFail;
             puzzle.OnPuzzleError += Handle_PuzzleError;
             puzzle.OnUIUpdated += ForceNewRender;
@@ -68,20 +78,21 @@ public class UI_Game : UI_RenderTarget
         Puzzles[IndexRevealed].StartPuzzleModule();
     }
 
-    private void Handle_PuzzleComplete(int AwardedScore)
+    [Rpc(SendTo.Everyone)]
+    private void Handle_PuzzleComplete_Rpc(int AwardedScore)
     {
         CurrentPuzzle.SetActive(false);
         ForceNewRender();
         StartCoroutine(NextPuzzleDelay());
-        Debug.Log("Completed Puzzle");
+        OnScoreUpdated?.Invoke(AwardedScore);
     }
     private void Handle_PuzzleFail(int PunishmentScore)
     {
-        Debug.Log("Failed Puzzle");
+        OnScoreUpdated?.Invoke(-PunishmentScore);
     }
     private void Handle_PuzzleError()
     {
-        Debug.Log("Errored Puzzle");
+        OnScoreUpdated?.Invoke(-5);
     }
 
     public void ButtonPressed(int ButtonIndex ,bool Performed) 
