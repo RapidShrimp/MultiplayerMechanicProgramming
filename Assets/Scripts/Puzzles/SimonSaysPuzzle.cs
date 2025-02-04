@@ -20,6 +20,7 @@ public class SimonSaysPuzzle : PuzzleModule
     {
         GetComponentInParent<UI_Game>().OnButtonPressRecieved += OnButtonPressed;
         m_Lights = GetComponentsInChildren<SimonSaysLight>();
+        ProgressSprites = GetComponentInChildren<HorizontalLayoutGroup>().GetComponentsInChildren<Image>();
     }
 
 
@@ -32,8 +33,9 @@ public class SimonSaysPuzzle : PuzzleModule
         {
             Sequence[i] = UnityEngine.Random.Range(0, 4);
         }
-        ProgressSprites = GetComponentInChildren<HorizontalLayoutGroup>().GetComponentsInChildren<Image>();
         OnCorrectSequenceUpdated_Rpc(Sequence);
+        Curr_Sequence.Clear();
+        UpdateProgress_Rpc(MakeIntArrayfromList(Curr_Sequence));
     }
 
     [Rpc(SendTo.Everyone)]
@@ -46,7 +48,7 @@ public class SimonSaysPuzzle : PuzzleModule
             CorrectSequence.Add(Array[i]);
         }
         Curr_Sequence.Clear();
-        UpdateProgress_Rpc();
+        if (!isActiveAndEnabled) { return; }
         DisplaySequence = StartCoroutine(ShowSimonSaysSequence());
     }
 
@@ -63,11 +65,11 @@ public class SimonSaysPuzzle : PuzzleModule
         {
             ErrorPuzzle();
             Curr_Sequence.Clear();
-            UpdateProgress_Rpc();
+            UpdateProgress_Rpc(MakeIntArrayfromList(Curr_Sequence));
             return;
         }
         Curr_Sequence.Add(ButtonIndex);
-        UpdateProgress_Rpc();
+        UpdateProgress_Rpc(MakeIntArrayfromList(Curr_Sequence));
         if (Curr_Sequence.Count == 5) { CompleteModule(); }
 
     }
@@ -91,8 +93,13 @@ public class SimonSaysPuzzle : PuzzleModule
     }
 
     [Rpc(SendTo.Everyone)]
-    public void UpdateProgress_Rpc()
+    public void UpdateProgress_Rpc(int[] CurrentProgress)
     {
+        if(!IsOwner)
+        {
+            Curr_Sequence = MakeListFromIntArray(CurrentProgress);
+        }
+
         for (int i = 0; i < 5; i++)
         {
             if (i<Curr_Sequence.Count) 
@@ -124,8 +131,30 @@ public class SimonSaysPuzzle : PuzzleModule
 
     public override void RequestUIChanges()
     {
+
     }
 
+    int[] MakeIntArrayfromList(List<int> list)
+    {
+        int[] ints = new int[list.Count];
+        for (int i = 0; i < ints.Length; i++)
+        {
+            ints[i] = list[i];
+        }
 
+        return ints;
+    
+    }
+
+    List<int> MakeListFromIntArray(int[] ints)
+    {
+        List<int> list = new List<int>();
+
+        for (int i = 0;i < ints.Length; i++)
+        {
+            list.Add(ints[i]);
+        }
+        return list;
+    }
     
 }
