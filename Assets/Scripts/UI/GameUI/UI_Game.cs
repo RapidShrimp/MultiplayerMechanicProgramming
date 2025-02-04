@@ -14,7 +14,7 @@ public class UI_Game : UI_RenderTarget
     protected UI_Score ScoreCounter;
     PuzzleModule[] Puzzles;
     GameObject CurrentPuzzle;
-
+    UI_Background Background;
     
 
     public bool ConfigurationSet = false;
@@ -27,7 +27,7 @@ public class UI_Game : UI_RenderTarget
         cam = GetComponent<Canvas>().worldCamera;
         ScoreCounter = GetComponentInChildren<UI_Score>();
         Puzzles = GetComponentsInChildren<PuzzleModule>();
-
+        Background = GetComponentInChildren<UI_Background>();
         cam.enabled = false;
         ToggleActiveRender(false);
     }
@@ -55,7 +55,7 @@ public class UI_Game : UI_RenderTarget
         {
             puzzle.OnPuzzleComplete += Handle_PuzzleComplete_Rpc;
             puzzle.OnPuzzleFail += Handle_PuzzleFail;
-            puzzle.OnPuzzleError += Handle_PuzzleError;
+            puzzle.OnPuzzleError += Handle_PuzzleError_Rpc;
             puzzle.OnUIUpdated += ForceNewRender;
             puzzle.gameObject.SetActive(false);
         }
@@ -86,15 +86,18 @@ public class UI_Game : UI_RenderTarget
         CurrentPuzzle.SetActive(false);
         ForceNewRender();
         StartCoroutine(NextPuzzleDelay());
+        Background.PuzzleComplete();
         OnScoreUpdated?.Invoke(AwardedScore);
     }
     private void Handle_PuzzleFail(int PunishmentScore)
     {
         OnScoreUpdated?.Invoke(-PunishmentScore);
     }
-    private void Handle_PuzzleError()
+    [Rpc(SendTo.Everyone)]
+    private void Handle_PuzzleError_Rpc()
     {
         OnScoreUpdated?.Invoke(-5);
+        Background.PuzzleErrored();
     }
 
     public void ButtonPressed(int ButtonIndex ,bool Performed) 
