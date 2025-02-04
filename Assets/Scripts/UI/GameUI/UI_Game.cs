@@ -8,6 +8,7 @@ public class UI_Game : UI_RenderTarget
 {
 
     public event Action<int,bool> OnButtonPressRecieved; //Int is the Index of the Button, bool is if the button was performed / canceled
+    public event Action<Vector2, bool> OnJoystickMovement;
     public event Action<int> OnScoreUpdated;
 
     [SerializeField] TextMeshProUGUI DisplayText;
