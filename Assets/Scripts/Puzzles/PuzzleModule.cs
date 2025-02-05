@@ -10,6 +10,7 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
     public event Action OnPuzzleError;
     public event Action OnUIUpdated;
 
+    protected SFX_Item PuzzleAudios;
 
     protected int Attempts = 1;
     protected int CurrentAttempt = 0;
@@ -18,6 +19,7 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
     private void OnEnable()
     {
         CurrentAttempt = 0;
+        PuzzleAudios = GetComponent<SFX_Item>();
     }
 
     virtual public void RequestUIChanges() { /*Override*/ }

@@ -128,7 +128,6 @@ GameObject:
   m_Component:
   - component: {fileID: 275428785}
   - component: {fileID: 275428784}
-  - component: {fileID: 275428783}
   - component: {fileID: 275428782}
   m_Layer: 0
   m_Name: Camera
@@ -181,14 +180,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!81 &275428783
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 275428781}
-  m_Enabled: 0
 --- !u!20 &275428784
 Camera:
   m_ObjectHideFlags: 0
@@ -266,6 +257,7 @@ GameObject:
   - component: {fileID: 382134674}
   - component: {fileID: 382134673}
   - component: {fileID: 382134672}
+  - component: {fileID: 382134675}
   m_Layer: 0
   m_Name: Floor
   m_TagString: Untagged
@@ -341,6 +333,28 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1233433105}
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!64 &382134675
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 382134670}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &508642489
 GameObject:
   m_ObjectHideFlags: 0

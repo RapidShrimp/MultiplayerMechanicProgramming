@@ -89,8 +89,8 @@ public class ArcadeUnit : NetworkBehaviour
         if (!IsOwner) { return; }
         Debug.Log("Started");
         PlayerUI.StartNewPuzzle();
-        if (CR_ConfigurationScramble != null) { StopCoroutine(CR_ConfigurationScramble); }
-        CR_ConfigurationScramble = StartCoroutine(RandomiseConfiguration());
+        /*if (CR_ConfigurationScramble != null) { StopCoroutine(CR_ConfigurationScramble); }
+        CR_ConfigurationScramble = StartCoroutine(RandomiseConfiguration());*/
     }
 
     public void GameEnded(bool IsWinner, int WinnerIndex)

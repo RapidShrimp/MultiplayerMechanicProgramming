@@ -32,6 +32,7 @@ public class PlayerCharacterController : NetworkBehaviour
 
 
         if (!IsOwner) { return; }
+        SFX_AudioManager.Singleton.SwapPlayer(transform.gameObject);
         GameManager.OnReadyGame += Handle_OnGameReady;
         GameManager.OnStartGame += Handle_OnStartGame;
         GameManager.OnGameFinished += Handle_OnGameEnded;
@@ -57,6 +58,8 @@ public class PlayerCharacterController : NetworkBehaviour
 
         PlayerInput.Player.ShoulderLeft.performed += Handle_LB;
         PlayerInput.Player.ShoulderRight.performed += Handle_RB;
+
+        PlayerInput.Cheats.MuteAudio.performed += (a) => { SFX_AudioManager.Singleton.ToggleMuteAudio(); };
     }
 
     private void OnClientDisconnect(ulong id)
@@ -74,6 +77,7 @@ public class PlayerCharacterController : NetworkBehaviour
         GameManager.OnStartGame -= Handle_OnStartGame;
         GameManager.OnGameFinished -= Handle_OnGameEnded;
 
+        if(PlayerInput == null) { return; }
         PlayerInput.Disable();
         PlayerInput.Player.Move.performed -= Handle_PlayerMove;
         PlayerInput.Player.Move.canceled -= Handle_PlayerMove;
@@ -251,7 +255,6 @@ public class PlayerCharacterController : NetworkBehaviour
         if (Camera.main) { Camera.main.enabled = false; }
         PlayerCam.enabled = true;
         CurrentlyViewing = PlayerCam;
-        GetComponentInChildren<AudioListener>().enabled = true;
         GameObject Hud = Instantiate(UI_HUDPrefab);
         UI_HUD = Hud.GetComponent<UI_HUDSelectPlayer>();
         UI_HUD.OnSelectPlayer += Handle_OnSelectPlayer;
@@ -298,6 +301,7 @@ public class PlayerCharacterController : NetworkBehaviour
 
         GameObject NextClient = NetworkManager.Singleton.ConnectedClientsList[PlayerIndex].PlayerObject.gameObject;
         if (NextClient == null) { return; }
+        SFX_AudioManager.Singleton.SwapPlayer(NextClient);
         PlayerCharacterController FoundClient = NextClient.GetComponent<PlayerCharacterController>();
         ArcadeUnit FoundArcade = NextClient.GetComponentInChildren<ArcadeUnit>();
         FoundClient.PlayerCam.enabled = IsViewing;

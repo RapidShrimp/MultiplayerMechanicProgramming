@@ -902,6 +902,45 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "Cheats",
+            "id": "84e3786a-7f55-4c48-86e2-cd4015a4eb6c",
+            "actions": [
+                {
+                    "name": "MuteAudio",
+                    "type": "Button",
+                    "id": "1eb990b7-e6d4-4cec-b7fb-2362385012fa",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "6c770d87-0366-43c7-a878-e0b5dd4ee2fe",
+                    "path": "<Keyboard>/m",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MuteAudio",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "5c8416bb-3606-44b2-a4ca-5b1297a74405",
+                    "path": "<Gamepad>/select",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "MuteAudio",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

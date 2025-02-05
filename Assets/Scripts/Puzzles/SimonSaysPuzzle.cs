@@ -78,7 +78,8 @@ public class SimonSaysPuzzle : PuzzleModule
     {
         while (true)
         {
-            yield return new WaitForSeconds(2);
+            //For Traditional Simon Says - Out of Scope
+            /*yield return new WaitForSeconds(2);
             for (int i = 0; i <= Curr_Sequence.Count; i++)
             {
                 yield return new WaitForSeconds(0.1f);
@@ -87,8 +88,19 @@ public class SimonSaysPuzzle : PuzzleModule
                 yield return new WaitForSeconds(0.2f);
                 m_Lights[CorrectSequence[i]].OnLightToggle(false);
                 UpdateUIRender();
-            }
+            }*/
 
+            yield return new WaitForSeconds(2);
+            for (int i = 0; i <= CorrectSequence.Count-1; i++)
+            {
+                yield return new WaitForSeconds(0.3f);
+                m_Lights[CorrectSequence[i]].OnLightToggle(true);
+                UpdateUIRender();
+                PuzzleAudios.PlaySFX(0, "SimonSays", 0.5f, ((float)CorrectSequence[i]/2)+0.5f);
+                yield return new WaitForSeconds(0.3f);
+                m_Lights[CorrectSequence[i]].OnLightToggle(false);
+                UpdateUIRender();
+            }
         }
     }
 

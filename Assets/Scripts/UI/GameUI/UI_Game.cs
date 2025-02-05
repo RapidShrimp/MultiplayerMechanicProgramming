@@ -16,6 +16,7 @@ public class UI_Game : UI_RenderTarget
     protected PuzzleModule[] Puzzles;
     protected GameObject CurrentPuzzle;
     protected UI_Background Background;
+    protected SFX_Item Audios;
     public UI_PlayerIdentifier PlayerIdentifier;
     
 
@@ -31,6 +32,7 @@ public class UI_Game : UI_RenderTarget
         ScoreCounter = GetComponentInChildren<UI_Score>();
         Puzzles = GetComponentsInChildren<PuzzleModule>();
         Background = GetComponentInChildren<UI_Background>();
+        Audios = GetComponentInChildren<SFX_Item>();
         PlayerIdentifier = GetComponentInChildren<UI_PlayerIdentifier>();
         cam.enabled = false;
         ToggleActiveRender(false);
@@ -91,6 +93,7 @@ public class UI_Game : UI_RenderTarget
         ForceNewRender();
         StartCoroutine(NextPuzzleDelay());
         Background.PuzzleComplete();
+        Audios.PlaySFX(0, "Complete");
         OnScoreUpdated?.Invoke(AwardedScore);
     }
     private void Handle_PuzzleFail(int PunishmentScore)
@@ -101,6 +104,7 @@ public class UI_Game : UI_RenderTarget
     private void Handle_PuzzleError_Rpc()
     {
         OnScoreUpdated?.Invoke(-5);
+        Audios.PlaySFX(0, "Incorrect");
         Background.PuzzleErrored();
     }
 
@@ -139,10 +143,13 @@ public class UI_Game : UI_RenderTarget
         if (IsWinner)
         {
             DisplayText.text = $"Congrats Player {WinnerIndex+1}!\nYOU WIN!";
+            SFX_AudioManager.Singleton.SwapToMusic(Audios.FindAudioByName("Victory"),0.1f,0.5f);
         }
         else
         {
             DisplayText.text = $"Player {WinnerIndex+1} is the Winner";
+            SFX_AudioManager.Singleton.SwapToMusic(Audios.FindAudioByName("GameOver"), 0.1f, 0.5f);
+
         }
     }
 }
