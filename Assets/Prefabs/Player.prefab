@@ -1339,6 +1339,7 @@ MonoBehaviour:
   ConfigsCompleted: 0
   JoystickPivot: {fileID: 289072622887605824}
   PlayerUI: {fileID: 2300360844053260879}
+  ScreenMeshRenderer: {fileID: 0}
 --- !u!1 &1578398126438888730
 GameObject:
   m_ObjectHideFlags: 0
@@ -2112,7 +2113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: f208324ab15b6524eba967f0cacfb7b6, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -5646,7 +5647,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: f208324ab15b6524eba967f0cacfb7b6, type: 2}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -7826,6 +7827,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1650431338155934285}
   - component: {fileID: 5367573485869041640}
+  - component: {fileID: 2432353014375691252}
   - component: {fileID: 4133905285105655544}
   m_Layer: 0
   m_Name: Screen_Screen
@@ -7857,6 +7859,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8880719242451861084}
   m_Mesh: {fileID: 506107443118868757, guid: f8294ce2b3ba56146b4eba04e1bc53a1, type: 3}
+--- !u!114 &2432353014375691252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8880719242451861084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cceef5794011c2247af4ecd67445384e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RenderTargetMaterial: {fileID: 2100000, guid: 9bf33741073546740b063e1e8dd67dcf, type: 2}
+  BlankScreenMaterial: {fileID: -4602372488256978278, guid: b9b88c6420ef9984281e11dfae0761b7, type: 3}
 --- !u!23 &4133905285105655544
 MeshRenderer:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ public class UI_Game : UI_RenderTarget
     {
         return cam; 
     }
+
     private void Awake()
     {
         cam = GetComponent<Canvas>().worldCamera;

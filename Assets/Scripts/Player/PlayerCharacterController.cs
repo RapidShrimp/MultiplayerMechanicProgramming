@@ -22,13 +22,15 @@ public class PlayerCharacterController : NetworkBehaviour
     Coroutine CR_MouseDetection;
     Coroutine CR_MoveMouse;
     Coroutine CR_MoveAction;
-
+    
 
     public override void OnNetworkSpawn()
     {
         DontDestroyOnLoad(this);
         m_ArcadeUnit = GetComponentInChildren<ArcadeUnit>();
         PlayerCam = GetComponentInChildren<Camera>();
+
+
         if (!IsOwner) { return; }
         GameManager.OnReadyGame += Handle_OnGameReady;
         GameManager.OnStartGame += Handle_OnStartGame;
@@ -57,6 +59,11 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput.Player.ShoulderRight.performed += Handle_RB;
     }
 
+    private void OnClientDisconnect(ulong id)
+    {
+        ArcadeScreenDisplay Screen =  GetComponentInChildren<ArcadeScreenDisplay>();
+        Screen.ToggleScreenActive_Rpc(false);
+    }
 
     public override void OnNetworkDespawn()
     {
@@ -249,7 +256,6 @@ public class PlayerCharacterController : NetworkBehaviour
         UI_HUD = Hud.GetComponent<UI_HUDSelectPlayer>();
         UI_HUD.OnSelectPlayer += Handle_OnSelectPlayer;
 
-        //GetPlayerIndex_Rpc(((int)NetworkObjectId));
     }
 
     private void Handle_OnStartGame()
@@ -267,15 +273,10 @@ public class PlayerCharacterController : NetworkBehaviour
         //Disable old Render
         if(CurrentListID != PlayerIndex) 
         {
-            GameObject CurrentClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
-            PlayerCharacterController FoundClient = CurrentClient.GetComponent<PlayerCharacterController>();
-            ArcadeUnit FoundArcade = CurrentClient.GetComponentInChildren<ArcadeUnit>();
-            FoundClient.PlayerCam.enabled = false;
-            FoundArcade.GetArcadeUI().ToggleActiveRender(false);
+            ToggleArcadeUnitView(CurrentListID, false);
+            ToggleArcadeUnitView(PlayerIndex, true);
         }
 
-        PlayerCam.enabled = true;
-        m_ArcadeUnit.GetArcadeUI().ToggleActiveRender(true);
         m_ArcadeUnit.GameEnded(PlayerIndex == WinningPlayer, WinningPlayer);
         StopAllCoroutines();
           
@@ -285,27 +286,24 @@ public class PlayerCharacterController : NetworkBehaviour
     private void Handle_OnSelectPlayer(int Direction)
     {
         if(!IsOwner) { return; }
-
-        //This breaks if a client disconnects
-        GameObject CurrentClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
-        {
-            PlayerCharacterController FoundClient = CurrentClient.GetComponent<PlayerCharacterController>();
-            ArcadeUnit FoundArcade = CurrentClient.GetComponentInChildren<ArcadeUnit>();
-            FoundClient.PlayerCam.enabled = false;
-            FoundArcade.GetArcadeUI().ToggleActiveRender(false);
-        }
-
+        CurrentListID = Mathf.Clamp(CurrentListID, 0,NetworkManager.Singleton.ConnectedClientsList.Count-1);
+        ToggleArcadeUnitView(CurrentListID,false);
         CurrentListID = (int)Mathf.Repeat(CurrentListID + Direction, NetworkManager.Singleton.ConnectedClientsList.Count);
+        ToggleArcadeUnitView(CurrentListID,true);
 
-        GameObject NextClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
-        if (NextClient != null) 
-        {
-            PlayerCharacterController FoundClient = NextClient.GetComponent<PlayerCharacterController>();
-            ArcadeUnit FoundArcade = NextClient.GetComponentInChildren<ArcadeUnit>();
-            FoundClient.PlayerCam.enabled = true;
-            CurrentlyViewing = FoundClient.PlayerCam;
-            FoundArcade.GetArcadeUI().ToggleActiveRender(true);
-        }
+    }
+
+    void ToggleArcadeUnitView(int PlayerIndex, bool IsViewing)
+    {
+
+        GameObject NextClient = NetworkManager.Singleton.ConnectedClientsList[PlayerIndex].PlayerObject.gameObject;
+        if (NextClient == null) { return; }
+        PlayerCharacterController FoundClient = NextClient.GetComponent<PlayerCharacterController>();
+        ArcadeUnit FoundArcade = NextClient.GetComponentInChildren<ArcadeUnit>();
+        FoundClient.PlayerCam.enabled = IsViewing;
+        FoundArcade.GetArcadeUI().ToggleActiveRender(IsViewing);
+
+        if (IsViewing) { CurrentlyViewing = FoundClient.PlayerCam; }
     }
 
     public int GetArcadeScore()

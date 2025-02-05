@@ -16,9 +16,8 @@ public class ArcadeUnit : NetworkBehaviour
     [SerializeField] GameObject JoystickPivot;
     Quaternion DesiredJoystickRotation;
     Coroutine CR_Joystick;
-
     [SerializeField] protected UI_Game PlayerUI; //The UI Component
-
+    [SerializeField] MeshRenderer ScreenMeshRenderer;
 
     private NetworkVariable<int> Score = new NetworkVariable<int>(
     value: 0,

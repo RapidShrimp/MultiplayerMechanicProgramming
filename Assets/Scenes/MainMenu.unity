@@ -2507,7 +2507,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  GameLength: 10
+  GameLength: 100
   UIMenu: {fileID: 1098883917}
   PlayerCount:
     m_InternalValue: 0
