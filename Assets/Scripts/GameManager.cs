@@ -67,11 +67,7 @@ public class GameManager : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
             {
                 PlayerCount.Value++;
-                for(int ID = 0; ID< NetworkManager.Singleton.ConnectedClientsList.Count; ID++)
-                {
-                    GameObject NewPlayer = NetworkManager.Singleton.ConnectedClientsList[ID].PlayerObject.gameObject;
-                    NewPlayer.GetComponent<PlayerCharacterController>().AssignPlayerIndex_Rpc(ID);
-                }
+                UpdatePlayerIDs();
             };
             NetworkManager.Singleton.OnClientDisconnectCallback += (id) =>
             {
@@ -94,6 +90,16 @@ public class GameManager : NetworkBehaviour
         };
 
     }
+
+    public void UpdatePlayerIDs()
+    {
+        for (int ID = 0; ID < NetworkManager.Singleton.ConnectedClientsList.Count; ID++)
+        {
+            GameObject NewPlayer = NetworkManager.Singleton.ConnectedClientsList[ID].PlayerObject.gameObject;
+            NewPlayer.GetComponent<PlayerCharacterController>().AssignPlayerIndex_Rpc(ID);
+        }
+    }
+
     [Rpc(SendTo.Everyone)]
     public void SetGameSettings_Rpc(int settingsIndex)
     {

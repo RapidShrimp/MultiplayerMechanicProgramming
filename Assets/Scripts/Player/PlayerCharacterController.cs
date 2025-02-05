@@ -30,11 +30,9 @@ public class PlayerCharacterController : NetworkBehaviour
         m_ArcadeUnit = GetComponentInChildren<ArcadeUnit>();
         PlayerCam = GetComponentInChildren<Camera>();
         if (!IsOwner) { return; }
-        transform.position = new Vector3(transform.position.x + 2, transform.position.y, transform.position.z);
         GameManager.OnReadyGame += Handle_OnGameReady;
         GameManager.OnStartGame += Handle_OnStartGame;
         GameManager.OnGameFinished += Handle_OnGameEnded;
-
         PlayerInput = new PlayerInputActions();
         //Bind Player Events
         PlayerInput.Player.Move.performed += Handle_PlayerMove;
@@ -235,6 +233,7 @@ public class PlayerCharacterController : NetworkBehaviour
         UI_Game GotUI = m_ArcadeUnit.GetArcadeUI();
         if(GotUI == null) { Debug.LogError("No UI Found"); }
         GotUI.PlayerIdentifier.InitPlayerIdentifier_Rpc(PlayerIndex);
+        transform.position = new Vector3((2 * PlayerIndex), 0, 0);
     }
 
     public void Handle_OnGameReady()
@@ -286,6 +285,8 @@ public class PlayerCharacterController : NetworkBehaviour
     private void Handle_OnSelectPlayer(int Direction)
     {
         if(!IsOwner) { return; }
+
+        //This breaks if a client disconnects
         GameObject CurrentClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
         {
             PlayerCharacterController FoundClient = CurrentClient.GetComponent<PlayerCharacterController>();
