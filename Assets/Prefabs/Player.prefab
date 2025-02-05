@@ -96,6 +96,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1956413829394799255}
   - component: {fileID: 2238849666303440194}
+  - component: {fileID: 7690929868248072801}
   - component: {fileID: 2910509850405813154}
   m_Layer: 5
   m_Name: Player ID
@@ -131,6 +132,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 83042122862004416}
   m_CullTransparentMesh: 1
+--- !u!114 &7690929868248072801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83042122862004416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1f08cb454b5d14438314c0edf8b432d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
 --- !u!114 &2910509850405813154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1522,6 +1536,7 @@ MonoBehaviour:
   DesiredRenderTo: {fileID: 8400000, guid: d5f1f29badc8673408b731625892fd6a, type: 2}
   RenderAuto: 1
   DisplayText: {fileID: 5100785316811114671}
+  PlayerIdentifier: {fileID: 0}
   ConfigurationSet: 0
 --- !u!114 &8436385219108406707
 MonoBehaviour:
@@ -7516,8 +7531,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6332093278284117156}
-  - component: {fileID: 8182297062855534019}
   - component: {fileID: 475296090696765454}
+  - component: {fileID: 8182297062855534019}
   - component: {fileID: 7944798555449112329}
   m_Layer: 5
   m_Name: ScoreText
@@ -7545,6 +7560,14 @@ RectTransform:
   m_AnchoredPosition: {x: 415, y: 371}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &475296090696765454
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8694986302461592807}
+  m_CullTransparentMesh: 1
 --- !u!114 &8182297062855534019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7557,14 +7580,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 155061a6e9e963b458ea981ee829cb57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!222 &475296090696765454
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8694986302461592807}
-  m_CullTransparentMesh: 1
 --- !u!114 &7944798555449112329
 MonoBehaviour:
   m_ObjectHideFlags: 0

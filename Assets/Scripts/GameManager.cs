@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Unity.Netcode;
 using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -66,7 +67,11 @@ public class GameManager : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
             {
                 PlayerCount.Value++;
-
+                for(int ID = 0; ID< NetworkManager.Singleton.ConnectedClientsList.Count; ID++)
+                {
+                    GameObject NewPlayer = NetworkManager.Singleton.ConnectedClientsList[ID].PlayerObject.gameObject;
+                    NewPlayer.GetComponent<PlayerCharacterController>().AssignPlayerIndex_Rpc(ID);
+                }
             };
             NetworkManager.Singleton.OnClientDisconnectCallback += (id) =>
             {

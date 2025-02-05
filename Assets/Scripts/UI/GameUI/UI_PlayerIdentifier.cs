@@ -14,14 +14,14 @@ public class UI_PlayerIdentifier : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void InitPlayerIdentifier_Rpc(int PlayerID)
     {
+
         if (IsOwner) 
-        { 
-            PlayerText.text = $"Player {PlayerID} (YOU)"; 
+        {
+            PlayerText.text = $"Player: {PlayerID + 1} (YOU)"; 
         }
         else
         {
-            PlayerText.text = $"Player {PlayerID}";
+            PlayerText.text = $"Player: {PlayerID + 1}";
         }
-
     }
 }

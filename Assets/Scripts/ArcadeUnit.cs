@@ -28,8 +28,7 @@ public class ArcadeUnit : NetworkBehaviour
 
     private void Awake()
     {
-        PlayerUI.transform.position = new Vector3(transform.position.x, 500);
-        PlayerUI.OnScoreUpdated += Handle_UpdateScore;
+
         Buttons = GetComponentsInChildren<ArcadeButton>();
         for(int i = 0; i < Buttons.Length; i++)
         {
@@ -56,7 +55,10 @@ public class ArcadeUnit : NetworkBehaviour
     {
 
         Score.OnValueChanged += Handle_ScoreChanged;
-        
+
+        PlayerUI.transform.position = new Vector3(transform.position.x, 500);
+        PlayerUI.OnScoreUpdated += Handle_UpdateScore;
+
         if (!IsOwner) { return; }
         Configurations = GetComponentsInChildren<Configuration>();
         foreach (Configuration config in Configurations)
@@ -70,6 +72,7 @@ public class ArcadeUnit : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         Score.OnValueChanged -= Handle_ScoreChanged;
+        PlayerUI.OnScoreUpdated -= Handle_UpdateScore;
 
     }
 

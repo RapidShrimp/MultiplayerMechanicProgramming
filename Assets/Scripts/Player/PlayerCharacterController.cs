@@ -228,25 +228,15 @@ public class PlayerCharacterController : NetworkBehaviour
 
     #endregion
 
-    /*[Rpc(SendTo.Server)]
-    public void GetPlayerIndex_Rpc(int NetworkID)
-    {
-        for(int ClientID = 0; ClientID < NetworkManager.Singleton.ConnectedClientsList.Count; ClientID++)
-        {
-            if((int)NetworkManager.Singleton.ConnectedClientsList[ClientID].PlayerObject.NetworkObjectId == NetworkID)
-            {
-                AssignPlayerIndex_Rpc(ClientID);
-                return;
-            }
-        }
-
-    }
     [Rpc(SendTo.Everyone)]
     public void AssignPlayerIndex_Rpc(int ClientIndex)
     {
+        Debug.Log($"RecievePlayerIndex {ClientIndex}");
         PlayerIndex = ClientIndex;
-        m_ArcadeUnit.GetArcadeUI().PlayerIdentifier.InitPlayerIdentifier_Rpc(PlayerIndex);
-    }*/
+        UI_Game GotUI = m_ArcadeUnit.GetArcadeUI();
+        if(GotUI == null) { Debug.LogError("No UI Found"); }
+        GotUI.PlayerIdentifier.InitPlayerIdentifier_Rpc(PlayerIndex);
+    }
 
     public void Handle_OnGameReady()
     {
