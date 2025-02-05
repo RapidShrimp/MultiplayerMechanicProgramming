@@ -15,4 +15,13 @@ public class UI_HUDSelectPlayer : MonoBehaviour
         UI_LeftButton.onClick.AddListener(() => { OnSelectPlayer?.Invoke(-1); });
         UI_RightButton.onClick.AddListener(() => { OnSelectPlayer?.Invoke(1); });
     }
+
+    void OnGameEnd(bool PlayerWin)
+    {
+        if (PlayerWin) 
+        { 
+            //Confetti Particles
+        }
+
+    }
 }

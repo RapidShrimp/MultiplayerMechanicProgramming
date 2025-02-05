@@ -11,9 +11,17 @@ public class GameManager : NetworkBehaviour
     public static event Action<int> OnPlayerCountUpdated;
     public static event Action OnReadyGame;
     public static event Action OnStartGame;
-    public event Action OnPauseGame;
-    public event Action OnResumeGame;
-    public event Action OnExitGame;
+    public static event Action OnPauseGame;
+    public static event Action OnGameFinished;
+
+    public static event Action OnResumeGame;
+    public static event Action OnExitGame;
+
+    public static event Action<int> OnGameTimerUpdated;
+    protected Coroutine GameTimer;
+
+    [SerializeField] protected float GameLength = 10;
+    //private SO_GameSettings SelectedSettings;
 
     [SerializeField] NetworkManagerUI UIMenu;
     [SerializeField] private NetworkVariable<int> PlayerCount = new NetworkVariable<int>(
@@ -31,15 +39,14 @@ public class GameManager : NetworkBehaviour
     {
         DontDestroyOnLoad( this );
     }
-    private SO_GameSettings SelectedSettings;
     public override void OnNetworkSpawn()
     {
-
         NetworkManager.Singleton.SceneManager.OnLoadComplete += (a, b, c) =>
         {
             if(NetworkManager.Singleton.LocalClientId == a)
             {
                 OnReadyGame?.Invoke();
+                if (IsServer) { GameTimeRemaining.Value = GameLength;}
             }
 
             if (!IsServer || NetworkManager.Singleton.LocalClientId != a) { return; }
@@ -77,7 +84,8 @@ public class GameManager : NetworkBehaviour
 
         GameTimeRemaining.OnValueChanged += (float previousValue, float newValue) =>
         {
-            //Call to Arcades to change UI Elements
+            //Debug.Log($"Time {newValue}");
+            OnGameTimerUpdated?.Invoke((int)newValue);
         };
 
     }
@@ -109,6 +117,25 @@ public class GameManager : NetworkBehaviour
     public void StartGame_Rpc()
     {
         OnStartGame?.Invoke();
+        if (IsOwner) 
+        { 
+            if(GameTimer == null)
+            {
+                GameTimer = StartCoroutine(CountdownGameTimer(120));
+            }
+        }
     }
-    
+
+
+
+    IEnumerator CountdownGameTimer(int GameLength)
+    {
+        if (!IsServer) { yield break; } 
+        while (GameTimeRemaining.Value > 0)
+        {
+            yield return new WaitForSeconds(1);
+            GameTimeRemaining.Value--;
+        }
+        OnGameFinished?.Invoke();
+    }
 }

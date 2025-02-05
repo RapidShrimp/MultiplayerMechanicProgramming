@@ -13,9 +13,10 @@ public class UI_Game : UI_RenderTarget
 
     [SerializeField] TextMeshProUGUI DisplayText;
     protected UI_Score ScoreCounter;
-    PuzzleModule[] Puzzles;
-    GameObject CurrentPuzzle;
-    UI_Background Background;
+    protected PuzzleModule[] Puzzles;
+    protected GameObject CurrentPuzzle;
+    protected UI_Background Background;
+    public UI_PlayerIdentifier PlayerIdentifier;
     
 
     public bool ConfigurationSet = false;
@@ -29,6 +30,7 @@ public class UI_Game : UI_RenderTarget
         ScoreCounter = GetComponentInChildren<UI_Score>();
         Puzzles = GetComponentsInChildren<PuzzleModule>();
         Background = GetComponentInChildren<UI_Background>();
+        PlayerIdentifier = GetComponentInChildren<UI_PlayerIdentifier>();
         cam.enabled = false;
         ToggleActiveRender(false);
     }

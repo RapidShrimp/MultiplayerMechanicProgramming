@@ -8,8 +8,9 @@ public class ArcadeUnit : NetworkBehaviour
     private Configuration[] Configurations;
     [SerializeField] protected int ConfigsCompleted;
 
-    Coroutine CR_GameTimer;
 
+    Coroutine CR_GameTimer;
+    Coroutine CR_ConfigurationScramble;
 
     ArcadeButton[] Buttons;
     [SerializeField] GameObject JoystickPivot;
@@ -19,15 +20,6 @@ public class ArcadeUnit : NetworkBehaviour
     [SerializeField] protected UI_Game PlayerUI; //The UI Component
 
     private int MaxHealth = 100;
-    private NetworkVariable<int> GameTimeRemaining = new NetworkVariable<int>(
-        value: 0,
-        NetworkVariableReadPermission.Everyone,
-        NetworkVariableWritePermission.Owner);
-
-    private NetworkVariable<float> Health = new NetworkVariable<float>(
-    value: 100,
-    NetworkVariableReadPermission.Everyone,
-    NetworkVariableWritePermission.Owner);
 
     private NetworkVariable<int> Score = new NetworkVariable<int>(
     value: 0,
@@ -64,7 +56,7 @@ public class ArcadeUnit : NetworkBehaviour
     {
 
         Score.OnValueChanged += Handle_ScoreChanged;
-
+        
         if (!IsOwner) { return; }
         Configurations = GetComponentsInChildren<Configuration>();
         foreach (Configuration config in Configurations)
@@ -87,8 +79,6 @@ public class ArcadeUnit : NetworkBehaviour
         PlayerUI.ToggleActiveRender(true);
         MaxHealth = 100;// Settings.DefaultHealth;
         Score.Value = 0;
-        Health.Value = MaxHealth;
-        GameTimeRemaining.Value = 120; // Settings.GameTime; // Change this later
         foreach (Configuration config in Configurations)
         {
             config.StartModule();
@@ -98,9 +88,21 @@ public class ArcadeUnit : NetworkBehaviour
     {
         if (!IsOwner) { return; }
         Debug.Log("Started");
-        CR_GameTimer = StartCoroutine(ArcadeTimer());
         PlayerUI.StartNewPuzzle();
+        if (CR_ConfigurationScramble != null) { StopCoroutine(CR_ConfigurationScramble); }
+        CR_ConfigurationScramble = StartCoroutine(RandomiseConfiguration());
     }
+
+    public void GameEnded()
+    {
+        if(CR_ConfigurationScramble != null)
+        {
+            StopCoroutine(CR_ConfigurationScramble);
+            CR_ConfigurationScramble = null;
+        }
+
+    }
+
 
     #region Configurations
     private void Handle_ConfigurationUpdated(bool IsActive)
@@ -114,6 +116,15 @@ public class ArcadeUnit : NetworkBehaviour
     {
         if(!IsOwner) { return; }
         Score.Value += SabotageScore;
+    }
+
+    IEnumerator RandomiseConfiguration()
+    {
+        while (true) 
+        {
+            yield return new WaitForSeconds(15);
+            Configurations[UnityEngine.Random.Range(0,Configurations.Length)].StartModule();
+        }
     }
 
     #endregion
@@ -139,16 +150,6 @@ public class ArcadeUnit : NetworkBehaviour
         }
     }
 
-    IEnumerator ArcadeTimer()
-    {
-        while (GameTimeRemaining.Value > 0) 
-        {
-            yield return new WaitForSecondsRealtime(1);
-            GameTimeRemaining.Value --;
-        }
-
-    }
-
 
     #region UI
     public UI_Game GetArcadeUI()
@@ -166,5 +167,6 @@ public class ArcadeUnit : NetworkBehaviour
         if (!PlayerUI) { Debug.Assert(false); return; }
         PlayerUI.UpdateScore(newScore);
     }
+
     #endregion
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,12 +15,14 @@ public class PlayerCharacterController : NetworkBehaviour
     ArcadeUnit m_ArcadeUnit;
     
     [SerializeField] GameObject UI_HUDPrefab;
+    protected int PlayerIndex;
+
     private UI_HUDSelectPlayer UI_HUD;
     Coroutine CR_MouseDetection;
     Coroutine CR_MoveMouse;
     Coroutine CR_MoveAction;
 
-    int CurrentListID = 0;
+    protected int CurrentListID = 0;
 
     public override void OnNetworkSpawn()
     {
@@ -30,6 +33,7 @@ public class PlayerCharacterController : NetworkBehaviour
         transform.position = new Vector3(transform.position.x + 2, transform.position.y, transform.position.z);
         GameManager.OnReadyGame += Handle_OnGameReady;
         GameManager.OnStartGame += Handle_OnStartGame;
+        GameManager.OnGameFinished += Handle_OnGameEnded;
 
         PlayerInput = new PlayerInputActions();
         //Bind Player Events
@@ -56,7 +60,6 @@ public class PlayerCharacterController : NetworkBehaviour
     }
 
 
-
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
@@ -64,6 +67,7 @@ public class PlayerCharacterController : NetworkBehaviour
         //Unbind Player Events
         GameManager.OnReadyGame -= Handle_OnGameReady;
         GameManager.OnStartGame -= Handle_OnStartGame;
+        GameManager.OnGameFinished -= Handle_OnGameEnded;
 
         PlayerInput.Disable();
         PlayerInput.Player.Move.performed -= Handle_PlayerMove;
@@ -222,12 +226,32 @@ public class PlayerCharacterController : NetworkBehaviour
         return RayHit;
     }
 
-#endregion
+    #endregion
 
+    /*[Rpc(SendTo.Server)]
+    public void GetPlayerIndex_Rpc(int NetworkID)
+    {
+        for(int ClientID = 0; ClientID < NetworkManager.Singleton.ConnectedClientsList.Count; ClientID++)
+        {
+            if((int)NetworkManager.Singleton.ConnectedClientsList[ClientID].PlayerObject.NetworkObjectId == NetworkID)
+            {
+                AssignPlayerIndex_Rpc(ClientID);
+                return;
+            }
+        }
+
+    }
+    [Rpc(SendTo.Everyone)]
+    public void AssignPlayerIndex_Rpc(int ClientIndex)
+    {
+        PlayerIndex = ClientIndex;
+        m_ArcadeUnit.GetArcadeUI().PlayerIdentifier.InitPlayerIdentifier_Rpc(PlayerIndex);
+    }*/
 
     public void Handle_OnGameReady()
     {
         if (!IsOwner) { return; }
+        CurrentListID = PlayerIndex;
         m_ArcadeUnit.ReadyGame();
         if (Camera.main) { Camera.main.enabled = false; }
         PlayerCam.enabled = true;
@@ -237,6 +261,7 @@ public class PlayerCharacterController : NetworkBehaviour
         UI_HUD = Hud.GetComponent<UI_HUDSelectPlayer>();
         UI_HUD.OnSelectPlayer += Handle_OnSelectPlayer;
 
+        //GetPlayerIndex_Rpc(((int)NetworkObjectId));
     }
 
     private void Handle_OnStartGame()
@@ -246,6 +271,15 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput.Enable();
         m_ArcadeUnit.StartGame();
     }
+
+    private void Handle_OnGameEnded()
+    {
+        if(!IsOwner) { return; }
+
+        PlayerInput.Disable();
+        m_ArcadeUnit.GameEnded();
+    }
+
 
     private void Handle_OnSelectPlayer(int Direction)
     {
@@ -270,12 +304,6 @@ public class PlayerCharacterController : NetworkBehaviour
             FoundArcade.GetArcadeUI().ToggleActiveRender(true);
         }
     }
-
-
-
-
-
-
 
 }
 

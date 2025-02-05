@@ -44,7 +44,7 @@ public class SimonSaysPuzzle : PuzzleModule
         CorrectSequence.Clear();
         for (int i = 0; i < Array.Length; i++) 
         { 
-            Debug.Log(Array[i]);
+            //Debug.Log(Array[i]);
             CorrectSequence.Add(Array[i]);
         }
         Curr_Sequence.Clear();
