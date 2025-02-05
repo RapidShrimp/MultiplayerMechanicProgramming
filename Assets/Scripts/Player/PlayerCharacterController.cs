@@ -16,13 +16,13 @@ public class PlayerCharacterController : NetworkBehaviour
     
     [SerializeField] GameObject UI_HUDPrefab;
     protected int PlayerIndex;
+    protected int CurrentListID = 0;
 
     private UI_HUDSelectPlayer UI_HUD;
     Coroutine CR_MouseDetection;
     Coroutine CR_MoveMouse;
     Coroutine CR_MoveAction;
 
-    protected int CurrentListID = 0;
 
     public override void OnNetworkSpawn()
     {
@@ -231,7 +231,6 @@ public class PlayerCharacterController : NetworkBehaviour
     [Rpc(SendTo.Everyone)]
     public void AssignPlayerIndex_Rpc(int ClientIndex)
     {
-        Debug.Log($"RecievePlayerIndex {ClientIndex}");
         PlayerIndex = ClientIndex;
         UI_Game GotUI = m_ArcadeUnit.GetArcadeUI();
         if(GotUI == null) { Debug.LogError("No UI Found"); }
@@ -262,14 +261,27 @@ public class PlayerCharacterController : NetworkBehaviour
         m_ArcadeUnit.StartGame();
     }
 
-    private void Handle_OnGameEnded()
+    private void Handle_OnGameEnded(int WinningPlayer)
     {
-        if(!IsOwner) { return; }
-
         PlayerInput.Disable();
-        m_ArcadeUnit.GameEnded();
-    }
 
+        //Disable old Render
+        if(CurrentListID != PlayerIndex) 
+        {
+            GameObject CurrentClient = NetworkManager.Singleton.ConnectedClientsList[CurrentListID].PlayerObject.gameObject;
+            PlayerCharacterController FoundClient = CurrentClient.GetComponent<PlayerCharacterController>();
+            ArcadeUnit FoundArcade = CurrentClient.GetComponentInChildren<ArcadeUnit>();
+            FoundClient.PlayerCam.enabled = false;
+            FoundArcade.GetArcadeUI().ToggleActiveRender(false);
+        }
+
+        PlayerCam.enabled = true;
+        m_ArcadeUnit.GetArcadeUI().ToggleActiveRender(true);
+        m_ArcadeUnit.GameEnded(PlayerIndex == WinningPlayer, WinningPlayer);
+        StopAllCoroutines();
+          
+
+    }
 
     private void Handle_OnSelectPlayer(int Direction)
     {
@@ -295,5 +307,9 @@ public class PlayerCharacterController : NetworkBehaviour
         }
     }
 
+    public int GetArcadeScore()
+    {
+        return m_ArcadeUnit.GetScore();
+    }
 }
 

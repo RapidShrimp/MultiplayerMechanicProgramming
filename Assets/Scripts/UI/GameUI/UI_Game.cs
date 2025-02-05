@@ -129,4 +129,19 @@ public class UI_Game : UI_RenderTarget
         StartNewPuzzle();
     }
 
+    public void OnGameEnded(bool IsWinner, int WinnerIndex)
+    {
+        CurrentPuzzle.GetComponent<PuzzleModule>().DeactivatePuzzleModule();
+        CurrentPuzzle.gameObject.SetActive(false);
+        StopAllCoroutines();
+        DisplayText.gameObject.SetActive(true);
+        if (IsWinner)
+        {
+            DisplayText.text = $"Congrats Player {WinnerIndex+1}!\nYOU WIN!";
+        }
+        else
+        {
+            DisplayText.text = $"Player {WinnerIndex+1} is the Winner";
+        }
+    }
 }

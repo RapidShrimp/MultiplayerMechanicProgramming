@@ -13,7 +13,7 @@ public class GameManager : NetworkBehaviour
     public static event Action OnReadyGame;
     public static event Action OnStartGame;
     public static event Action OnPauseGame;
-    public static event Action OnGameFinished;
+    public static event Action<int> OnGameFinished; //Int is the winning player
 
     public static event Action OnResumeGame;
     public static event Action OnExitGame;
@@ -131,7 +131,24 @@ public class GameManager : NetworkBehaviour
         }
     }
 
+    protected int GetHighestScoringPlayer()
+    {
+        int HighestScoringPlayer = 0;
+        int HighsestScore = 0;
+        for (int ID = 0; ID < NetworkManager.Singleton.ConnectedClientsList.Count; ID++)
+        {
 
+            GameObject NewPlayer = NetworkManager.Singleton.ConnectedClientsList[ID].PlayerObject.gameObject;
+            int PlayerScore = NewPlayer.GetComponent<PlayerCharacterController>().GetArcadeScore();
+            if ( PlayerScore > HighsestScore) 
+            { 
+                HighsestScore = PlayerScore;
+                HighestScoringPlayer = ID;
+            };
+        }
+
+        return HighestScoringPlayer;
+    }
 
     IEnumerator CountdownGameTimer(int GameLength)
     {
@@ -141,6 +158,14 @@ public class GameManager : NetworkBehaviour
             yield return new WaitForSeconds(1);
             GameTimeRemaining.Value--;
         }
-        OnGameFinished?.Invoke();
+
+        EndGame_Rpc(GetHighestScoringPlayer());
+    }
+    
+    
+    [Rpc(SendTo.Everyone)]
+    public void EndGame_Rpc(int WinnerID)
+    {
+        OnGameFinished?.Invoke(WinnerID);
     }
 }

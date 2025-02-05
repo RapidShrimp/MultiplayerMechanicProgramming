@@ -19,13 +19,12 @@ public class ArcadeUnit : NetworkBehaviour
 
     [SerializeField] protected UI_Game PlayerUI; //The UI Component
 
-    private int MaxHealth = 100;
 
     private NetworkVariable<int> Score = new NetworkVariable<int>(
     value: 0,
     NetworkVariableReadPermission.Everyone,
     NetworkVariableWritePermission.Owner);
-
+    public int GetScore() { return Score.Value; }
     private void Awake()
     {
 
@@ -80,7 +79,6 @@ public class ArcadeUnit : NetworkBehaviour
     {
         if (!IsOwner) { return; }
         PlayerUI.ToggleActiveRender(true);
-        MaxHealth = 100;// Settings.DefaultHealth;
         Score.Value = 0;
         foreach (Configuration config in Configurations)
         {
@@ -96,14 +94,10 @@ public class ArcadeUnit : NetworkBehaviour
         CR_ConfigurationScramble = StartCoroutine(RandomiseConfiguration());
     }
 
-    public void GameEnded()
+    public void GameEnded(bool IsWinner, int WinnerIndex)
     {
-        if(CR_ConfigurationScramble != null)
-        {
-            StopCoroutine(CR_ConfigurationScramble);
-            CR_ConfigurationScramble = null;
-        }
-
+        StopAllCoroutines();
+        PlayerUI.OnGameEnded(IsWinner, WinnerIndex);
     }
 
 
