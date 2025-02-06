@@ -20,10 +20,11 @@ public class GameManager : NetworkBehaviour
 
     public static event Action<int> OnGameTimerUpdated;
     protected Coroutine GameTimer;
+    [SerializeField] protected float GameLength = 120;
 
-    [SerializeField] protected float GameLength = 10;
     //private SO_GameSettings SelectedSettings;
 
+    protected SFX_Item ConnectionSounds;
     [SerializeField] NetworkManagerUI UIMenu;
     [SerializeField] private NetworkVariable<int> PlayerCount = new NetworkVariable<int>(
         0,
@@ -39,56 +40,47 @@ public class GameManager : NetworkBehaviour
     private void Awake()
     {
         DontDestroyOnLoad( this );
+        ConnectionSounds = GetComponentInChildren<SFX_Item>();
     }
     public override void OnNetworkSpawn()
     {
-        NetworkManager.Singleton.SceneManager.OnLoadComplete += (a, b, c) =>
-        {
-            if(NetworkManager.Singleton.LocalClientId == a)
-            {
-                OnReadyGame?.Invoke();
-                if (IsServer) { GameTimeRemaining.Value = GameLength;}
-            }
 
-            if (!IsServer || NetworkManager.Singleton.LocalClientId != a) { return; }
-            StartCoroutine(StartGameCountdown(3));
-        };
-        
-        //Server Client Updates
-        NetworkManager.Singleton.OnConnectionEvent += (a,b) =>
-        {
-            /*Needs a Check to see if the disconnecting client was the host**/
-            //SceneManager.LoadScene(0);
-        };
         if (IsServer)
         {
-
-            UIMenu.OnStartGame += TransitionLevel;
-            NetworkManager.Singleton.OnClientConnectedCallback += (id) =>
-            {
-                PlayerCount.Value++;
-                UpdatePlayerIDs();
-            };
-            NetworkManager.Singleton.OnClientDisconnectCallback += (id) =>
-            {
-                PlayerCount.Value--;
-            };
+            UIMenu.OnStartGame += () => { TransitionLevel("GameScene"); };
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
         }
-        PlayerCount.OnValueChanged += (int previousValue, int newValue) =>
-        {
-            OnPlayerCountUpdated?.Invoke(newValue);
-            if (UIMenu)
-            {
-                UIMenu.SetPlayerCount(PlayerCount.Value);
-            }
-        };
+        NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLevelLoaded;
+        PlayerCount.OnValueChanged += PlayersUpdated;
 
         GameTimeRemaining.OnValueChanged += (float previousValue, float newValue) =>
         {
-            //Debug.Log($"Time {newValue}");
             OnGameTimerUpdated?.Invoke((int)newValue);
         };
 
+    }
+
+    private void OnClientDisconnect(ulong Id)
+    {
+        PlayerCount.Value--;
+        SFX_AudioManager.Singleton.PlaySoundToPlayer(ConnectionSounds.FindAudioByName("Leave"), 1, 1);
+    }
+
+    private void OnClientConnected(ulong Id)
+    {
+        PlayerCount.Value++;
+        UpdatePlayerIDs();
+        SFX_AudioManager.Singleton.PlaySoundToPlayer(ConnectionSounds.FindAudioByName("Join"),1,1);
+
+    }
+    private void PlayersUpdated(int previousValue, int newValue)
+    {
+        OnPlayerCountUpdated?.Invoke(newValue);
+        if (UIMenu)
+        {
+            UIMenu.SetPlayerCount(PlayerCount.Value);
+        }
     }
 
     public void UpdatePlayerIDs()
@@ -106,10 +98,22 @@ public class GameManager : NetworkBehaviour
         //Call to the arcade unit to update looks - Scope Creep Here :Skull:
     }
 
-    public void TransitionLevel()
+    public void TransitionLevel(string LevelName = "MainMenu")
     {
         if (!IsServer) { return; }
-        NetworkManager.SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+        NetworkManager.Singleton.SceneManager.LoadScene(LevelName, LoadSceneMode.Single);
+    }
+
+    private void OnLevelLoaded(ulong clientId, string sceneName, LoadSceneMode loadSceneMode)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            OnReadyGame?.Invoke();
+            if (IsServer) { GameTimeRemaining.Value = GameLength; }
+        }
+
+        if (!IsServer || NetworkManager.Singleton.LocalClientId != clientId) { return; }
+        StartCoroutine(StartGameCountdown(3));
     }
 
     IEnumerator StartGameCountdown(int CountdownLength)
@@ -161,8 +165,8 @@ public class GameManager : NetworkBehaviour
         if (!IsServer) { yield break; } 
         while (GameTimeRemaining.Value > 0)
         {
-            yield return new WaitForSeconds(1);
             GameTimeRemaining.Value--;
+            yield return new WaitForSeconds(1);
         }
 
         EndGame_Rpc(GetHighestScoringPlayer());

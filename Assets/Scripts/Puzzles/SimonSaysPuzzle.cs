@@ -69,6 +69,7 @@ public class SimonSaysPuzzle : PuzzleModule
             return;
         }
         Curr_Sequence.Add(ButtonIndex);
+        PuzzleAudios.PlaySFX(0, "SimonSays", 0.5f, (ButtonIndex / 2) + 0.5f);
         UpdateProgress_Rpc(MakeIntArrayfromList(Curr_Sequence));
         if (Curr_Sequence.Count == 5) { CompleteModule(); }
 

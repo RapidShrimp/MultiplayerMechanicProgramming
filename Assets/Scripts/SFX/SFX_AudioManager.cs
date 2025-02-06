@@ -39,7 +39,7 @@ public class SFX_AudioManager : MonoBehaviour
         }
     }
 
-    public void PlaySoundToPlayer(AudioSource Sound,float Volume,float Pitch)
+    public void PlaySoundToPlayer(AudioSource Sound,float Volume =0.5f,float Pitch=1.0f)
     {
         if(Sound.isPlaying) {Sound.Stop(); }
         Sound.volume = Volume;

@@ -77,7 +77,7 @@ public class ButtonHoldPuzzle : PuzzleModule
     {
         base.StartPuzzleModule();
         if (!IsOwner) { return; }
-        HoldLength.Value = UnityEngine.Random.Range(2, 7);
+        HoldLength.Value = UnityEngine.Random.Range(1, 6);
         DesiredButtonIndex.Value = UnityEngine.Random.Range(0, 4);
     }
 
