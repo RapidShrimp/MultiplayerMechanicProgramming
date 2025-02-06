@@ -78,6 +78,7 @@ public class ArcadeUnit : NetworkBehaviour
     {
         if (!IsOwner) { return; }
         PlayerUI.ToggleActiveRender(true);
+        PlayerUI.OnGameReady();
         Score.Value = 0;
         foreach (Configuration config in Configurations)
         {

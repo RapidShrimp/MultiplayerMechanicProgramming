@@ -134,6 +134,10 @@ public class UI_Game : UI_RenderTarget
         StartNewPuzzle();
     }
 
+    public void OnGameReady()
+    {
+        StartCoroutine(StartGameUI());
+    }
     public void OnGameEnded(bool IsWinner, int WinnerIndex)
     {
         CurrentPuzzle.GetComponent<PuzzleModule>().DeactivatePuzzleModule();
@@ -157,5 +161,16 @@ public class UI_Game : UI_RenderTarget
     {
         if (!isActiveAndEnabled || CurrentPuzzle == null || !CurrentPuzzle.gameObject.activeInHierarchy) { return; }
         CurrentPuzzle.OnMoveInput(MoveDir, Performed);
+    }
+
+    IEnumerator StartGameUI()
+    {
+        SFX_AudioManager.Singleton.PlaySoundToPlayer(Audios.FindAudioByName("StartCountdown"));
+        DisplayText.text = "Ready";
+        yield return new WaitForSeconds(1);
+        DisplayText.text = "Set";
+        yield return new WaitForSeconds(1);
+        DisplayText.text = "GO!";
+
     }
 }

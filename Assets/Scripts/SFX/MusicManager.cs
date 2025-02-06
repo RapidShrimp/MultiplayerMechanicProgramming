@@ -10,9 +10,9 @@ public class MusicManager : NetworkBehaviour
     private void Start()
     {
         SFX_AudioManager.Singleton.SwapToMusic(MainMenuMusic, 2, 0.5f);
-        GameManager.OnReadyGame += () =>
+        GameManager.OnLoadingLevel += (Time) =>
         {
-            SFX_AudioManager.Singleton.SwapToMusic(GameplayMusic,0.2f,1,0.2f);
+            SFX_AudioManager.Singleton.SwapToMusic(GameplayMusic,Time/2,Time/2,0.2f,Time/2);
         };        
     }
 

@@ -14,26 +14,29 @@ public class UI_LobbyMenu : NetworkBehaviour
     [SerializeField] private Animator Throbber;
     [SerializeField] int RequiredPlayersToStart = 2;
 
+    SFX_Item Audios;
 
 
     protected bool bCanStartGame;
     private void OnEnable()
     {
         StartButtonText = GetComponentInChildren<TextMeshProUGUI>(m_StartButton);
+        Audios = GetComponentInChildren<SFX_Item>();
         SetCanStartGame(false);
     }
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
-        if (IsServer)
+        
+        m_StartButton.onClick.AddListener(() =>
         {
-            m_StartButton.onClick.AddListener(() =>
+            if (IsServer)
             {
                 OnStartGame?.Invoke();
-            });
+            }
+            SFX_AudioManager.Singleton.PlaySoundToPlayer(Audios.FindAudioByName("StartGame"));
+        });
 
-
-        }
 
     }
     public void SetCanStartGame(bool CanStart)

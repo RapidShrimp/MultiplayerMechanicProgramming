@@ -10,18 +10,21 @@ using UnityEngine.SceneManagement;
 public class GameManager : NetworkBehaviour
 {
     public static event Action<int> OnPlayerCountUpdated;
+    
+    public static event Action<int> OnLoadingLevel; //Int is the fade time
     public static event Action OnReadyGame;
     public static event Action OnStartGame;
-    public static event Action OnPauseGame;
+
     public static event Action<int> OnGameFinished; //Int is the winning player
 
+    public static event Action OnPauseGame;
     public static event Action OnResumeGame;
     public static event Action OnExitGame;
 
     public static event Action<int> OnGameTimerUpdated;
     protected Coroutine GameTimer;
     [SerializeField] protected float GameLength = 120;
-
+    [SerializeField] protected float LevelTransitionDelay = 3;
     //private SO_GameSettings SelectedSettings;
 
     protected SFX_Item ConnectionSounds;
@@ -47,18 +50,33 @@ public class GameManager : NetworkBehaviour
 
         if (IsServer)
         {
-            UIMenu.OnStartGame += () => { TransitionLevel("GameScene"); };
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
         }
         NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLevelLoaded;
         PlayerCount.OnValueChanged += PlayersUpdated;
+        UIMenu.OnStartGame += OnUIStartGame; 
 
         GameTimeRemaining.OnValueChanged += (float previousValue, float newValue) =>
         {
             OnGameTimerUpdated?.Invoke((int)newValue);
         };
 
+    }
+
+    private void OnUIStartGame()
+    {
+        OnLoadingLevel?.Invoke(2);
+        if (IsServer)
+        {
+            StartCoroutine(LevelFade(2));
+        }
+    }
+
+    IEnumerator LevelFade(float FadeTime)
+    {
+        yield return new WaitForSeconds(FadeTime);
+        TransitionLevel("GameScene");
     }
 
     private void OnClientDisconnect(ulong Id)
@@ -113,7 +131,7 @@ public class GameManager : NetworkBehaviour
         }
 
         if (!IsServer || NetworkManager.Singleton.LocalClientId != clientId) { return; }
-        StartCoroutine(StartGameCountdown(3));
+        StartCoroutine(StartGameCountdown((int)LevelTransitionDelay));
     }
 
     IEnumerator StartGameCountdown(int CountdownLength)

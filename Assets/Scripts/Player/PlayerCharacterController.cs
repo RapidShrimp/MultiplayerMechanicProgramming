@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 public class PlayerCharacterController : NetworkBehaviour
 {
     PlayerInputActions PlayerInput;
+    PlayerInputActions PlayerCheats;
     Camera PlayerCam;
     Camera CurrentlyViewing;
     ArcadeUnit m_ArcadeUnit;
@@ -22,7 +23,6 @@ public class PlayerCharacterController : NetworkBehaviour
     Coroutine CR_MouseDetection;
     Coroutine CR_MoveMouse;
     Coroutine CR_MoveAction;
-    
 
     public override void OnNetworkSpawn()
     {
@@ -30,9 +30,9 @@ public class PlayerCharacterController : NetworkBehaviour
         m_ArcadeUnit = GetComponentInChildren<ArcadeUnit>();
         PlayerCam = GetComponentInChildren<Camera>();
 
-
         if (!IsOwner) { return; }
         SFX_AudioManager.Singleton.SwapPlayer(transform.gameObject);
+        GameManager.OnLoadingLevel += Handle_LevelTransition;
         GameManager.OnReadyGame += Handle_OnGameReady;
         GameManager.OnStartGame += Handle_OnStartGame;
         GameManager.OnGameFinished += Handle_OnGameEnded;
@@ -59,20 +59,19 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput.Player.ShoulderLeft.performed += Handle_LB;
         PlayerInput.Player.ShoulderRight.performed += Handle_RB;
 
-        PlayerInput.Cheats.MuteAudio.performed += (a) => { SFX_AudioManager.Singleton.ToggleMuteAudio(); };
+        PlayerCheats = new PlayerInputActions();
+        PlayerCheats.Cheats.MuteAudio.performed += (a) => { SFX_AudioManager.Singleton.ToggleMuteAudio(); };
+        PlayerCheats.Enable();
     }
 
-    private void OnClientDisconnect(ulong id)
-    {
-        ArcadeScreenDisplay Screen =  GetComponentInChildren<ArcadeScreenDisplay>();
-        Screen.ToggleScreenActive_Rpc(false);
-    }
+
 
     public override void OnNetworkDespawn()
     {
         base.OnNetworkDespawn();
         if (!IsOwner) { return; }
         //Unbind Player Events
+        GameManager.OnLoadingLevel -= Handle_LevelTransition;
         GameManager.OnReadyGame -= Handle_OnGameReady;
         GameManager.OnStartGame -= Handle_OnStartGame;
         GameManager.OnGameFinished -= Handle_OnGameEnded;
@@ -99,6 +98,8 @@ public class PlayerCharacterController : NetworkBehaviour
 
         PlayerInput.Player.ShoulderLeft.performed -= Handle_LB;
         PlayerInput.Player.ShoulderRight.performed -= Handle_RB;
+        
+        PlayerCheats.Disable();
 
     }
 
@@ -250,6 +251,27 @@ public class PlayerCharacterController : NetworkBehaviour
 
     #endregion
 
+    public int GetArcadeScore()
+    {
+        return m_ArcadeUnit.GetScore();
+    }
+    private void Handle_LevelTransition(int Time)
+    {
+
+        ScreenFade Fader = GetComponentInChildren<ScreenFade>();
+        if (Fader == null)
+        {
+            return;
+        }
+        StartCoroutine(Fader.FadeGUI(Time/2, false));
+        //Do Fading Here
+    }
+
+    private void OnClientDisconnect(ulong id)
+    {
+        ArcadeScreenDisplay Screen = GetComponentInChildren<ArcadeScreenDisplay>();
+        Screen.ToggleScreenActive_Rpc(false);
+    }
     [Rpc(SendTo.Everyone)]
     public void AssignPlayerIndex_Rpc(int ClientIndex)
     {
@@ -263,6 +285,14 @@ public class PlayerCharacterController : NetworkBehaviour
     public void Handle_OnGameReady()
     {
         if (!IsOwner) { return; }
+
+
+        ScreenFade Fader = GetComponentInChildren<ScreenFade>();
+        if (Fader != null) 
+        { 
+            StartCoroutine(Fader.FadeGUI(0.5f, true));
+        }
+
         CurrentListID = PlayerIndex;
         m_ArcadeUnit.ReadyGame();
         if (Camera.main) { Camera.main.enabled = false; }
@@ -295,7 +325,6 @@ public class PlayerCharacterController : NetworkBehaviour
 
         m_ArcadeUnit.GameEnded(PlayerIndex == WinningPlayer, WinningPlayer);
         StopAllCoroutines();
-          
 
     }
 
@@ -323,9 +352,5 @@ public class PlayerCharacterController : NetworkBehaviour
         if (IsViewing) { CurrentlyViewing = FoundClient.PlayerCam; }
     }
 
-    public int GetArcadeScore()
-    {
-        return m_ArcadeUnit.GetScore();
-    }
 }
 
