@@ -11,11 +11,11 @@ public class ArcadeUnit : NetworkBehaviour
 
     Coroutine CR_GameTimer;
     Coroutine CR_ConfigurationScramble;
+    Coroutine CR_Joystick;
 
     ArcadeButton[] Buttons;
     [SerializeField] GameObject JoystickPivot;
     Quaternion DesiredJoystickRotation;
-    Coroutine CR_Joystick;
     [SerializeField] protected UI_Game PlayerUI; //The UI Component
     [SerializeField] MeshRenderer ScreenMeshRenderer;
 
@@ -125,15 +125,14 @@ public class ArcadeUnit : NetworkBehaviour
 
     #endregion
 
-    public void PressButton(int ButtonIndex,bool Performed)
-    {
-        PlayerUI.ButtonPressed(ButtonIndex,Performed);
-    }
 
-    public void SetDesiredJoystickPosition(Vector2 joystickPosition)
+
+    public void SetDesiredJoystickPosition(Vector2 joystickPosition, bool Performed)
     {
         if (CR_Joystick == null) { CR_Joystick = StartCoroutine(MoveJoystickToLocation()); }
         DesiredJoystickRotation = Quaternion.Euler(joystickPosition.y*45,0,joystickPosition.x*-45);
+        PlayerUI.MoveUI(joystickPosition,Performed);
+        
     }
 
     public IEnumerator MoveJoystickToLocation()
@@ -152,7 +151,10 @@ public class ArcadeUnit : NetworkBehaviour
     {
         return PlayerUI;
     }
-
+    public void PressButton(int ButtonIndex, bool Performed)
+    {
+        PlayerUI.ButtonPressed(ButtonIndex, Performed);
+    }
     private void Handle_UpdateScore(int ScoreChange)
     {
         if (!IsOwner) { return; }

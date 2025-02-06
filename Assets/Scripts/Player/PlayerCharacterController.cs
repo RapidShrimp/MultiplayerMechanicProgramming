@@ -184,12 +184,25 @@ public class PlayerCharacterController : NetworkBehaviour
 
         if (context.performed)
         {
-            m_ArcadeUnit.SetDesiredJoystickPosition(PlayerInput.Player.Move.ReadValue<Vector2>());
+            if(CR_MoveAction != null) { return; }
+            CR_MoveAction = StartCoroutine(MoveJoystick());
         }
         else if (context.canceled)
         {
-            m_ArcadeUnit.SetDesiredJoystickPosition(Vector2.zero);
-
+            if (CR_MoveAction!=null)
+            {
+                StopCoroutine(CR_MoveAction);
+                CR_MoveAction = null;
+            }
+            m_ArcadeUnit.SetDesiredJoystickPosition(Vector2.zero,false);
+        }
+    }
+    IEnumerator MoveJoystick()
+    {
+        while (true)
+        {
+            m_ArcadeUnit.SetDesiredJoystickPosition(PlayerInput.Player.Move.ReadValue<Vector2>(),true);
+            yield return new WaitForFixedUpdate();
         }
     }
 

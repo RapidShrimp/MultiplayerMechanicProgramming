@@ -5,7 +5,7 @@ using UnityEngine;
 public class StarCollector : PuzzleModule
 {
 
-    StarPlayer player;
+    protected StarPlayer player;
 
     NetworkVariable<int> Stars = new NetworkVariable<int>(
         value: 0,
@@ -20,8 +20,10 @@ public class StarCollector : PuzzleModule
 
     private void OnEnable()
     {
+        player = GetComponentInChildren<StarPlayer>();
         Stars.OnValueChanged += OnStarCollected;
         RequiredStars.OnValueChanged += OnRequiredStarsChanged;
+        
     }
 
     private void OnDisable()
@@ -44,7 +46,11 @@ public class StarCollector : PuzzleModule
 
 
     }
+    public override void OnMoveInput(Vector2 Direction, bool Performed)
+    {
+        if (!isActiveAndEnabled) { return; }
+        player.Handle_PlayerMove(Direction, Performed);
+    }
 
-    
 
 }

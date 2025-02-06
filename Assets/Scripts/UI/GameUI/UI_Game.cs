@@ -14,7 +14,7 @@ public class UI_Game : UI_RenderTarget
     [SerializeField] TextMeshProUGUI DisplayText;
     protected UI_Score ScoreCounter;
     protected PuzzleModule[] Puzzles;
-    protected GameObject CurrentPuzzle;
+    protected PuzzleModule CurrentPuzzle;
     protected UI_Background Background;
     protected SFX_Item Audios;
     public UI_PlayerIdentifier PlayerIdentifier;
@@ -81,15 +81,15 @@ public class UI_Game : UI_RenderTarget
     public void StartNewPuzzle_Rpc(int IndexRevealed)
     {
         DisplayText.gameObject.SetActive(false);
-        CurrentPuzzle = Puzzles[IndexRevealed].gameObject;
-        CurrentPuzzle.SetActive(true);
+        CurrentPuzzle = Puzzles[IndexRevealed];
+        CurrentPuzzle.gameObject.SetActive(true);
         Puzzles[IndexRevealed].StartPuzzleModule();
     }
 
     [Rpc(SendTo.Everyone)]
     private void Handle_PuzzleComplete_Rpc(int AwardedScore)
     {
-        CurrentPuzzle.SetActive(false);
+        CurrentPuzzle.gameObject.SetActive(false);
         ForceNewRender();
         StartCoroutine(NextPuzzleDelay());
         Background.PuzzleComplete();
@@ -151,5 +151,11 @@ public class UI_Game : UI_RenderTarget
             SFX_AudioManager.Singleton.SwapToMusic(Audios.FindAudioByName("GameOver"), 0.1f, 0.5f);
 
         }
+    }
+
+    public void MoveUI(Vector2 MoveDir, bool Performed)
+    {
+        if (!isActiveAndEnabled || CurrentPuzzle == null || !CurrentPuzzle.gameObject.activeInHierarchy) { return; }
+        CurrentPuzzle.OnMoveInput(MoveDir, Performed);
     }
 }

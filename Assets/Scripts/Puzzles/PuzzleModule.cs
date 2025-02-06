@@ -68,7 +68,10 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
         return false;
     }
 
-
+    public virtual void OnMoveInput(Vector2 Direction, bool Performed)
+    {
+        //Override Here
+    }
 
     protected virtual void UpdateUIRender()
     {
