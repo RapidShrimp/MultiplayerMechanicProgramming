@@ -2,7 +2,7 @@ using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
-public class MusicManager : NetworkBehaviour
+public class MusicManager : MonoBehaviour
 {
     [SerializeField] protected AudioSource MainMenuMusic;
     [SerializeField] protected AudioSource GameplayMusic;
@@ -12,7 +12,7 @@ public class MusicManager : NetworkBehaviour
         SFX_AudioManager.Singleton.SwapToMusic(MainMenuMusic, 2, 0.5f);
         GameManager.OnLoadingLevel += (Time) =>
         {
-            SFX_AudioManager.Singleton.SwapToMusic(GameplayMusic,Time/2,Time/2,0.2f,Time/2);
+            SFX_AudioManager.Singleton.SwapToMusic(GameplayMusic,Time/2,Time/2,0.1f,Time/2);
         };        
     }
 

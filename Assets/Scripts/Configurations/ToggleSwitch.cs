@@ -9,7 +9,7 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
 
     [SerializeField] private GameObject Switch;
     [SerializeField] private MeshRenderer Light;
-
+    protected float Intenstity = 0.5f;
     //True = Up | False = Down;
     private NetworkVariable<bool> b_CurrentPosition = new NetworkVariable<bool>(
         value: false,
@@ -20,6 +20,11 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
         value: false,
         NetworkVariableReadPermission.Everyone,
         NetworkVariableWritePermission.Owner);
+
+    private void Awake()
+    {
+        Light.materials[0].EnableKeyword("_EmissionColor");
+    }
 
     public override void OnNetworkSpawn()
     {
@@ -53,6 +58,8 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
         //Toggle State
         bool IsCorrect = b_CorrectPosition.Value == b_CurrentPosition.Value ? true : false;
         Light.materials[0].color = IsCorrect ? Color.green : Color.red;
+        Light.materials[0].SetColor("_EmissionColor", IsCorrect ? Color.green * Intenstity: Color.red * Intenstity); 
+
         Switch.transform.localEulerAngles = IsCorrect ? new Vector3(40,0,0) : new Vector3(-40,0,0);
         OnToggle?.Invoke(IsCorrect);
     }

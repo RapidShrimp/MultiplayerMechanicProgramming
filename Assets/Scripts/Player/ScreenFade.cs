@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class ScreenFade : MonoBehaviour
 {
-    bool isFading = false;
     float FadeAlpha = 0;
 
 
@@ -16,7 +15,6 @@ public class ScreenFade : MonoBehaviour
     }
     public IEnumerator FadeGUI(float FadeTime, bool FadeIn)
     {
-        isFading = true;
         float TimeElapsed = 0;
         float FadeFrom = FadeAlpha;
         float FadeTo = FadeIn ? 0 : 1;
@@ -28,7 +26,6 @@ public class ScreenFade : MonoBehaviour
             FadeAlpha = Mathf.Clamp(Mathf.Lerp(FadeFrom,FadeTo,TimeElapsed/FadeTime),0,1);
             FadeCanvas.SetAlpha(FadeAlpha);
         }
-        if (FadeIn) { isFading = false; }
         yield return new WaitForEndOfFrame();
     }
 

@@ -6,7 +6,7 @@ public class StarPlayer : NetworkBehaviour
 {
 
     public event Action OnStarCollected;
-    public float step = 0.05f;
+    public float step = 1;
     Rigidbody2D m_Rb;
     Collider2D m_Collider;
     [SerializeField] GameObject[] StarsList;
@@ -19,7 +19,11 @@ public class StarPlayer : NetworkBehaviour
 
     public void Handle_PlayerMove(Vector2 Dir, bool Performed)
     {
-        transform.position += new Vector3 (Dir.x,Dir.y,0) * step;
+        //transform.localPosition += new Vector3 (Dir.x,Dir.y,0) * step;
+        float XPos = Mathf.Clamp(transform.localPosition.x + (Dir.x * step) , -500.0f, 500.0f);
+        float YPos = Mathf.Clamp(transform.localPosition.y + (Dir.y * step) , -350.0f, 300.0f);
+
+        transform.localPosition = new Vector3(XPos, YPos, transform.localPosition.z);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -46,13 +50,8 @@ public class StarPlayer : NetworkBehaviour
     protected void CollectedStar_Rpc(int StarIndex)
     {
         StarsList[StarIndex].SetActive(false);
+        
         OnStarCollected?.Invoke();
     }
-
-    private void FixedUpdate()
-    {
-        
-    }
-
     
 }

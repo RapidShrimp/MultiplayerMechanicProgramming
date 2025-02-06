@@ -159,7 +159,7 @@ public class ArcadeUnit : NetworkBehaviour
     private void Handle_UpdateScore(int ScoreChange)
     {
         if (!IsOwner) { return; }
-        Score.Value += ScoreChange;
+        Score.Value += ScoreChange * (ConfigsCompleted +1 /Configurations.Length);
     }
     private void Handle_ScoreChanged(int oldScore, int newScore)
     {
