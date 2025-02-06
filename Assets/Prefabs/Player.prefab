@@ -5551,7 +5551,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44245fe2f71c5934f8a428d0eebd96a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
   step: 0.05
+  StarsList:
+  - {fileID: 1838923410288392668}
+  - {fileID: 4533499226229697632}
+  - {fileID: 6158300431049566078}
+  - {fileID: 4372283476266968109}
+  - {fileID: 5053947567533742041}
+  - {fileID: 8785898895160978453}
+  - {fileID: 700430103765261927}
+  - {fileID: 4597393381836869650}
+  - {fileID: 8361768070457636551}
 --- !u!50 &3892178490167007564
 Rigidbody2D:
   serializedVersion: 5

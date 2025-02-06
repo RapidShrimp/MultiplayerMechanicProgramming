@@ -43,7 +43,7 @@ public class StarCollector : PuzzleModule
     public override void StartPuzzleModule()
     {
         base.StartPuzzleModule();
-
+        
 
     }
     public override void OnMoveInput(Vector2 Direction, bool Performed)

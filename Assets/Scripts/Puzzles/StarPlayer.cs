@@ -1,14 +1,15 @@
 using System;
+using Unity.Netcode;
 using UnityEngine;
 
-public class StarPlayer : MonoBehaviour
+public class StarPlayer : NetworkBehaviour
 {
 
-    public event Action OnCoinCollected;
+    public event Action OnStarCollected;
     public float step = 0.05f;
     Rigidbody2D m_Rb;
     Collider2D m_Collider;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] GameObject[] StarsList;
 
     private void Awake()
     {
@@ -21,13 +22,31 @@ public class StarPlayer : MonoBehaviour
         transform.position += new Vector3 (Dir.x,Dir.y,0) * step;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log($"Collided {collision.gameObject.name}");
         if(collision.tag == "Star")
-        {
-            collision.gameObject.SetActive(false);
+        { 
+            //Find Child Index
+
+            for(int i = 0; i < StarsList.Length; i++)
+            {
+                if(collision.gameObject == StarsList[i])
+                {
+                    CollectedStar_Rpc(i);
+                }
+            }
         }
+    }
+
+    [Rpc(SendTo.Everyone)]
+    protected void CollectedStar_Rpc(int StarIndex)
+    {
+        StarsList[StarIndex].SetActive(false);
+        OnStarCollected?.Invoke();
     }
 
     private void FixedUpdate()
