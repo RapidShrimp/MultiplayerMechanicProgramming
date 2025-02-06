@@ -17,7 +17,7 @@ public class Configuration : NetworkBehaviour
     {
         base.OnNetworkSpawn();
         IsCompleted.OnValueChanged +=  (a, b) => { OnConfigurationUpdated?.Invoke(b); };
-       
+        IsCompleted.Value = true;
     }
 
     virtual public void StartModule() { }

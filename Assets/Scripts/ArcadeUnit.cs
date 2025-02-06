@@ -80,10 +80,7 @@ public class ArcadeUnit : NetworkBehaviour
         PlayerUI.ToggleActiveRender(true);
         PlayerUI.OnGameReady();
         Score.Value = 0;
-        foreach (Configuration config in Configurations)
-        {
-            config.StartModule();
-        }
+                
     }
     public void StartGame()
     {
@@ -159,7 +156,7 @@ public class ArcadeUnit : NetworkBehaviour
     private void Handle_UpdateScore(int ScoreChange)
     {
         if (!IsOwner) { return; }
-        Score.Value += ScoreChange * (ConfigsCompleted +1 /Configurations.Length);
+        Score.Value += Mathf.FloorToInt((float)ScoreChange * ((float)ConfigsCompleted +1 /Configurations.Length));
     }
     private void Handle_ScoreChanged(int oldScore, int newScore)
     {

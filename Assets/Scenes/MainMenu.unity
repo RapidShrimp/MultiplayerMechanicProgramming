@@ -2259,7 +2259,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1b3574dc9ec25b4880efe19939bcc6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ShowTopMostFoldoutHeaderGroup: 1
   MainMenuMusic: {fileID: 356246739}
   GameplayMusic: {fileID: 1727834108}
 --- !u!1 &1329936373

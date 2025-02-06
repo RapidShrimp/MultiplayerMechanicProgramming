@@ -19,6 +19,7 @@ public class HandleConfiguration : Configuration, IInteractable
         TopYPos = GetComponent<Collider>().transform.position.y;
         HandleMesh = GetComponentInChildren<MeshRenderer>();
         IsCompleted.OnValueChanged += Handle_CompleteUpdated;
+        Handle_CompleteUpdated(false, true);
     }
 
 

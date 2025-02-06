@@ -9,11 +9,6 @@ public class SwitchConfiguration : Configuration
     void Start()
     {
         Switches = GetComponentsInChildren<ToggleSwitch>();
-    }
-
-    override public void StartModule()
-    {
-        if (!IsOwner) { return; }
         foreach (ToggleSwitch sw in Switches)
         {
             bool SwitchActive = Random.Range(0, 2) == 1 ? true : false;
@@ -22,6 +17,12 @@ public class SwitchConfiguration : Configuration
             sw.SetCorrectPosition_Rpc(SwitchActive);
             sw.OnToggle += OnSwitchToggled;
         }
+    }
+
+    override public void StartModule()
+    {
+        if (!IsOwner) { return; }
+
     }
 
     /*

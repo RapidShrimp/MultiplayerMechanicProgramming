@@ -9,12 +9,13 @@ public class StarPlayer : NetworkBehaviour
     public float step = 1;
     Rigidbody2D m_Rb;
     Collider2D m_Collider;
-    [SerializeField] GameObject[] StarsList;
+    [SerializeField] GameObject StarsList;
 
     private void Awake()
     {
         m_Rb = GetComponent<Rigidbody2D>();
         m_Collider = GetComponent<Collider2D>();
+        StarsList = transform.parent.GetChild(1).gameObject;
     }
 
     public void Handle_PlayerMove(Vector2 Dir, bool Performed)
@@ -32,26 +33,28 @@ public class StarPlayer : NetworkBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!IsOwner) { return; }
         if(collision.tag == "Star")
-        { 
+        {
             //Find Child Index
-
-            for(int i = 0; i < StarsList.Length; i++)
+            for (int i = 0; i < StarsList.transform.childCount; i++)
             {
-                if(collision.gameObject == StarsList[i])
+                if(StarsList.transform.GetChild(i).gameObject == collision.transform.gameObject)
                 {
+                    Debug.Log("Trigger Event Loop");
+                    OnStarCollected?.Invoke();
                     CollectedStar_Rpc(i);
+                    return;
                 }
             }
+
         }
     }
 
     [Rpc(SendTo.Everyone)]
     protected void CollectedStar_Rpc(int StarIndex)
     {
-        StarsList[StarIndex].SetActive(false);
-        
-        OnStarCollected?.Invoke();
+        StarsList.transform.GetChild(StarIndex).gameObject.SetActive(false);
     }
     
 }
