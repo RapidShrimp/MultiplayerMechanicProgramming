@@ -86,7 +86,7 @@ public class GameManager : NetworkBehaviour
         }
         NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLevelLoaded;
         PlayerCount.OnValueChanged += PlayersUpdated;
-        UIMenu.OnStartGame += OnUIStartGame;
+        UIMenu.OnStartGame += OnUIStartGame_Rpc;
         UIMenu.OnUpdateGameSettings += SetGameSettings_Rpc;
         GameTimeRemaining.OnValueChanged += (float previousValue, float newValue) =>
         {
@@ -106,7 +106,9 @@ public class GameManager : NetworkBehaviour
         UIMenu.OnLoadGameSettings(m_GameSettings.Value);
     }
 
-    private void OnUIStartGame()
+
+    [Rpc(SendTo.Everyone)]
+    private void OnUIStartGame_Rpc()
     {
         OnLoadingLevel?.Invoke(2);
         if (IsServer)
@@ -114,7 +116,6 @@ public class GameManager : NetworkBehaviour
             StartCoroutine(LevelFade(2));
         }
     }
-
     IEnumerator LevelFade(float FadeTime)
     {
         yield return new WaitForSeconds(FadeTime);

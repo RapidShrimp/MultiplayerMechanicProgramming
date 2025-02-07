@@ -269,6 +269,7 @@ public class PlayerCharacterController : NetworkBehaviour
     }
     private void Handle_LevelTransition(int Time)
     {
+        Debug.Log("Do Fade");
         ScreenFade Fader = GetComponentInChildren<ScreenFade>();
         if (Fader == null)
         {

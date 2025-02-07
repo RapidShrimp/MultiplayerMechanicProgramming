@@ -60,8 +60,8 @@ public class SimonSaysPuzzle : PuzzleModule
             CorrectSequence.Add(Array[i]);
         }
         Curr_Sequence.Clear();
+        transform.gameObject.SetActive(true);
         DisplaySequence = StartCoroutine(ShowSimonSaysSequence());
-        if (!isActiveAndEnabled) { return; }
     }
 
     public override void FailModule()

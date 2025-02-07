@@ -2265,7 +2265,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 1
@@ -6415,7 +6415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c27245c3b6f7d8468debf5b1c1eba69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FadeCanvas: {fileID: 0}
+  FadeCanvas: {fileID: 6182542373427765695}
 --- !u!1 &6863641268083672660
 GameObject:
   m_ObjectHideFlags: 0
