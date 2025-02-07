@@ -180,11 +180,6 @@ public class PlayerCharacterController : NetworkBehaviour
         }
         else
         {
-            if (CR_MouseDetection != null)
-            {
-                StopCoroutine(CR_MouseDetection);
-                CR_MouseDetection = null;
-            }
 
         }
     }
@@ -235,14 +230,21 @@ public class PlayerCharacterController : NetworkBehaviour
         while (PlayerInput.Player.MouseLClick.IsInProgress())
         {
             GetHitUnderMouse(CurrentlyViewing, out Hit);
-            if (Interaction.OnDrag(Hit.point))
+            if (Interaction.OnDrag(Hit.point, true))
             {
-                yield return new WaitForSeconds(0.1f);
+                yield return new WaitForFixedUpdate();
             }
             else
             {
+                Interaction.OnDrag(Hit.point, false);
                 yield break;
             }
+        }
+        Interaction.OnDrag(Hit.point, false);
+        
+        if (CR_MouseDetection != null)
+        {
+            CR_MouseDetection = null;
         }
     }
 

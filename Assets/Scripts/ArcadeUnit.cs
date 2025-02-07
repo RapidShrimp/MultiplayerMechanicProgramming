@@ -161,7 +161,8 @@ public class ArcadeUnit : NetworkBehaviour
     private void Handle_UpdateScore(int ScoreChange)
     {
         if (!IsOwner) { return; }
-        Score.Value += ScoreChange + ConfigsCompleted * 20;
+        if(ScoreChange > 0) { ScoreChange += ConfigsCompleted * 20; }
+        Score.Value += ScoreChange;
     }
     private void Handle_ScoreChanged(int oldScore, int newScore)
     {

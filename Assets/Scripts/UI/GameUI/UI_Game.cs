@@ -24,7 +24,6 @@ public class UI_Game : UI_RenderTarget
     [Rpc(SendTo.Everyone)]
     public void SetConfigurationCompletion_Rpc( bool IsSet) 
     {
-        Debug.Log("Configuration Set");
         ConfigurationSet = IsSet; }
     
     public Camera GetUICamera()
@@ -144,7 +143,7 @@ public class UI_Game : UI_RenderTarget
     }
 
     public void ButtonPressed(int ButtonIndex ,bool Performed) 
-    { 
+    {
         OnButtonPressRecieved?.Invoke(ButtonIndex, Performed);
     }
 

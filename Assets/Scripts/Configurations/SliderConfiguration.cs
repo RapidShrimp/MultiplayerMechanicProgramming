@@ -93,7 +93,7 @@ public class SliderConfiguration : Configuration, IInteractable
         return false;
     }
 
-    public bool OnDrag(Vector3 WorldPos)
+    public bool OnDrag(Vector3 WorldPos, bool IsHeld)
     {
         float XDiff = (SliderMesh.transform.position - WorldPos).x + 0.5f;
         DebugWorldPos = WorldPos;

@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Drawing;
+using Unity.Netcode;
 using UnityEngine;
 
-public class ArcadeButton : MonoBehaviour, IInteractable
+public class ArcadeButton : NetworkBehaviour, IInteractable
 {
     public event Action<int,bool> OnButtonPressed;
+    Coroutine CR_Holding;
     protected int buttonIndex = 0;
+    bool LastInput = false;
     public void InitButton(UnityEngine.Color Colour, int ButtonIndex) 
     { 
         buttonIndex = ButtonIndex;
@@ -21,14 +24,21 @@ public class ArcadeButton : MonoBehaviour, IInteractable
         return false;
     }
 
-    public bool OnDrag(Vector3 WorldPos)
+    public bool OnDrag(Vector3 WorldPos, bool IsHeld)
     {
-        return true;
-    }
+        if (!IsOwner) { return false; }
+        if(IsHeld == LastInput) { return true; }
 
-    IEnumerator HoldingCheck()
-    {
-        yield return new WaitForSeconds(0.5f);
-        OnButtonPressed?.Invoke(buttonIndex,false);
+        if (!IsHeld)
+        {
+            //Exit button inputs
+            LastInput = IsHeld;
+            OnButtonPressed?.Invoke(buttonIndex, false);
+            return false;
+        }
+
+        LastInput = IsHeld;
+        OnButtonPressed?.Invoke(buttonIndex, true);
+        return true;
     }
 }

@@ -5,9 +5,6 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-
-
-
 public class ButtonHoldPuzzle : PuzzleModule
 {
 
@@ -30,7 +27,7 @@ public class ButtonHoldPuzzle : PuzzleModule
 
     private void Awake()
     {
-        GetComponentInParent<UI_Game>().OnButtonPressRecieved += ButtonHoldPuzzle_OnButtonPressRecieved;
+        transform.parent.GetComponentInParent<UI_Game>().OnButtonPressRecieved += ButtonHoldPuzzle_OnButtonPressRecieved;
         OnScreenPromptText = GetComponentInChildren<TextMeshProUGUI>();
         ButtonImage = GetComponentInChildren<Image>();
     }

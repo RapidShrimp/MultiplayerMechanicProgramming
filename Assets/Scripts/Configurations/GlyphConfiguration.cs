@@ -80,7 +80,7 @@ public class GlyphConfiguration : Configuration, IInteractable
         return true;
     }
 
-    public bool OnDrag(Vector3 WorldPos)
+    public bool OnDrag(Vector3 WorldPos, bool IsHeld)
     {
         //Do Nothing :)
         return false;

@@ -62,7 +62,7 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
 
     }
 
-    public virtual bool OnDrag(Vector3 WorldPos)
+    public virtual bool OnDrag(Vector3 WorldPos, bool IsHeld)
     {
         if (!IsOwner) { return false; };
         return false;

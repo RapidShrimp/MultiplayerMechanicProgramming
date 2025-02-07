@@ -70,7 +70,7 @@ public class ToggleSwitch : NetworkBehaviour , IInteractable
         return true;
     }
 
-    public bool OnDrag(Vector3 WorldPos)
+    public bool OnDrag(Vector3 WorldPos, bool IsHeld)
     {
         return false;
     }

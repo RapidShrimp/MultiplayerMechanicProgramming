@@ -2383,6 +2383,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5326149295675789952}
   - component: {fileID: 3284182841642547261}
+  - component: {fileID: 6306573443457517294}
   m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
@@ -2419,6 +2420,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8043c7345a2e25c41849c6d65e7d44b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!135 &6306573443457517294
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2786438731287008743}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.03
+  m_Center: {x: 0.28, y: 0.88, z: -0.23}
 --- !u!1 &2865839560113307832
 GameObject:
   m_ObjectHideFlags: 0
@@ -2429,6 +2452,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6095037163876447216}
   - component: {fileID: 5221461498473620983}
+  - component: {fileID: 8516563932056413449}
   m_Layer: 0
   m_Name: Button (3)
   m_TagString: Untagged
@@ -2465,6 +2489,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8043c7345a2e25c41849c6d65e7d44b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!135 &8516563932056413449
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2865839560113307832}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.03
+  m_Center: {x: 0.28, y: 0.88, z: -0.23}
 --- !u!1 &3050416863465211176
 GameObject:
   m_ObjectHideFlags: 0
@@ -3009,6 +3055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 665168153656207166}
   - component: {fileID: 5427240856559533834}
+  - component: {fileID: 5370781101496083133}
   m_Layer: 0
   m_Name: Button (2)
   m_TagString: Untagged
@@ -3045,6 +3092,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8043c7345a2e25c41849c6d65e7d44b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!135 &5370781101496083133
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3581590149686962813}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.03
+  m_Center: {x: 0.28, y: 0.88, z: -0.23}
 --- !u!1 &3582365432442939171
 GameObject:
   m_ObjectHideFlags: 0
@@ -7293,6 +7362,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3851999598719614775}
   - component: {fileID: 4831760114637998039}
+  - component: {fileID: 6043157290774212984}
   m_Layer: 0
   m_Name: Button (1)
   m_TagString: Untagged
@@ -7329,6 +7399,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8043c7345a2e25c41849c6d65e7d44b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+--- !u!135 &6043157290774212984
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7428279301395365149}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.03
+  m_Center: {x: 0.28, y: 0.88, z: -0.23}
 --- !u!1 &7494748867587700658
 GameObject:
   m_ObjectHideFlags: 0
