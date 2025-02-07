@@ -8,16 +8,15 @@ public class ArcadeUnit : NetworkBehaviour
     private Configuration[] Configurations;
     [SerializeField] protected int ConfigsCompleted;
 
-
+    GameSettings LocalSettingsRef;
     Coroutine CR_GameTimer;
     Coroutine CR_ConfigurationScramble;
     Coroutine CR_Joystick;
-
+    bool SabotageEnabled = true;
     ArcadeButton[] Buttons;
     [SerializeField] GameObject JoystickPivot;
     Quaternion DesiredJoystickRotation;
     [SerializeField] protected UI_Game PlayerUI; //The UI Component
-    [SerializeField] MeshRenderer ScreenMeshRenderer;
 
     private NetworkVariable<int> Score = new NetworkVariable<int>(
     value: 0,
@@ -74,12 +73,14 @@ public class ArcadeUnit : NetworkBehaviour
 
     }
 
-    public void ReadyGame()
+    public void ReadyGame(GameSettings Settings)
     {
+        LocalSettingsRef = Settings;
         if (!IsOwner) { return; }
         PlayerUI.ToggleActiveRender(true);
         PlayerUI.OnGameReady();
         Score.Value = 0;
+        SabotageEnabled = Settings.SabotageScoring;
                 
     }
     public void StartGame()
@@ -87,8 +88,10 @@ public class ArcadeUnit : NetworkBehaviour
         if (!IsOwner) { return; }
         Debug.Log("Started");
         PlayerUI.StartNewPuzzle();
-        /*if (CR_ConfigurationScramble != null) { StopCoroutine(CR_ConfigurationScramble); }
-        CR_ConfigurationScramble = StartCoroutine(RandomiseConfiguration());*/
+
+        if(!LocalSettingsRef.ScrambleConfiguration) { return; }
+        if (CR_ConfigurationScramble != null) { StopCoroutine(CR_ConfigurationScramble); }
+        CR_ConfigurationScramble = StartCoroutine(RandomiseConfiguration());
     }
 
     public void GameEnded(bool IsWinner, int WinnerIndex)
@@ -103,13 +106,13 @@ public class ArcadeUnit : NetworkBehaviour
     {
         if (IsActive) { ConfigsCompleted++; }
         else ConfigsCompleted-- ;
-
-        PlayerUI.ConfigurationSet = ConfigsCompleted == Configurations.Length;
+        PlayerUI.SetConfigurationCompletion(!LocalSettingsRef.ConfigurationRequired || ConfigsCompleted == Configurations.Length);
     }
     private void Handle_ConfigurationSabotaged(int SabotageScore)
     {
-        if(!IsOwner) { return; }
+        if(!IsOwner || !SabotageEnabled) { return; }
         Score.Value += SabotageScore;
+        
     }
 
     IEnumerator RandomiseConfiguration()

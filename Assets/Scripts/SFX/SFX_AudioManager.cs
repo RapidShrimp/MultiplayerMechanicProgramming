@@ -4,18 +4,33 @@ using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
+
+/*Singleton Class for managing scene Audio with blends*/
 [Singleton]
 public class SFX_AudioManager : MonoBehaviour
 {
     public static SFX_AudioManager Singleton { get; private set; }
 
     AudioSource CurrentMusic = null;
+    SFX_Item[] SoundsNearby = new SFX_Item[0];
 
-    SFX_Item[] SoundsNearby = new SFX_Item[0]; 
+    float Intensity = 0.1f;
+    
     private void Awake()
     {
         DontDestroyOnLoad(this);
         Singleton = this;
+        Intensity = PlayerPrefs.GetFloat("MasterVolume", Intensity);
+    }
+
+    private void OnDestroy()
+    {
+        PlayerPrefs.Save();
+    }
+    public void SetVolume(float MasterVolume)
+    {
+        Intensity = Mathf.Clamp(MasterVolume,0,1);
+        PlayerPrefs.SetFloat("MasterVolume",Intensity);
     }
 
     public void ToggleMuteAudio()
@@ -42,7 +57,7 @@ public class SFX_AudioManager : MonoBehaviour
     public void PlaySoundToPlayer(AudioSource Sound,float Volume =0.5f,float Pitch=1.0f)
     {
         if(Sound.isPlaying) {Sound.Stop(); }
-        Sound.volume = Volume;
+        Sound.volume = Volume * Intensity;
         Sound.pitch = Pitch;
         Sound.Play();
     }
@@ -69,7 +84,7 @@ public class SFX_AudioManager : MonoBehaviour
     IEnumerator OnFadeMusic(AudioSource Audio, float fadeTime, float FadeVolume)
     {
         float TimeElapsed = 0;
-        float InitialVolume = Audio.volume;
+        float InitialVolume = Audio.volume * Intensity;
         if (!Audio.isPlaying) 
         {
             InitialVolume = 0;
@@ -77,7 +92,7 @@ public class SFX_AudioManager : MonoBehaviour
         }
         while (TimeElapsed < fadeTime)
         {
-            Audio.volume = Mathf.Lerp(InitialVolume, FadeVolume, TimeElapsed / fadeTime);
+            Audio.volume = Mathf.Lerp(InitialVolume, FadeVolume, TimeElapsed / fadeTime) * Intensity;
             TimeElapsed += Time.deltaTime;
             yield return new WaitForFixedUpdate();
         }

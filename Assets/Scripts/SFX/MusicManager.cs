@@ -9,7 +9,7 @@ public class MusicManager : MonoBehaviour
 
     private void Start()
     {
-        SFX_AudioManager.Singleton.SwapToMusic(MainMenuMusic, 2, 0.5f);
+        SFX_AudioManager.Singleton.SwapToMusic(MainMenuMusic, 2, 0.1f);
         GameManager.OnLoadingLevel += (Time) =>
         {
             SFX_AudioManager.Singleton.SwapToMusic(GameplayMusic,Time/2,Time/2,0.1f,Time/2);

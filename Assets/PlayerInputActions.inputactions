@@ -915,6 +915,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "IncreaseVolume",
+                    "type": "Button",
+                    "id": "8cd005c0-89e7-404a-a4de-1d9ffdec7a81",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "DecreaseVolume",
+                    "type": "Button",
+                    "id": "917a0c06-6c1a-40a1-b304-b0bb2851d96a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -937,6 +955,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "MuteAudio",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cb8a7e42-0608-4322-aa9c-e47f1e7f1364",
+                    "path": "<Keyboard>/equals",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "IncreaseVolume",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "86d4f723-5c0a-4c59-9245-e013c64eaaab",
+                    "path": "<Keyboard>/minus",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "DecreaseVolume",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -6,13 +6,36 @@ using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public struct GameSettings : INetworkSerializable
+{
+    public bool SabotageScoring;
+    public bool ConfigurationRequired;
+    public bool ScrambleConfiguration;
+    public int GameTime;
 
+    public GameSettings(bool Scoring, bool ConfigurationRequire,bool ConfigurationScramble, int Time)
+    {
+        SabotageScoring = Scoring;
+        ConfigurationRequired = ConfigurationRequire;
+        ScrambleConfiguration = ConfigurationScramble;
+        GameTime = Time;
+    }
+
+    public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+    {
+        serializer.SerializeValue(ref GameTime);
+        serializer.SerializeValue(ref ConfigurationRequired);
+        serializer.SerializeValue(ref GameTime);
+        serializer.SerializeValue(ref ScrambleConfiguration);
+
+    }
+}
 public class GameManager : NetworkBehaviour
 {
     public static event Action<int> OnPlayerCountUpdated;
     
     public static event Action<int> OnLoadingLevel; //Int is the fade time
-    public static event Action OnReadyGame;
+    public static event Action <GameSettings> OnReadyGame;
     public static event Action OnStartGame;
 
     public static event Action<int> OnGameFinished; //Int is the winning player
@@ -23,12 +46,17 @@ public class GameManager : NetworkBehaviour
 
     public static event Action<int> OnGameTimerUpdated;
     protected Coroutine GameTimer;
-    [SerializeField] protected float GameLength = 120;
     [SerializeField] protected float LevelTransitionDelay = 3;
     //private SO_GameSettings SelectedSettings;
 
     protected SFX_Item ConnectionSounds;
     [SerializeField] NetworkManagerUI UIMenu;
+
+    NetworkVariable<GameSettings> m_GameSettings = new NetworkVariable<GameSettings>(
+        value: new GameSettings(true,true,true,120),
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Server);
+
     [SerializeField] private NetworkVariable<int> PlayerCount = new NetworkVariable<int>(
         0,
         NetworkVariableReadPermission.Everyone,
@@ -40,6 +68,8 @@ public class GameManager : NetworkBehaviour
         NetworkVariableWritePermission.Server
         );
     
+    
+
     private void Awake()
     {
         DontDestroyOnLoad( this );
@@ -55,8 +85,8 @@ public class GameManager : NetworkBehaviour
         }
         NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLevelLoaded;
         PlayerCount.OnValueChanged += PlayersUpdated;
-        UIMenu.OnStartGame += OnUIStartGame; 
-
+        UIMenu.OnStartGame += OnUIStartGame;
+        UIMenu.OnUpdateGameSettings += SetGameSettings_Rpc;
         GameTimeRemaining.OnValueChanged += (float previousValue, float newValue) =>
         {
             OnGameTimerUpdated?.Invoke((int)newValue);
@@ -110,10 +140,10 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    [Rpc(SendTo.Everyone)]
-    public void SetGameSettings_Rpc(int settingsIndex)
+    [Rpc(SendTo.Server)]
+    public void SetGameSettings_Rpc(GameSettings Settings)
     {
-        //Call to the arcade unit to update looks - Scope Creep Here :Skull:
+        m_GameSettings.Value = Settings;
     }
 
     public void TransitionLevel(string LevelName = "MainMenu")
@@ -126,8 +156,8 @@ public class GameManager : NetworkBehaviour
     {
         if (NetworkManager.Singleton.LocalClientId == clientId)
         {
-            OnReadyGame?.Invoke();
-            if (IsServer) { GameTimeRemaining.Value = GameLength; }
+            OnReadyGame?.Invoke(m_GameSettings.Value);
+            if (IsServer) { GameTimeRemaining.Value = m_GameSettings.Value.GameTime; }
         }
 
         if (!IsServer || NetworkManager.Singleton.LocalClientId != clientId) { return; }
@@ -154,7 +184,7 @@ public class GameManager : NetworkBehaviour
         { 
             if(GameTimer == null)
             {
-                GameTimer = StartCoroutine(CountdownGameTimer(120));
+                GameTimer = StartCoroutine(CountdownGameTimer(m_GameSettings.Value.GameTime));
             }
         }
     }
@@ -165,7 +195,6 @@ public class GameManager : NetworkBehaviour
         int HighsestScore = 0;
         for (int ID = 0; ID < NetworkManager.Singleton.ConnectedClientsList.Count; ID++)
         {
-
             GameObject NewPlayer = NetworkManager.Singleton.ConnectedClientsList[ID].PlayerObject.gameObject;
             int PlayerScore = NewPlayer.GetComponent<PlayerCharacterController>().GetArcadeScore();
             if ( PlayerScore > HighsestScore) 
@@ -196,4 +225,5 @@ public class GameManager : NetworkBehaviour
     {
         OnGameFinished?.Invoke(WinnerID);
     }
+
 }

@@ -937,6 +937,24 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""IncreaseVolume"",
+                    ""type"": ""Button"",
+                    ""id"": ""8cd005c0-89e7-404a-a4de-1d9ffdec7a81"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""DecreaseVolume"",
+                    ""type"": ""Button"",
+                    ""id"": ""917a0c06-6c1a-40a1-b304-b0bb2851d96a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -959,6 +977,28 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MuteAudio"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cb8a7e42-0608-4322-aa9c-e47f1e7f1364"",
+                    ""path"": ""<Keyboard>/equals"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""IncreaseVolume"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86d4f723-5c0a-4c59-9245-e013c64eaaab"",
+                    ""path"": ""<Keyboard>/minus"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DecreaseVolume"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1054,6 +1094,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         // Cheats
         m_Cheats = asset.FindActionMap("Cheats", throwIfNotFound: true);
         m_Cheats_MuteAudio = m_Cheats.FindAction("MuteAudio", throwIfNotFound: true);
+        m_Cheats_IncreaseVolume = m_Cheats.FindAction("IncreaseVolume", throwIfNotFound: true);
+        m_Cheats_DecreaseVolume = m_Cheats.FindAction("DecreaseVolume", throwIfNotFound: true);
     }
 
     ~@PlayerInputActions()
@@ -1351,11 +1393,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Cheats;
     private List<ICheatsActions> m_CheatsActionsCallbackInterfaces = new List<ICheatsActions>();
     private readonly InputAction m_Cheats_MuteAudio;
+    private readonly InputAction m_Cheats_IncreaseVolume;
+    private readonly InputAction m_Cheats_DecreaseVolume;
     public struct CheatsActions
     {
         private @PlayerInputActions m_Wrapper;
         public CheatsActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @MuteAudio => m_Wrapper.m_Cheats_MuteAudio;
+        public InputAction @IncreaseVolume => m_Wrapper.m_Cheats_IncreaseVolume;
+        public InputAction @DecreaseVolume => m_Wrapper.m_Cheats_DecreaseVolume;
         public InputActionMap Get() { return m_Wrapper.m_Cheats; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1368,6 +1414,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MuteAudio.started += instance.OnMuteAudio;
             @MuteAudio.performed += instance.OnMuteAudio;
             @MuteAudio.canceled += instance.OnMuteAudio;
+            @IncreaseVolume.started += instance.OnIncreaseVolume;
+            @IncreaseVolume.performed += instance.OnIncreaseVolume;
+            @IncreaseVolume.canceled += instance.OnIncreaseVolume;
+            @DecreaseVolume.started += instance.OnDecreaseVolume;
+            @DecreaseVolume.performed += instance.OnDecreaseVolume;
+            @DecreaseVolume.canceled += instance.OnDecreaseVolume;
         }
 
         private void UnregisterCallbacks(ICheatsActions instance)
@@ -1375,6 +1427,12 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @MuteAudio.started -= instance.OnMuteAudio;
             @MuteAudio.performed -= instance.OnMuteAudio;
             @MuteAudio.canceled -= instance.OnMuteAudio;
+            @IncreaseVolume.started -= instance.OnIncreaseVolume;
+            @IncreaseVolume.performed -= instance.OnIncreaseVolume;
+            @IncreaseVolume.canceled -= instance.OnIncreaseVolume;
+            @DecreaseVolume.started -= instance.OnDecreaseVolume;
+            @DecreaseVolume.performed -= instance.OnDecreaseVolume;
+            @DecreaseVolume.canceled -= instance.OnDecreaseVolume;
         }
 
         public void RemoveCallbacks(ICheatsActions instance)
@@ -1465,5 +1523,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     public interface ICheatsActions
     {
         void OnMuteAudio(InputAction.CallbackContext context);
+        void OnIncreaseVolume(InputAction.CallbackContext context);
+        void OnDecreaseVolume(InputAction.CallbackContext context);
     }
 }

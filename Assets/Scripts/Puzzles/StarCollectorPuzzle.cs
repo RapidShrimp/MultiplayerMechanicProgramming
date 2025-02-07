@@ -20,10 +20,6 @@ public class StarCollector : PuzzleModule
         player.OnStarCollected += OnStarCollected;
     }
 
-    private void OnDisable()
-    {
-    }
-
     private void OnStarCollected()
     {
         if (!IsOwner) { return; }

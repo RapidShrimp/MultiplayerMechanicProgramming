@@ -18,7 +18,6 @@ public class ScreenFade : MonoBehaviour
         float TimeElapsed = 0;
         float FadeFrom = FadeAlpha;
         float FadeTo = FadeIn ? 0 : 1;
-
         while (TimeElapsed < FadeTime)
         {
             yield return new WaitForFixedUpdate();

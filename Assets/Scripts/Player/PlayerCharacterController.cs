@@ -31,6 +31,8 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerCam = GetComponentInChildren<Camera>();
 
         if (!IsOwner) { return; }
+
+        //Bind to the Audio Manager & Game Manager
         SFX_AudioManager.Singleton.SwapPlayer(transform.gameObject);
         GameManager.OnLoadingLevel += Handle_LevelTransition;
         GameManager.OnReadyGame += Handle_OnGameReady;
@@ -59,8 +61,14 @@ public class PlayerCharacterController : NetworkBehaviour
         PlayerInput.Player.ShoulderLeft.performed += Handle_LB;
         PlayerInput.Player.ShoulderRight.performed += Handle_RB;
 
+
+
+        //In an Ideal world this would be better, but we are not in that world. I dissappoint even myself 
         PlayerCheats = new PlayerInputActions();
         PlayerCheats.Cheats.MuteAudio.performed += (a) => { SFX_AudioManager.Singleton.ToggleMuteAudio(); };
+        PlayerCheats.Cheats.IncreaseVolume.performed += (a) => SFX_AudioManager.Singleton.SetVolume(PlayerPrefs.GetFloat("MasterVolume") + 10);
+        PlayerCheats.Cheats.DecreaseVolume.performed += (a) => SFX_AudioManager.Singleton.SetVolume(PlayerPrefs.GetFloat("MasterVolume") - 10);
+
         PlayerCheats.Enable();
     }
 
@@ -70,12 +78,14 @@ public class PlayerCharacterController : NetworkBehaviour
     {
         base.OnNetworkDespawn();
         if (!IsOwner) { return; }
-        //Unbind Player Events
+
+        //Unbind static events
         GameManager.OnLoadingLevel -= Handle_LevelTransition;
         GameManager.OnReadyGame -= Handle_OnGameReady;
         GameManager.OnStartGame -= Handle_OnStartGame;
         GameManager.OnGameFinished -= Handle_OnGameEnded;
 
+        //Unbind Player Events
         if(PlayerInput == null) { return; }
         PlayerInput.Disable();
         PlayerInput.Player.Move.performed -= Handle_PlayerMove;
@@ -257,7 +267,6 @@ public class PlayerCharacterController : NetworkBehaviour
     }
     private void Handle_LevelTransition(int Time)
     {
-
         ScreenFade Fader = GetComponentInChildren<ScreenFade>();
         if (Fader == null)
         {
@@ -282,7 +291,7 @@ public class PlayerCharacterController : NetworkBehaviour
         transform.position = new Vector3((2 * PlayerIndex), 0, 0);
     }
 
-    public void Handle_OnGameReady()
+    public void Handle_OnGameReady(GameSettings Settings)
     {
         if (!IsOwner) { return; }
 
@@ -294,14 +303,13 @@ public class PlayerCharacterController : NetworkBehaviour
         }
 
         CurrentListID = PlayerIndex;
-        m_ArcadeUnit.ReadyGame();
+        m_ArcadeUnit.ReadyGame(Settings);
         if (Camera.main) { Camera.main.enabled = false; }
         PlayerCam.enabled = true;
         CurrentlyViewing = PlayerCam;
         GameObject Hud = Instantiate(UI_HUDPrefab);
         UI_HUD = Hud.GetComponent<UI_HUDSelectPlayer>();
         UI_HUD.OnSelectPlayer += Handle_OnSelectPlayer;
-
     }
 
     private void Handle_OnStartGame()
@@ -331,6 +339,7 @@ public class PlayerCharacterController : NetworkBehaviour
     private void Handle_OnSelectPlayer(int Direction)
     {
         if(!IsOwner) { return; }
+        //Clamping saves lives, We dont want an index out of range...
         CurrentListID = Mathf.Clamp(CurrentListID, 0,NetworkManager.Singleton.ConnectedClientsList.Count-1);
         ToggleArcadeUnitView(CurrentListID,false);
         CurrentListID = (int)Mathf.Repeat(CurrentListID + Direction, NetworkManager.Singleton.ConnectedClientsList.Count);
@@ -340,6 +349,7 @@ public class PlayerCharacterController : NetworkBehaviour
 
     void ToggleArcadeUnitView(int PlayerIndex, bool IsViewing)
     {
+        //Deactivate Current Client Arcade Screen and Swap render target to new Client ID
 
         GameObject NextClient = NetworkManager.Singleton.ConnectedClientsList[PlayerIndex].PlayerObject.gameObject;
         if (NextClient == null) { return; }

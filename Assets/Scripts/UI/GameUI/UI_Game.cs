@@ -20,7 +20,9 @@ public class UI_Game : UI_RenderTarget
     public UI_PlayerIdentifier PlayerIdentifier;
     
 
-    public bool ConfigurationSet = false;
+    protected bool ConfigurationSet = false;
+    public void SetConfigurationCompletion( bool IsSet) { ConfigurationSet = IsSet; }
+    
     public Camera GetUICamera()
     {
         return cam; 
@@ -66,11 +68,6 @@ public class UI_Game : UI_RenderTarget
             puzzle.gameObject.SetActive(false);
         }
     }
-
-    public override void OnNetworkDespawn()
-    {
-    }
-
 
     public void StartNewPuzzle()
     {
