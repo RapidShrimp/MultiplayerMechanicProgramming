@@ -30,6 +30,10 @@ public class SFX_AudioManager : MonoBehaviour
     public void SetVolume(float MasterVolume)
     {
         Intensity = Mathf.Clamp(MasterVolume,0,1);
+        if (CurrentMusic != null)
+        {
+            CurrentMusic.volume = CurrentMusic.volume * MasterVolume;
+        }
         PlayerPrefs.SetFloat("MasterVolume",Intensity);
     }
 

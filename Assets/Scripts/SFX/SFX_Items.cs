@@ -16,13 +16,13 @@ public class SFX_Item : MonoBehaviour
         }
     }
 
-    public static void PlaySFX(AudioSource source, float volume = 0.5f, float pitch = 1)
+    public static void PlaySFX(AudioSource source, float volume = 1f, float pitch = 1)
     {
         source.pitch = pitch;
         source.volume = volume;
-        source.Play();
+        SFX_AudioManager.Singleton.PlaySoundToPlayer(source);
     }
-    public void PlaySFX(int Key = 0, string ByName = null, float volume = 0.5f, float pitch = 1)
+    public void PlaySFX(int Key = 0, string ByName = null, float volume = 1f, float pitch = 1)
     {
         Key = Mathf.Clamp(Key,0, m_AudioSources.Length-1);
         AudioSource DesiredSource = m_AudioSources[Key];
