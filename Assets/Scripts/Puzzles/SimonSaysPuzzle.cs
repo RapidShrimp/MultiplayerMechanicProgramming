@@ -48,8 +48,8 @@ public class SimonSaysPuzzle : PuzzleModule
             CorrectSequence.Add(Array[i]);
         }
         Curr_Sequence.Clear();
-        if (!isActiveAndEnabled) { return; }
         DisplaySequence = StartCoroutine(ShowSimonSaysSequence());
+        if (!isActiveAndEnabled) { return; }
     }
 
     public override void FailModule()

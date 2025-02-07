@@ -14,10 +14,28 @@ public class StarCollector : PuzzleModule
 
 
     GameObject StarsContainer = null;
-    private void Awake()
+    
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        
+
+    }
+    public override void OnNetworkDespawn()
+    {
+        base.OnNetworkDespawn();
+    }
+    private void OnEnable()
     {
         player = GetComponentInChildren<StarPlayer>();
+        StarsContainer = transform.GetChild(1).gameObject;
         player.OnStarCollected += OnStarCollected;
+
+        if (StarsContainer == null) { Debug.LogError("No Stars Container Found"); }
+    }
+    private void OnDisable()
+    {
+        player.OnStarCollected -= OnStarCollected;
     }
 
     private void OnStarCollected()
@@ -31,7 +49,7 @@ public class StarCollector : PuzzleModule
     public override void StartPuzzleModule()
     {
         base.StartPuzzleModule();
-        StarsContainer = transform.GetChild(1).gameObject;
+        Debug.Log("Start Puzzle Called");
         if (IsOwner)
         {
             int StarsToFind = 0;
@@ -56,7 +74,7 @@ public class StarCollector : PuzzleModule
     public override void OnMoveInput(Vector2 Direction, bool Performed)
     {
         if (!isActiveAndEnabled) { return; }
-        player.Handle_PlayerMove(Direction, Performed);
+        player.Handle_PlayerMove_Rpc(Direction, Performed);
     }
 
 

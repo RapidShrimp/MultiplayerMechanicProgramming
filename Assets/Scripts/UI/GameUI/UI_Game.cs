@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using TMPro;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 public class UI_Game : UI_RenderTarget
@@ -19,9 +20,12 @@ public class UI_Game : UI_RenderTarget
     protected SFX_Item Audios;
     public UI_PlayerIdentifier PlayerIdentifier;
     
-
     protected bool ConfigurationSet = false;
-    public void SetConfigurationCompletion( bool IsSet) { ConfigurationSet = IsSet; }
+    [Rpc(SendTo.Everyone)]
+    public void SetConfigurationCompletion_Rpc( bool IsSet) 
+    {
+        Debug.Log("Configuration Set");
+        ConfigurationSet = IsSet; }
     
     public Camera GetUICamera()
     {
@@ -61,16 +65,52 @@ public class UI_Game : UI_RenderTarget
         ScoreCounter.ChangeScore_Rpc(0);
         foreach (PuzzleModule puzzle in Puzzles)
         {
-            puzzle.OnPuzzleComplete += Handle_PuzzleComplete_Rpc;
-            puzzle.OnPuzzleFail += Handle_PuzzleFail;
-            puzzle.OnPuzzleError += Handle_PuzzleError_Rpc;
-            puzzle.OnUIUpdated += ForceNewRender;
+            BindToPuzzle(puzzle);
+            NetworkTransform[] NetMovement = puzzle.GetComponentsInChildren<NetworkTransform>();
+            foreach(NetworkTransform netMovement in NetMovement) { netMovement.enabled = false; }
             puzzle.gameObject.SetActive(false);
         }
     }
 
+    public void BindToPuzzle(PuzzleModule puzzle)
+    {
+        puzzle.OnPuzzleComplete += Handle_PuzzleComplete_Rpc;
+        puzzle.OnPuzzleFail += Handle_PuzzleFail;
+        puzzle.OnPuzzleError += Handle_PuzzleError_Rpc;
+        puzzle.OnUIUpdated += ForceNewRender;
+    }
+
+    protected void SetActivePuzzle(PuzzleModule puzzle)
+    {
+        if(CurrentPuzzle != null)
+        {
+            SetPuzzleInactive(CurrentPuzzle);
+        }
+
+        CurrentPuzzle = puzzle;
+
+        //Enable Network Transforms if there are any (Future proofing this project)
+        NetworkTransform[] netMovements = CurrentPuzzle.GetComponentsInChildren<NetworkTransform>();
+        foreach (NetworkTransform netMovement in netMovements) { netMovement.enabled = true; }
+        CurrentPuzzle.gameObject.SetActive(true);
+        CurrentPuzzle.StartPuzzleModule();
+
+    }
+
+    public void SetPuzzleInactive(PuzzleModule puzzle)
+    {
+
+        //Unity likes to cry if a network transform is enabled in an inactive object (Mega Sad)
+        NetworkTransform[] netMovements = CurrentPuzzle.GetComponentsInChildren<NetworkTransform>();
+        foreach (NetworkTransform netMovement in netMovements) { netMovement.enabled = false; }
+        puzzle.gameObject.SetActive(false);
+        puzzle.DeactivatePuzzleModule();
+
+    }
+
     public void StartNewPuzzle()
     {
+        if (!IsOwner) { return; }
         StartNewPuzzle_Rpc(UnityEngine.Random.Range(0, Puzzles.Length));
     }
 
@@ -78,20 +118,18 @@ public class UI_Game : UI_RenderTarget
     public void StartNewPuzzle_Rpc(int IndexRevealed)
     {
         DisplayText.gameObject.SetActive(false);
-        CurrentPuzzle = Puzzles[IndexRevealed];
-        CurrentPuzzle.gameObject.SetActive(true);
-        Puzzles[IndexRevealed].StartPuzzleModule();
+        SetActivePuzzle(Puzzles[IndexRevealed]);
     }
 
     [Rpc(SendTo.Everyone)]
     private void Handle_PuzzleComplete_Rpc(int AwardedScore)
     {
-        CurrentPuzzle.gameObject.SetActive(false);
+        SetPuzzleInactive(CurrentPuzzle);
         ForceNewRender();
-        StartCoroutine(NextPuzzleDelay());
         Background.PuzzleComplete();
         Audios.PlaySFX(0, "Complete");
         OnScoreUpdated?.Invoke(AwardedScore);
+        StartCoroutine(NextPuzzleDelay());
     }
     private void Handle_PuzzleFail(int PunishmentScore)
     {
@@ -137,8 +175,9 @@ public class UI_Game : UI_RenderTarget
     }
     public void OnGameEnded(bool IsWinner, int WinnerIndex)
     {
+        SetPuzzleInactive(CurrentPuzzle);
         CurrentPuzzle.GetComponent<PuzzleModule>().DeactivatePuzzleModule();
-        CurrentPuzzle.gameObject.SetActive(false);
+        
         StopAllCoroutines();
         DisplayText.gameObject.SetActive(true);
         if (IsWinner)

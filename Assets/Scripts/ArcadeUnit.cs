@@ -55,8 +55,8 @@ public class ArcadeUnit : NetworkBehaviour
 
         PlayerUI.transform.position = new Vector3(transform.position.x, 500);
         PlayerUI.OnScoreUpdated += Handle_UpdateScore;
-
         if (!IsOwner) { return; }
+
         Configurations = GetComponentsInChildren<Configuration>();
         foreach (Configuration config in Configurations)
         {
@@ -80,7 +80,7 @@ public class ArcadeUnit : NetworkBehaviour
         PlayerUI.ToggleActiveRender(true);
         PlayerUI.OnGameReady();
         Score.Value = 0;
-        SabotageEnabled = Settings.SabotageScoring;
+        SabotageEnabled = LocalSettingsRef.SabotageScoring;
                 
     }
     public void StartGame()
@@ -106,7 +106,9 @@ public class ArcadeUnit : NetworkBehaviour
     {
         if (IsActive) { ConfigsCompleted++; }
         else ConfigsCompleted-- ;
-        PlayerUI.SetConfigurationCompletion(!LocalSettingsRef.ConfigurationRequired || ConfigsCompleted == Configurations.Length);
+
+        //if ConfigurationIsNotRequired OR All Configs Completed, SET
+        PlayerUI.SetConfigurationCompletion_Rpc(!LocalSettingsRef.ConfigurationRequired || ConfigsCompleted == Configurations.Length);
     }
     private void Handle_ConfigurationSabotaged(int SabotageScore)
     {

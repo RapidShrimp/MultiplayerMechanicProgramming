@@ -82,6 +82,7 @@ public class GameManager : NetworkBehaviour
         {
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnect;
+            LoadGameSettings();
         }
         NetworkManager.Singleton.SceneManager.OnLoadComplete += OnLevelLoaded;
         PlayerCount.OnValueChanged += PlayersUpdated;
@@ -92,6 +93,17 @@ public class GameManager : NetworkBehaviour
             OnGameTimerUpdated?.Invoke((int)newValue);
         };
 
+    }
+
+    private void LoadGameSettings()
+    {
+        GameSettings LoadedSettings;
+        LoadedSettings.GameTime = PlayerPrefs.GetInt("GameTime", 120);
+        LoadedSettings.ScrambleConfiguration = PlayerPrefs.GetInt("ScrambleConfigs", 1) == 1 ? true : false;
+        LoadedSettings.ConfigurationRequired = PlayerPrefs.GetInt("RequireConfigs", 1) == 1 ? true : false;
+        LoadedSettings.SabotageScoring = PlayerPrefs.GetInt("SabotagingScores", 1) == 1 ? true : false;
+        m_GameSettings.Value = LoadedSettings;
+        UIMenu.OnLoadGameSettings(m_GameSettings.Value);
     }
 
     private void OnUIStartGame()
@@ -143,6 +155,7 @@ public class GameManager : NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void SetGameSettings_Rpc(GameSettings Settings)
     {
+        Debug.Log("Changed & Save Settings");
         m_GameSettings.Value = Settings;
     }
 

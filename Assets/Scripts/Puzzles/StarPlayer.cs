@@ -18,7 +18,8 @@ public class StarPlayer : NetworkBehaviour
         StarsList = transform.parent.GetChild(1).gameObject;
     }
 
-    public void Handle_PlayerMove(Vector2 Dir, bool Performed)
+    [Rpc(SendTo.Everyone)]
+    public void Handle_PlayerMove_Rpc(Vector2 Dir, bool Performed)
     {
         //transform.localPosition += new Vector3 (Dir.x,Dir.y,0) * step;
         float XPos = Mathf.Clamp(transform.localPosition.x + (Dir.x * step) , -500.0f, 500.0f);
