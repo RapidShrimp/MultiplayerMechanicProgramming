@@ -22,7 +22,6 @@ public class SliderConfiguration : Configuration, IInteractable
     MeshRenderer CorrectLocRenderer;
     float DistanceTolerance = 0.025f;
 
-
     Vector3 DebugWorldPos = Vector3.one;
 
     public override void OnNetworkSpawn()
@@ -110,6 +109,7 @@ public class SliderConfiguration : Configuration, IInteractable
         return true;
     }
 
+    
     private void OnDrawGizmos()
     {
         Gizmos.DrawSphere(DebugWorldPos,0.01f);

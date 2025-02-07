@@ -18,6 +18,8 @@ public class Configuration : NetworkBehaviour
         base.OnNetworkSpawn();
         IsCompleted.OnValueChanged +=  (a, b) => { OnConfigurationUpdated?.Invoke(b); };
         if (IsOwner) { IsCompleted.Value = true; }
+
+
     }
 
     virtual public void StartModule() { }
@@ -28,4 +30,5 @@ public class Configuration : NetworkBehaviour
         Debug.Log("Sabotaged");
         OnConfigurationSabotaged?.Invoke(SabotageValue); 
     }
+
 }

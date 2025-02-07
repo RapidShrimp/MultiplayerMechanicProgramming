@@ -23,12 +23,15 @@ public class PlayerCharacterController : NetworkBehaviour
     Coroutine CR_MouseDetection;
     Coroutine CR_MoveMouse;
     Coroutine CR_MoveAction;
+    IHoverable CurrentlyHovering = null;
+
 
     public override void OnNetworkSpawn()
     {
         DontDestroyOnLoad(this);
         m_ArcadeUnit = GetComponentInChildren<ArcadeUnit>();
         PlayerCam = GetComponentInChildren<Camera>();
+        CurrentlyViewing = PlayerCam;
 
         if (!IsOwner) { return; }
 
@@ -182,6 +185,33 @@ public class PlayerCharacterController : NetworkBehaviour
         {
 
         }
+    }
+
+    private void FixedUpdate()
+    {
+
+        //This should be on a coroutine
+        if(!IsOwner) {return; }
+        RaycastHit Hit;
+        GetHitUnderMouse(CurrentlyViewing, out Hit);
+        if(Hit.collider == null) { return; }
+        GameObject tmp = Hit.collider.gameObject;
+        if(tmp == null) 
+        { 
+            if(CurrentlyHovering != null)
+            {
+                CurrentlyHovering.OnHover(false);
+            }
+            return;
+        }
+        IHoverable Interaction = tmp.GetComponentInChildren<IHoverable>();
+        if (Interaction != CurrentlyHovering && CurrentlyHovering != null)
+        {
+            Debug.Log("Unhover");
+            CurrentlyHovering.OnHover(false);
+        }
+        CurrentlyHovering = Interaction;
+        if (CurrentlyHovering != null) { CurrentlyHovering.OnHover(true); }
     }
 
     private void Handle_PlayerMove(InputAction.CallbackContext context)

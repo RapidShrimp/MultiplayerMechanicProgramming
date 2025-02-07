@@ -77,4 +77,9 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
     {
         OnUIUpdated?.Invoke();
     }
+
+    public void OnHovver(bool Hovered)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -156,6 +156,7 @@ public class ArcadeUnit : NetworkBehaviour
     }
     public void PressButton(int ButtonIndex, bool Performed)
     {
+        Buttons[ButtonIndex].PressButtonVisual_Rpc(Performed);
         PlayerUI.ButtonPressed(ButtonIndex, Performed);
     }
     private void Handle_UpdateScore(int ScoreChange)

@@ -41,4 +41,19 @@ public class ArcadeButton : NetworkBehaviour, IInteractable
         OnButtonPressed?.Invoke(buttonIndex, true);
         return true;
     }
+
+    [Rpc(SendTo.Everyone)]
+    public void PressButtonVisual_Rpc(bool Performed)
+    {
+        GameObject ButtonPress = transform.GetChild(0).gameObject;
+        if (!Performed) 
+        { 
+            ButtonPress.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            transform.GetChild(0).transform.localPosition = new Vector3(0, -0.01f);
+        }
+
+    }
 }
