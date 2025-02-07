@@ -44,7 +44,7 @@ public class SliderConfiguration : Configuration, IInteractable
     {
         if (IsOwner)
         {
-            DesiredXPos.Value = Random.Range(0, SliderMax + 1);
+            DesiredXPos.Value = Random.Range(1, SliderMax + 1);
         }
     }
 

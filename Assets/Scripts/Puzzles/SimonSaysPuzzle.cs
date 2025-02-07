@@ -38,6 +38,18 @@ public class SimonSaysPuzzle : PuzzleModule
         UpdateProgress_Rpc(MakeIntArrayfromList(Curr_Sequence));
     }
 
+    public override void DeactivatePuzzleModule()
+    {
+        base.DeactivatePuzzleModule();
+
+        for (int i = 0; i < Curr_Sequence.Count; i++) 
+        { 
+            m_Lights[0].OnLightToggle(false);
+        }
+
+
+    }
+
     [Rpc(SendTo.Everyone)]
     public void OnCorrectSequenceUpdated_Rpc(int[] Array)
     {
