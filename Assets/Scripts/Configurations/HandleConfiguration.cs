@@ -64,7 +64,6 @@ public class HandleConfiguration : Configuration, IInteractable
 
     public bool OnDrag(Vector3 WorldPos, bool IsHeld)
     {
-
         if (IsOwner && !IsCompleted.Value)
         {
             LerpValue = WorldPos.y - TopYPos;

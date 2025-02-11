@@ -32,7 +32,7 @@ public class PuzzleModule : NetworkBehaviour, PuzzleInterface, IInteractable
 
     public virtual void DeactivatePuzzleModule()
     {
-        StopAllCoroutines();
+        //StopAllCoroutines();
     }
 
 

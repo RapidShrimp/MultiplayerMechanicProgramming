@@ -27,7 +27,7 @@ public class Configuration : NetworkBehaviour
     [Rpc(SendTo.Owner)]
     protected void Sabotage_Rpc() 
     {
-        Debug.Log("Sabotaged");
+        //Debug.Log("Sabotaged");
         OnConfigurationSabotaged?.Invoke(SabotageValue); 
     }
 

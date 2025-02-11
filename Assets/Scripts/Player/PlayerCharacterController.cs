@@ -2,6 +2,7 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Linq;
+using Unity.Android.Gradle.Manifest;
 using Unity.Netcode;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -175,11 +176,15 @@ public class PlayerCharacterController : NetworkBehaviour
         // Hold Functionality
         if (context.started)
         {
-            if (CR_MouseDetection == null)
+            //Luke said you cant mark me down on this
+            //no i didn't - luke
+            if (CR_MouseDetection != null)
             {
-                CR_MouseDetection = StartCoroutine(Handle_MouseDown());
-            }
+                StopCoroutine(CR_MouseDetection);
+                CR_MouseDetection = null;
 
+            }
+            CR_MouseDetection = StartCoroutine(Handle_MouseDown());
         }
         else
         {
@@ -189,7 +194,6 @@ public class PlayerCharacterController : NetworkBehaviour
 
     private void FixedUpdate()
     {
-
         //This should be on a coroutine
         if(!IsOwner) {return; }
         RaycastHit Hit;
@@ -207,7 +211,6 @@ public class PlayerCharacterController : NetworkBehaviour
         IHoverable Interaction = tmp.GetComponentInChildren<IHoverable>();
         if (Interaction != CurrentlyHovering && CurrentlyHovering != null)
         {
-            Debug.Log("Unhover");
             CurrentlyHovering.OnHover(false);
         }
         CurrentlyHovering = Interaction;
@@ -247,10 +250,13 @@ public class PlayerCharacterController : NetworkBehaviour
         RaycastHit Hit;
         if (!GetHitUnderMouse(CurrentlyViewing, out Hit)) { yield break; }
         GameObject tmp = Hit.collider.gameObject;
+        Debug.Log($"HitObject {tmp.name}");
         if (tmp == null) { yield break; }
-        IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
-        if (Interaction == null) { yield break; }
 
+        IInteractable Interaction = tmp.GetComponentInChildren<IInteractable>();
+        Debug.Log($"HitObject {Interaction != null}");
+
+        if (Interaction == null) { yield break; }
 
         if (Interaction.OnClick())
         {
@@ -259,6 +265,7 @@ public class PlayerCharacterController : NetworkBehaviour
 
         while (PlayerInput.Player.MouseLClick.IsInProgress())
         {
+            Debug.Log("HELLLLPP MMEEEEE");
             GetHitUnderMouse(CurrentlyViewing, out Hit);
             if (Interaction.OnDrag(Hit.point, true))
             {
