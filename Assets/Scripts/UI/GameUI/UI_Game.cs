@@ -102,8 +102,8 @@ public class UI_Game : UI_RenderTarget
         //Unity likes to cry if a network transform is enabled in an inactive object (Mega Sad)
         NetworkTransform[] netMovements = CurrentPuzzle.GetComponentsInChildren<NetworkTransform>();
         foreach (NetworkTransform netMovement in netMovements) { netMovement.enabled = false; }
-        puzzle.gameObject.SetActive(false);
         puzzle.DeactivatePuzzleModule();
+        puzzle.gameObject.SetActive(false);
 
     }
 

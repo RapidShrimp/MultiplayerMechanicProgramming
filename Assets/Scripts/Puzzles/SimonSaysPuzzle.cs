@@ -46,7 +46,7 @@ public class SimonSaysPuzzle : PuzzleModule
         { 
             m_Lights[0].OnLightToggle(false);
         }
-
+        UpdateUIRender();
 
     }
 
