@@ -25,7 +25,7 @@ public class ArcadeUnit : NetworkBehaviour
     public int GetScore() { return Score.Value; }
     private void Awake()
     {
-
+        //Assign Button Colours
         Buttons = GetComponentsInChildren<ArcadeButton>();
         for(int i = 0; i < Buttons.Length; i++)
         {
